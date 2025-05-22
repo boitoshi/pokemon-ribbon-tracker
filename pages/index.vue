@@ -4,7 +4,15 @@
     
     <!-- ポケモン検索セクション -->
     <div class="mb-8">
-      <PokemonSearch @select="selectPokemon" />
+      <div v-if="isLoading" class="py-16 text-center">
+        <div class="inline-block animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+        <p class="mt-2 text-gray-500">リボンデータを読み込み中...</p>
+      </div>
+      <PokemonSearch 
+        v-else 
+        :allPokemon="pokemonList"
+        :selectedPokemon="selectedPokemon"
+        @select-pokemon="selectPokemon" />
     </div>
 
     <!-- 選択されたポケモン情報 -->
@@ -94,6 +102,19 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { usePokemonData } from '~/utils/dataFetcher';
+
+// データフェッチャーを初期化
+const { 
+  pokemonList, 
+  ribbonList, 
+  gameList, 
+  isLoading,
+  error,
+  fetchPokemonList, 
+  fetchRibbonList, 
+  fetchGameList
+} = usePokemonData();
 
 // 状態管理
 const activeTab = ref('ribbons');
@@ -162,120 +183,25 @@ const filteredRibbons = computed(() => {
 
 // データの読み込み
 onMounted(async () => {
-  // 実際のアプリでは適切なデータ取得ロジックに置き換え
-  ribbons.value = await fetchRibbonData();
-  games.value = await fetchGameData();
+  try {
+    // GitHub リポジトリから各種データを非同期に取得
+    const [pokemonData, ribbonData, gameData] = await Promise.all([
+      fetchPokemonList(),
+      fetchRibbonList(),
+      fetchGameList()
+    ]);
+
+    // 取得したデータを状態にセット
+    ribbons.value = ribbonData;
+    games.value = gameData;
+
+    console.log('✅ データの読み込みが完了しました');
+    console.log(`📊 ${pokemonData.length}匹のポケモンデータ`);
+    console.log(`🎀 ${ribbonData.length}個のリボンデータ`);
+    console.log(`🎮 ${gameData.length}個のゲームデータ`);
+  } catch (err) {
+    console.error('❌ データの読み込みエラー:', err);
+    // エラー表示などの処理
+  }
 });
-
-// データ取得関数（実際のアプリではAPI呼び出しなど）
-const fetchRibbonData = async () => {
-  // サンプルデータ
-  return [
-    {
-      id: 'champion-hoenn',
-      name: 'ホウエンチャンピオンリボン',
-      description: 'ホウエン地方のポケモンリーグで優勝した証',
-      games: ['ruby', 'sapphire', 'emerald', 'oras'],
-      generation: 3,
-      compatible_pokemon: 'all-except-special',
-      requirements: 'ホウエン地方のポケモンリーグを制覇する',
-      image_url: '/ribbons/champion-hoenn.png',
-      type: 'champion'
-    },
-    {
-      id: 'contest-master-cute',
-      name: 'かわいさマスターリボン',
-      description: 'かわいさコンテストですべてのランクで優勝した証',
-      games: ['ruby', 'sapphire', 'emerald'],
-      generation: 3,
-      compatible_pokemon: 'all-except-special',
-      requirements: 'かわいさコンテストのすべてのランクで優勝する',
-      image_url: '/ribbons/contest-master-cute.png',
-      type: 'contest'
-    },
-    {
-      id: 'tower-ability',
-      name: 'アビリティリボン',
-      description: 'バトルタワーでレベル50のポケモンと対戦し勝ち抜いた証',
-      games: ['ruby', 'sapphire', 'emerald'],
-      generation: 3,
-      compatible_pokemon: 'all',
-      requirements: 'バトルタワーのレベル50の「シングル」で勝ち抜く',
-      image_url: '/ribbons/tower-ability.png',
-      type: 'battle'
-    },
-    {
-      id: 'champion-sinnoh',
-      name: 'シンオウチャンピオンリボン',
-      description: 'シンオウ地方のポケモンリーグで優勝した証',
-      games: ['diamond', 'pearl', 'platinum'],
-      generation: 4,
-      compatible_pokemon: 'all',
-      requirements: 'シンオウ地方のポケモンリーグを制覇する',
-      image_url: '/ribbons/champion-sinnoh.png',
-      type: 'champion'
-    },
-    {
-      id: 'memory-kalos',
-      name: 'カロス思い出リボン',
-      description: 'カロス地方での思い出を記念したリボン',
-      games: ['x', 'y'],
-      generation: 6,
-      compatible_pokemon: 'all',
-      requirements: 'X・Yでポケモンと過ごす',
-      image_url: '/ribbons/memory-kalos.png',
-      type: 'memory'
-    },
-    // 他のリボンデータ...
-  ];
-};
-
-const fetchGameData = async () => {
-  // サンプルデータ
-  return [
-    {
-      id: 'ruby',
-      name: 'ルビー',
-      generation: 3,
-      release_year: 2002,
-      transfer_paths: ['emerald', 'diamond', 'platinum', 'black', 'bank', 'home']
-    },
-    {
-      id: 'sapphire',
-      name: 'サファイア',
-      generation: 3,
-      release_year: 2002,
-      transfer_paths: ['emerald', 'diamond', 'platinum', 'black', 'bank', 'home']
-    },
-    {
-      id: 'emerald',
-      name: 'エメラルド',
-      generation: 3,
-      release_year: 2004,
-      transfer_paths: ['diamond', 'platinum', 'black', 'bank', 'home']
-    },
-    {
-      id: 'diamond',
-      name: 'ダイヤモンド',
-      generation: 4,
-      release_year: 2006,
-      transfer_paths: ['black', 'bank', 'home']
-    },
-    {
-      id: 'platinum',
-      name: 'プラチナ',
-      generation: 4,
-      release_year: 2008,
-      transfer_paths: ['black', 'bank', 'home']
-    },
-    {
-      id: 'sword',
-      name: 'ソード',
-      generation: 8,
-      release_year: 2019,
-      transfer_paths: ['home']
-    },
-    // 他のゲームデータ...
-  ];
-};
 </script>
