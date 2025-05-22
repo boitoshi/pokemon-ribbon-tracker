@@ -1,14 +1,17 @@
-// 既に.gitignoreがあれば編集、なければ新規作成するよ
+# .gitignore ファイル
 
-// node_modulesフォルダを無視する設定
-node_modules/
+# Nuxt関連
+.nuxt
+dist
+.output
 
-// npm関連のログも無視しておくといいよ～
+# npm関連
+node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-// その他無視したいものもここに追加できるよ！
+# その他
 .DS_Store
 .env
 .env.local
