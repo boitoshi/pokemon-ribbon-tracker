@@ -68,21 +68,8 @@
 </template>
 
 <script setup lang="ts">
-// 型定義
-interface Ribbon {
-  id: string;
-  name: string;
-  obtained: boolean;
-}
-
-interface Pokemon {
-  id: string;
-  number: string;
-  name: string;
-  imageUrl: string;
-  types: string[];
-  ribbons: Ribbon[];
-}
+import { computed } from 'vue';
+import type { Pokemon } from '~/types';
 
 // プロパティ定義
 const props = defineProps<{
@@ -123,7 +110,4 @@ const getTypeClass = (type: string): string => {
   return typeClasses[type] || 'bg-gray-400';
 };
 
-function computed(arg0: () => number) {
-    throw new Error('Function not implemented.');
-}
 </script>

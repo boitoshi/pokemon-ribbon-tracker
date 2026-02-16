@@ -51,15 +51,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-
-// 👇ポケモンの型定義をしっかり書いてあげるよ～！
-interface Pokemon {
-  id: string;
-  number: string; // 図鑑番号
-  name: string;
-  imageUrl?: string;
-  types: string[];
-}
+import type { Pokemon } from '~/types';
 
 // 検索状態の変数
 const searchQuery = ref('');
@@ -69,7 +61,7 @@ const selectedPokemon = ref<Pokemon | null>(null);
 
 // イベント
 const emit = defineEmits<{
-  (e: 'select', pokemon: Pokemon): void;
+  (e: 'select-pokemon', pokemon: Pokemon): void;
 }>();
 
 // ポケモン検索関数
@@ -103,7 +95,7 @@ const searchPokemon = async () => {
 // ポケモン選択関数
 const selectPokemon = (pokemon: Pokemon) => {
   selectedPokemon.value = pokemon;
-  emit('select', pokemon);
+  emit('select-pokemon', pokemon);
   searchQuery.value = ''; // 検索欄をクリア
   results.value = []; // 結果をクリア
 };
