@@ -18,3 +18,17 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+
+# エディタ関連（補足するとより良いかも）
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ログファイル
+logs/
+*.log
+
+# キャッシュ
+.cache/
+.temp/

@@ -1,11 +1,13 @@
 // ポケモンリボントラッカー 共通型定義
 
+/** リボンの取得状態を表すUI型 */
 export interface RibbonStatus {
   id: string;
   name: string;
   obtained: boolean;
 }
 
+/** ポケモンのUI表示用型（PokemonDetail から変換して使用） */
 export interface Pokemon {
   id: string;
   number: string;
@@ -15,6 +17,7 @@ export interface Pokemon {
   ribbons?: RibbonStatus[];
 }
 
+/** ポケモンのAPI/データソース型（外部JSONから取得） */
 export interface PokemonDetail {
   id: string;
   dexNumber: number;
@@ -28,6 +31,7 @@ export interface PokemonDetail {
   abilities: string[];
 }
 
+/** リボンの定義データ */
 export interface Ribbon {
   id: string;
   name: string;
@@ -39,6 +43,7 @@ export interface Ribbon {
   image_url?: string;
 }
 
+/** ゲームタイトルの定義データ */
 export interface Game {
   id: string;
   name: string;
@@ -48,6 +53,7 @@ export interface Game {
   platform: string;
 }
 
+/** リボンフィルタの状態 */
 export interface FilterState {
   generation: number | null;
   type: string | null;

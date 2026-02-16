@@ -9,7 +9,9 @@
     <div v-else>
       <div class="mb-4 p-4 bg-green-50 rounded flex justify-between items-center">
         <div>
-          <p><strong>{{ pokemon.name }}</strong> のリボン王チャート</p>
+          <p>
+            <strong>{{ pokemon.name }}</strong> のリボン王チャート
+          </p>
           <p class="text-sm mt-1">
             獲得したリボン: {{ store.currentCheckedRibbons.length }} / {{ ribbons.length }}
           </p>
@@ -24,11 +26,7 @@
 
       <!-- 世代ごとのリボンチェックリスト -->
       <div class="space-y-6">
-        <div
-          v-for="gen in generations"
-          :key="gen"
-          class="border rounded-lg overflow-hidden"
-        >
+        <div v-for="gen in generations" :key="gen" class="border rounded-lg overflow-hidden">
           <div class="bg-gray-100 p-3 font-bold">第{{ gen }}世代リボン</div>
           <div class="p-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -117,9 +115,7 @@ const getRibbonsByGeneration = (generation: number) => {
 const getCompletionByGeneration = (generation: number): number => {
   const genRibbons = getRibbonsByGeneration(generation);
   if (genRibbons.length === 0) return 0;
-  const checked = genRibbons.filter((r) =>
-    store.currentCheckedRibbons.includes(r.id)
-  ).length;
+  const checked = genRibbons.filter((r) => store.currentCheckedRibbons.includes(r.id)).length;
   return Math.round((checked / genRibbons.length) * 100);
 };
 

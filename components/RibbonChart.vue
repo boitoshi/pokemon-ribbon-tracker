@@ -21,11 +21,7 @@
         >
           <div class="bg-gray-100 p-3 font-medium">第{{ generation }}世代</div>
 
-          <div
-            v-for="(gameData, game) in gameGroup"
-            :key="game"
-            class="border-b last:border-b-0"
-          >
+          <div v-for="(gameData, game) in gameGroup" :key="game" class="border-b last:border-b-0">
             <div class="px-4 py-3 bg-gray-50 flex justify-between items-center">
               <h4 class="font-medium">{{ getGameName(String(game)) }}</h4>
               <span class="text-sm text-gray-600">{{ gameData.ribbons.length }}個のリボン</span>
@@ -37,7 +33,9 @@
                 :key="`${game}-${ribbon.id}`"
                 class="flex items-center p-2 bg-white border rounded"
               >
-                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
+                <div
+                  class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2 flex-shrink-0"
+                >
                   <span class="text-sm">🎀</span>
                 </div>
 
@@ -46,7 +44,9 @@
                   <div class="text-xs text-gray-500 line-clamp-1">{{ ribbon.description }}</div>
                 </div>
 
-                <div class="ml-2 w-5 h-5 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center">
+                <div
+                  class="ml-2 w-5 h-5 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center"
+                >
                   <span v-if="isRibbonObtained(ribbon.id)" class="text-green-800">✓</span>
                 </div>
               </div>
@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRibbonProgressStore } from '~/stores/ribbonProgress';
+import { getGameName } from '~/utils/gameNames';
 import type { Pokemon, Ribbon, Game } from '~/types';
 
 const props = defineProps<{
@@ -82,31 +83,6 @@ const props = defineProps<{
 }>();
 
 const store = useRibbonProgressStore();
-
-const GAME_NAMES: Record<string, string> = {
-  ruby: 'ルビー',
-  sapphire: 'サファイア',
-  emerald: 'エメラルド',
-  diamond: 'ダイヤモンド',
-  pearl: 'パール',
-  platinum: 'プラチナ',
-  heartgold: 'ハートゴールド',
-  soulsilver: 'ソウルシルバー',
-  black: 'ブラック',
-  white: 'ホワイト',
-  black2: 'ブラック2',
-  white2: 'ホワイト2',
-  x: 'X',
-  y: 'Y',
-  oras: 'オメガルビー・アルファサファイア',
-  sun: 'サン',
-  moon: 'ムーン',
-  usum: 'ウルトラサン・ウルトラムーン',
-  sword: 'ソード',
-  shield: 'シールド',
-};
-
-const getGameName = (gameId: string): string => GAME_NAMES[gameId] ?? gameId;
 
 const isRibbonObtained = (ribbonId: string): boolean =>
   store.currentCheckedRibbons.includes(ribbonId);
