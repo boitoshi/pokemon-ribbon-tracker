@@ -68,12 +68,6 @@ export const useRibbonProgressStore = defineStore('ribbonProgress', {
       this.saveProgress(pokemonId);
     },
 
-    /** リボン一覧を v-model の配列でまとめて更新 */
-    setCheckedRibbons(pokemonId: string, ribbonIds: string[]): void {
-      this.progress[pokemonId] = [...ribbonIds];
-      this.saveProgress(pokemonId);
-    },
-
     /** 進捗をリセット */
     clearProgress(pokemonId: string): void {
       this.progress[pokemonId] = [];

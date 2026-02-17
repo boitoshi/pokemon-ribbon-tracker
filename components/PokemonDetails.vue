@@ -27,21 +27,10 @@
     <!-- リボン取得状況 -->
     <div class="mt-2 md:mt-4">
       <h3 class="font-bold text-base md:text-lg mb-1 md:mb-2">リボン取得状況</h3>
-      <div v-if="pokemon.ribbons?.length" class="grid grid-cols-2 md:grid-cols-3 gap-2">
-        <div
-          v-for="ribbon in pokemon.ribbons"
-          :key="ribbon.id"
-          class="p-2 border rounded flex items-center"
-          :class="{ 'bg-green-50 border-green-200': ribbon.obtained }"
-        >
-          <div class="w-6 h-6 mr-2 flex-shrink-0">
-            <span v-if="ribbon.obtained" class="text-green-500">✓</span>
-            <span v-else class="text-gray-300">○</span>
-          </div>
-          <span class="text-sm">{{ ribbon.name }}</span>
-        </div>
+      <div class="flex gap-4 text-sm">
+        <span>取得済み: <strong>{{ store.currentCheckedRibbons.length }}個</strong></span>
+        <span>取得可能: <strong>{{ store.ribbons.length }}個</strong></span>
       </div>
-      <p v-else class="text-gray-500 text-sm">リボンデータはリボン王チャートで管理できます</p>
     </div>
 
     <!-- リボン獲得率 -->
@@ -64,19 +53,19 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Pokemon } from '~/types';
+import { useRibbonProgressStore } from '~/stores/ribbonProgress';
 
 // プロパティ定義
 const props = defineProps<{
   pokemon: Pokemon | null;
 }>();
 
+const store = useRibbonProgressStore();
+
 // リボン獲得率の計算
 const ribbonPercentage = computed(() => {
   if (!props.pokemon) return 0;
-
-  if (!props.pokemon.ribbons || props.pokemon.ribbons.length === 0) return 0;
-  const obtainedCount = props.pokemon.ribbons.filter((r) => r.obtained).length;
-  return Math.round((obtainedCount / props.pokemon.ribbons.length) * 100);
+  return store.totalCompletion;
 });
 
 // ポケモンタイプに応じたCSSクラスを返す
