@@ -96,7 +96,7 @@
             type="checkbox"
             :checked="store.currentCheckedRibbons.includes(ribbon.id)"
             class="w-5 h-5 mr-2 md:mr-3 flex-shrink-0"
-            @click.stop="store.toggleRibbon(pokemon.id, ribbon.id)"
+            @click.stop="store.currentProgressKey && store.toggleRibbon(store.currentProgressKey, ribbon.id)"
             @change.stop
           />
 

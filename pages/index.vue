@@ -25,6 +25,11 @@
       />
     </div>
 
+    <!-- マイポケモンパネル -->
+    <div v-if="!isLoading && !error" class="mb-4 md:mb-8">
+      <MyPokemonPanel />
+    </div>
+
     <!-- 選択されたポケモン情報 -->
     <div v-if="store.selectedPokemon" class="mb-4 md:mb-8">
       <PokemonDetails :pokemon="store.selectedPokemon" />
@@ -89,6 +94,7 @@ const loadData = async (): Promise<void> => {
     store.setPokemonList(pokemonData);
     store.setRibbons(ribbonData);
     store.setGames(gameData);
+    store.loadMyPokemonList();
   } catch {
     // error は usePokemonData 内で管理される
   }

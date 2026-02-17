@@ -283,8 +283,8 @@ const handleImportFile = (event: Event): void => {
       const json = e.target?.result as string;
       store.importProgress(json);
       // Reload current pokemon's progress if selected
-      if (props.pokemon) {
-        store.loadProgress(props.pokemon.id);
+      if (store.currentProgressKey) {
+        store.loadProgress(store.currentProgressKey);
       }
       alert('進捗データをインポートしました');
     } catch (err) {
@@ -298,10 +298,10 @@ const handleImportFile = (event: Event): void => {
 
 /** 確認ダイアログを表示してから進捗をリセット */
 const confirmReset = (): void => {
-  if (!props.pokemon) return;
+  if (!props.pokemon || !store.currentProgressKey) return;
   const ok = confirm(`${props.pokemon.name} の進捗をリセットしますか？この操作は元に戻せません。`);
   if (ok) {
-    store.clearProgress(props.pokemon.id);
+    store.clearProgress(store.currentProgressKey);
   }
 };
 </script>

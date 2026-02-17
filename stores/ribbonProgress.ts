@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
-import type { Pokemon, Ribbon, Game, PokemonDetail } from '~/types';
+import type { Pokemon, Ribbon, Game, PokemonDetail, MyPokemon, ExportData } from '~/types';
 
 const STORAGE_PREFIX = 'ribbon_progress_';
+const MY_POKEMON_STORAGE_KEY = 'my_pokemon_list';
 
 export const useRibbonProgressStore = defineStore('ribbonProgress', {
   state: () => ({
@@ -19,20 +20,38 @@ export const useRibbonProgressStore = defineStore('ribbonProgress', {
     error: null as string | null,
     /** ポケモンIDごとの取得済みリボンIDセット: { [pokemonId]: Set<ribbonId> } */
     progress: {} as Record<string, string[]>,
+    /** 登録したマイポケモン一覧 */
+    myPokemonList: [] as MyPokemon[],
+    /** 現在アクティブなマイポケモンID */
+    activeMyPokemonId: null as string | null,
   }),
 
   getters: {
+    /** 進捗管理に使うキー（マイポケモンID or ポケモンID） */
+    currentProgressKey(state): string | null {
+      if (state.activeMyPokemonId) return state.activeMyPokemonId;
+      return state.selectedPokemon?.id ?? null;
+    },
+
     /** 現在選択中のポケモンの取得済みリボンID一覧 */
-    currentCheckedRibbons(state): string[] {
-      if (!state.selectedPokemon) return [];
-      return state.progress[state.selectedPokemon.id] ?? [];
+    currentCheckedRibbons(): string[] {
+      const key = this.currentProgressKey;
+      if (!key) return [];
+      return this.$state.progress[key] ?? [];
     },
 
     /** 現在選択中のポケモンの総合完了率 */
-    totalCompletion(state): number {
-      if (!state.selectedPokemon || state.ribbons.length === 0) return 0;
-      const checked = state.progress[state.selectedPokemon.id]?.length ?? 0;
-      return Math.round((checked / state.ribbons.length) * 100);
+    totalCompletion(): number {
+      const key = this.currentProgressKey;
+      if (!key || this.ribbons.length === 0) return 0;
+      const checked = this.$state.progress[key]?.length ?? 0;
+      return Math.round((checked / this.ribbons.length) * 100);
+    },
+
+    /** 現在アクティブなマイポケモンを取得 */
+    activeMyPokemon(state): MyPokemon | null {
+      if (!state.activeMyPokemonId) return null;
+      return state.myPokemonList.find((p) => p.id === state.activeMyPokemonId) ?? null;
     },
 
     /** 選択中のポケモンの世代を取得 */
@@ -89,6 +108,7 @@ export const useRibbonProgressStore = defineStore('ribbonProgress', {
     /** ポケモンを選択し進捗をロード */
     selectPokemon(pokemon: Pokemon): void {
       this.selectedPokemon = pokemon;
+      this.activeMyPokemonId = null;
       this.loadProgress(pokemon.id);
     },
 
@@ -107,24 +127,133 @@ export const useRibbonProgressStore = defineStore('ribbonProgress', {
       this.pokemonList = list;
     },
 
-    /** 全進捗データをJSON文字列としてエクスポート */
-    exportProgress(): string {
-      return JSON.stringify(this.progress);
+    /** マイポケモンを登録 */
+    registerMyPokemon(
+      pokemonId: string,
+      nickname: string,
+      originGame: string,
+      memo: string
+    ): MyPokemon {
+      const myPokemon: MyPokemon = {
+        id: `my_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        pokemonId,
+        nickname,
+        originGame,
+        memo,
+        createdAt: new Date().toISOString(),
+      };
+      this.myPokemonList.push(myPokemon);
+      this.progress[myPokemon.id] = [];
+      this.saveMyPokemonList();
+      return myPokemon;
     },
 
-    /** JSON文字列から進捗データをインポート */
+    /** マイポケモンを更新 */
+    updateMyPokemon(
+      id: string,
+      updates: Partial<Pick<MyPokemon, 'nickname' | 'originGame' | 'memo'>>
+    ): void {
+      const pokemon = this.myPokemonList.find((p) => p.id === id);
+      if (!pokemon) return;
+      if (updates.nickname !== undefined) pokemon.nickname = updates.nickname;
+      if (updates.originGame !== undefined) pokemon.originGame = updates.originGame;
+      if (updates.memo !== undefined) pokemon.memo = updates.memo;
+      this.saveMyPokemonList();
+    },
+
+    /** マイポケモンを削除（進捗データも削除） */
+    removeMyPokemon(id: string): void {
+      const idx = this.myPokemonList.findIndex((p) => p.id === id);
+      if (idx === -1) return;
+      this.myPokemonList.splice(idx, 1);
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- 動的キーで進捗データを削除する必要がある
+      delete this.progress[id];
+      localStorage.removeItem(`${STORAGE_PREFIX}${id}`);
+      if (this.activeMyPokemonId === id) {
+        this.activeMyPokemonId = null;
+      }
+      this.saveMyPokemonList();
+    },
+
+    /** マイポケモンを選択してアクティブにする */
+    selectMyPokemon(myPokemonId: string): void {
+      const myPokemon = this.myPokemonList.find((p) => p.id === myPokemonId);
+      if (!myPokemon) return;
+      this.activeMyPokemonId = myPokemonId;
+      const detail = this.pokemonList.find((p) => p.id === myPokemon.pokemonId);
+      if (detail) {
+        this.selectedPokemon = {
+          id: detail.id,
+          number: String(detail.dexNumber).padStart(3, '0'),
+          name: detail.name,
+          imageUrl: detail.image,
+          types: detail.types,
+        };
+      }
+      this.loadProgress(myPokemonId);
+    },
+
+    /** マイポケモン一覧を localStorage から読み込む */
+    loadMyPokemonList(): void {
+      try {
+        const saved = localStorage.getItem(MY_POKEMON_STORAGE_KEY);
+        this.myPokemonList = saved ? (JSON.parse(saved) as MyPokemon[]) : [];
+      } catch {
+        this.myPokemonList = [];
+      }
+    },
+
+    /** マイポケモン一覧を localStorage に保存 */
+    saveMyPokemonList(): void {
+      try {
+        localStorage.setItem(MY_POKEMON_STORAGE_KEY, JSON.stringify(this.myPokemonList));
+      } catch {
+        console.error('マイポケモンの保存に失敗しました');
+      }
+    },
+
+    /** 全データをJSON文字列としてエクスポート */
+    exportProgress(): string {
+      const data: ExportData = {
+        version: 1,
+        myPokemonList: this.myPokemonList,
+        progress: this.progress,
+      };
+      return JSON.stringify(data);
+    },
+
+    /** JSON文字列からデータをインポート */
     importProgress(json: string): void {
       try {
-        const data = JSON.parse(json) as Record<string, string[]>;
-        // Validate structure: each value must be string[]
-        for (const [key, value] of Object.entries(data)) {
-          if (!Array.isArray(value) || !value.every((v) => typeof v === 'string')) {
-            throw new Error(`Invalid data for key: ${key}`);
+        const raw = JSON.parse(json) as Record<string, unknown>;
+
+        if (raw.version === 1 && raw.progress) {
+          // v1 format (with myPokemonList)
+          const data = raw as unknown as ExportData;
+          for (const [key, value] of Object.entries(data.progress)) {
+            if (!Array.isArray(value) || !value.every((v) => typeof v === 'string')) {
+              throw new Error(`Invalid data for key: ${key}`);
+            }
           }
+          this.progress = data.progress;
+          if (Array.isArray(data.myPokemonList)) {
+            this.myPokemonList = data.myPokemonList;
+            this.saveMyPokemonList();
+          }
+        } else if (typeof raw === 'object' && !Array.isArray(raw) && !raw.version) {
+          // Legacy format (just progress object)
+          const data = raw as Record<string, string[]>;
+          for (const [key, value] of Object.entries(data)) {
+            if (!Array.isArray(value) || !value.every((v) => typeof v === 'string')) {
+              throw new Error(`Invalid data for key: ${key}`);
+            }
+          }
+          this.progress = data;
+        } else {
+          throw new Error('不明なデータ形式です');
         }
-        this.progress = data;
-        // Save each pokemon's progress to localStorage
-        for (const pokemonId of Object.keys(data)) {
+
+        for (const pokemonId of Object.keys(this.progress)) {
           this.saveProgress(pokemonId);
         }
       } catch (err) {

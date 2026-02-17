@@ -24,6 +24,22 @@
       </div>
     </div>
 
+    <!-- マイポケモン情報 -->
+    <div v-if="store.activeMyPokemon" class="mt-2 md:mt-4 bg-blue-50 p-2 md:p-3 rounded-lg">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs text-blue-600 font-medium">マイポケモン</span>
+          <p class="font-bold text-sm">{{ store.activeMyPokemon.nickname || pokemon.name }}</p>
+          <p v-if="store.activeMyPokemon.originGame" class="text-xs text-gray-500">
+            出身: {{ getGameDisplayName(store.activeMyPokemon.originGame) }}
+          </p>
+          <p v-if="store.activeMyPokemon.memo" class="text-xs text-gray-500 mt-0.5">
+            {{ store.activeMyPokemon.memo }}
+          </p>
+        </div>
+      </div>
+    </div>
+
     <!-- リボン取得状況 -->
     <div class="mt-2 md:mt-4">
       <h3 class="font-bold text-base md:text-lg mb-1 md:mb-2">リボン取得状況</h3>
@@ -54,6 +70,7 @@
 import { computed } from 'vue';
 import type { Pokemon } from '~/types';
 import { useRibbonProgressStore } from '~/stores/ribbonProgress';
+import { getGameName } from '~/utils/gameNames';
 
 // プロパティ定義
 const props = defineProps<{
@@ -67,6 +84,9 @@ const ribbonPercentage = computed(() => {
   if (!props.pokemon) return 0;
   return store.totalCompletion;
 });
+
+/** ゲームIDから表示名を取得 */
+const getGameDisplayName = (gameId: string): string => getGameName(gameId);
 
 // ポケモンタイプに応じたCSSクラスを返す
 const getTypeClass = (type: string): string => {

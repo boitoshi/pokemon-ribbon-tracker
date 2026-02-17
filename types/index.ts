@@ -17,6 +17,22 @@ export interface Pokemon {
   ribbons?: RibbonStatus[];
 }
 
+/** マイポケモン（登録したポケモン個体） */
+export interface MyPokemon {
+  /** 内部ID（自動生成、タイムスタンプベース） */
+  id: string;
+  /** 図鑑のポケモンID（PokemonDetail.id と対応） */
+  pokemonId: string;
+  /** ニックネーム（任意） */
+  nickname: string;
+  /** 出身ゲームID */
+  originGame: string;
+  /** メモ（任意） */
+  memo: string;
+  /** 登録日（ISO 8601文字列） */
+  createdAt: string;
+}
+
 /** ポケモンのAPI/データソース型（外部JSONから取得） */
 export interface PokemonDetail {
   id: string;
@@ -59,4 +75,14 @@ export interface FilterState {
   type: string | null;
   status: 'obtained' | 'not-obtained' | null;
   search: string;
+}
+
+/** エクスポート/インポートデータ形式 */
+export interface ExportData {
+  /** バージョン（将来の互換性のため） */
+  version: number;
+  /** マイポケモン一覧 */
+  myPokemonList: MyPokemon[];
+  /** リボン進捗データ */
+  progress: Record<string, string[]>;
 }
