@@ -1,12 +1,12 @@
 <template>
-  <div class="mb-4 p-4 bg-gray-50 rounded-lg">
-    <h3 class="font-bold mb-2">リボンフィルター</h3>
+  <div class="mb-2 md:mb-4 p-2 md:p-4 bg-gray-50 rounded-lg">
+    <h3 class="font-bold text-sm md:text-base mb-1 md:mb-2">リボンフィルター</h3>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
       <!-- 世代フィルター -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">世代</label>
-        <div class="flex flex-wrap gap-2">
+        <label class="block text-xs md:text-sm font-medium text-gray-700 mb-0.5 md:mb-1">世代</label>
+        <div class="flex flex-wrap gap-1 md:gap-2">
           <button
             :class="[
               'px-2 py-1 text-xs rounded',
@@ -32,8 +32,8 @@
 
       <!-- タイプフィルター -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">リボンタイプ</label>
-        <div class="flex flex-wrap gap-2">
+        <label class="block text-xs md:text-sm font-medium text-gray-700 mb-0.5 md:mb-1">リボンタイプ</label>
+        <div class="flex flex-wrap gap-1 md:gap-2">
           <button
             :class="[
               'px-2 py-1 text-xs rounded',
@@ -59,8 +59,8 @@
 
       <!-- 取得状況フィルター -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">取得状況</label>
-        <div class="flex flex-wrap gap-2">
+        <label class="block text-xs md:text-sm font-medium text-gray-700 mb-0.5 md:mb-1">取得状況</label>
+        <div class="flex flex-wrap gap-1 md:gap-2">
           <button
             :class="[
               'px-2 py-1 text-xs rounded',
@@ -93,8 +93,8 @@
     </div>
 
     <!-- 検索バー -->
-    <div class="mt-3">
-      <label class="block text-sm font-medium text-gray-700 mb-1">リボン名検索</label>
+    <div class="mt-2 md:mt-3">
+      <label class="block text-xs md:text-sm font-medium text-gray-700 mb-0.5 md:mb-1">リボン名検索</label>
       <input
         v-model="searchQuery"
         type="text"
@@ -105,7 +105,7 @@
     </div>
 
     <!-- フィルターリセット -->
-    <div class="mt-3 text-right">
+    <div class="mt-2 md:mt-3 text-right">
       <button class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm" @click="resetFilters">
         フィルターをリセット
       </button>

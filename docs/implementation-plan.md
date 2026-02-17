@@ -1,67 +1,48 @@
-# 残り実装計画（次セッション用）
+# 実装計画
 
-## Batch 1: 5コンポーネント TypeScript 化
+## 完了済み
 
-### 1a. TransferGuide.vue
-- `<script setup lang="ts">` を追加（現在は template-only）
+### Phase 1-2: 安定化（完了）
+- Nuxt 3 プロジェクト構築、Pinia 導入、型定義整備
+- 9コンポーネントの TypeScript 化（Batch 1）
+- PokemonSearch データモデル修正（Batch 2）
+- GAME_NAMES 共通定数化 → `utils/gameNames.ts` に一元化済み
 
-### 1b. HelpfulResources.vue
-- `lang="ts"` 追加
-- Resource interface 定義
-- `example.com` リンク → 空文字に修正（templateで `v-if="resource.link"` 処理済み）
+### Phase 3: バグ修正・データ拡充（完了）
+- カテゴリフィルタ修正: `r.id.includes()` → `CATEGORY_MAP` + `r.category` マッチング
+- PokemonDetails: オプショナル `ribbons` の null 安全対策
+- ダミーリボン: 3件 → 17件（全世代チャンピオン、コンテスト、バトル施設、思い出、イベント）
+- ダミーゲーム: 5件 → 21件（第3〜8世代全タイトル）
+- リボンガイド: 20件 → 27件（バトルタワーシンオウ、バトルファクトリー、シンオウコンテスト等）
+- `alert` リボンの `category` 修正: `'特性'` → `'イベント'`
 
-### 1c. RibbonFilter.vue
-- `lang="ts"` 追加
-- `import type { FilterState } from '~/types'`
-- emit/reactive を型付け
-- 関数パラメータに型アノテーション
-
-### 1d. RibbonsList.vue
-- `lang="ts"` 追加
-- `defineProps<{ ribbons: Ribbon[]; pokemon: Pokemon | null }>()`
-- `defineEmits<{ (e: 'select-ribbon', ribbon: Ribbon): void }>()`
-- 存在しない `compatible_pokemon` / `is_special` 参照を削除（常に true を返すよう簡素化）
-- 不要な `import { defineProps, defineEmits } from 'vue'` を削除
-
-### 1e. RibbonGuide.vue
-- `lang="ts"` 追加
-- `defineProps<{ selectedRibbon: Ribbon | null }>()`
-- `formatGames`, `getRibbonGuide`, `getRibbonTips` に型アノテーション
+### Phase 4: テスト追加（完了）
+- `tests/utils/ribbonFilter.test.ts` — 14テスト
+- `tests/stores/ribbonProgress.test.ts` — 29テスト
+- 既存テスト含め合計55テスト、全パス
 
 ---
 
-## Batch 2: PokemonSearch データモデル修正
+### Phase 5: 機能改善（完了）
+- 5a. 進捗エクスポート/インポート: ストアに `exportProgress()` / `importProgress()` + RibbonMasterChart UI
+- 5b. リボン互換性チェック: `selectedPokemonGeneration` getter + `isPokemonCompatible` 世代判定
+- 5c. 認定証生成: Canvas API で PNG 画像生成・ダウンロード
 
-`components/PokemonSearch.vue`:
-- `allPokemon: PokemonDetail[]` / `selectedPokemon: Pokemon | null` props を宣言
-- ダミーデータ削除 → `props.allPokemon` からフィルタリング
-- `PokemonDetail` → `Pokemon` 型変換マッピング
+### Phase 6: コンテンツ拡充（完了）
+- リボンガイド: 27件 → 52件（エメラルドバトルフロンティア、購入リボン、ORAS、バトルツリー等）
 
----
-
-## Batch 3: 検証
-
-```bash
-npm run lint:fix
-npm run format
-npm run build
-```
-
----
-
-## サブエージェント委譲
-
-| サブエージェント | 対象 | model |
-|----------------|------|-------|
-| #1 | Batch 1 (5コンポーネントTS化) | sonnet |
-| #2 | Batch 2 (PokemonSearch修正) | sonnet |
-| CLI | Batch 3 (検証) | - |
+### Phase 7: モバイルUI最適化（完了）
+- 全10コンポーネント/ページにレスポンシブ Tailwind クラスを適用
+- モバイル（`md:` 未満）: パディング・マージン・フォントサイズ・アイコンサイズを縮小
+- タブバー横スクロール化、フレックスレイアウト最適化
+- 1画面あたりの情報密度を向上
 
 ---
 
 ## 将来のフェーズ（スコープ外）
 
-- Phase 3: 全リボンガイドデータ実装
-- Phase 4: Vitest テスト追加、デプロイ設定
-- GAME_NAMES の共通定数化（RibbonChart と RibbonGuide で重複）
-- Pokemon vs PokemonDetail の型統一
+- 外部 JSON データソースの整備（GitHub リポジトリ）
+- デプロイ設定（GitHub Pages / Vercel）
+- E2E テスト / コンポーネントテスト
+- アクセシビリティ改善（aria 属性、キーボード操作）
+- ダークモード対応

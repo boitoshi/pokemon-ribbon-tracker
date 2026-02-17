@@ -1,17 +1,17 @@
 <template>
-  <div v-if="pokemon" class="pokemon-details bg-white p-4 rounded-lg shadow">
+  <div v-if="pokemon" class="pokemon-details bg-white p-2 md:p-4 rounded-lg shadow">
     <!-- ポケモン基本情報セクション -->
-    <div class="flex items-center mb-4">
-      <div class="mr-4">
-        <img :src="pokemon.imageUrl" :alt="pokemon.name" class="w-24 h-24 object-contain" />
+    <div class="flex items-center mb-2 md:mb-4">
+      <div class="mr-2 md:mr-4">
+        <img :src="pokemon.imageUrl" :alt="pokemon.name" class="w-16 h-16 md:w-24 md:h-24 object-contain" />
       </div>
 
       <div>
-        <h2 class="text-xl font-bold">{{ pokemon.name }}</h2>
+        <h2 class="text-lg md:text-xl font-bold">{{ pokemon.name }}</h2>
         <p class="text-gray-600">#{{ pokemon.number }}</p>
 
         <!-- タイプ表示 -->
-        <div class="flex mt-1 gap-2">
+        <div class="flex mt-1 gap-1 md:gap-2">
           <span
             v-for="type in pokemon.types"
             :key="type"
@@ -25,9 +25,9 @@
     </div>
 
     <!-- リボン取得状況 -->
-    <div class="mt-4">
-      <h3 class="font-bold text-lg mb-2">リボン取得状況</h3>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+    <div class="mt-2 md:mt-4">
+      <h3 class="font-bold text-base md:text-lg mb-1 md:mb-2">リボン取得状況</h3>
+      <div v-if="pokemon.ribbons?.length" class="grid grid-cols-2 md:grid-cols-3 gap-2">
         <div
           v-for="ribbon in pokemon.ribbons"
           :key="ribbon.id"
@@ -41,10 +41,11 @@
           <span class="text-sm">{{ ribbon.name }}</span>
         </div>
       </div>
+      <p v-else class="text-gray-500 text-sm">リボンデータはリボン王チャートで管理できます</p>
     </div>
 
     <!-- リボン獲得率 -->
-    <div class="mt-4 bg-gray-50 p-3 rounded-lg">
+    <div class="mt-2 md:mt-4 bg-gray-50 p-2 md:p-3 rounded-lg">
       <div class="flex justify-between items-center">
         <span class="font-medium">リボン獲得率</span>
         <span class="font-bold">{{ ribbonPercentage }}%</span>
@@ -55,7 +56,7 @@
     </div>
   </div>
 
-  <div v-else class="p-8 text-center bg-gray-50 rounded-lg">
+  <div v-else class="p-4 md:p-8 text-center bg-gray-50 rounded-lg">
     <p class="text-gray-500">ポケモンを選択してください😊</p>
   </div>
 </template>
@@ -73,6 +74,7 @@ const props = defineProps<{
 const ribbonPercentage = computed(() => {
   if (!props.pokemon) return 0;
 
+  if (!props.pokemon.ribbons || props.pokemon.ribbons.length === 0) return 0;
   const obtainedCount = props.pokemon.ribbons.filter((r) => r.obtained).length;
   return Math.round((obtainedCount / props.pokemon.ribbons.length) * 100);
 });

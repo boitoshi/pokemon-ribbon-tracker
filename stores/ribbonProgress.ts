@@ -34,6 +34,13 @@ export const useRibbonProgressStore = defineStore('ribbonProgress', {
       const checked = state.progress[state.selectedPokemon.id]?.length ?? 0;
       return Math.round((checked / state.ribbons.length) * 100);
     },
+
+    /** 選択中のポケモンの世代を取得 */
+    selectedPokemonGeneration(state): number | null {
+      if (!state.selectedPokemon) return null;
+      const detail = state.pokemonList.find((p) => p.id === state.selectedPokemon?.id);
+      return detail?.generation ?? null;
+    },
   },
 
   actions: {
@@ -104,6 +111,31 @@ export const useRibbonProgressStore = defineStore('ribbonProgress', {
     /** ポケモン一覧をセット */
     setPokemonList(list: PokemonDetail[]): void {
       this.pokemonList = list;
+    },
+
+    /** 全進捗データをJSON文字列としてエクスポート */
+    exportProgress(): string {
+      return JSON.stringify(this.progress);
+    },
+
+    /** JSON文字列から進捗データをインポート */
+    importProgress(json: string): void {
+      try {
+        const data = JSON.parse(json) as Record<string, string[]>;
+        // Validate structure: each value must be string[]
+        for (const [key, value] of Object.entries(data)) {
+          if (!Array.isArray(value) || !value.every((v) => typeof v === 'string')) {
+            throw new Error(`Invalid data for key: ${key}`);
+          }
+        }
+        this.progress = data;
+        // Save each pokemon's progress to localStorage
+        for (const pokemonId of Object.keys(data)) {
+          this.saveProgress(pokemonId);
+        }
+      } catch (err) {
+        throw new Error(err instanceof Error ? err.message : '進捗データの形式が不正です');
+      }
     },
   },
 });

@@ -1,23 +1,23 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="bg-white border rounded-lg p-4 shadow-sm">
-    <h3 class="text-lg font-bold mb-4">ポケモン転送ガイド</h3>
+  <div class="bg-white border rounded-lg p-2 md:p-4 shadow-sm">
+    <h3 class="text-base md:text-lg font-bold mb-2 md:mb-4">ポケモン転送ガイド</h3>
 
-    <div class="mb-6">
-      <p class="mb-2">
+    <div class="mb-3 md:mb-6">
+      <p class="mb-1 md:mb-2 text-sm md:text-base">
         リボンコレクションを続けるには、ポケモンを各世代間で転送する必要があります。
       </p>
-      <p class="text-sm text-gray-600">※一度転送したポケモンは元の世代に戻すことができません。</p>
+      <p class="text-xs md:text-sm text-gray-600">※一度転送したポケモンは元の世代に戻すことができません。</p>
     </div>
 
-    <div class="space-y-6">
+    <div class="space-y-3 md:space-y-6">
       <!-- 第3→第4世代 -->
-      <div class="border-l-4 border-green-500 pl-3">
-        <h4 class="font-medium text-green-800">第3世代 → 第4世代</h4>
-        <div class="mt-2 text-gray-700">
+      <div class="border-l-4 border-green-500 pl-2 md:pl-3">
+        <h4 class="font-medium text-sm md:text-base text-green-800">第3世代 → 第4世代</h4>
+        <div class="mt-1 md:mt-2 text-gray-700 text-sm md:text-base">
           <p><span class="font-medium">転送方法:</span> パルパークを使用</p>
-          <ol class="mt-1 pl-5 list-decimal">
+          <ol class="mt-0.5 md:mt-1 pl-3 md:pl-5 list-decimal">
             <li>
               GBAソフト（ルビー/サファイア/エメラルド/ファイアレッド/リーフグリーン）と、DSソフト（ダイヤモンド/パール/プラチナ）を準備
             </li>
@@ -30,11 +30,11 @@
       </div>
 
       <!-- 第4→第5世代 -->
-      <div class="border-l-4 border-blue-500 pl-3">
-        <h4 class="font-medium text-blue-800">第4世代 → 第5世代</h4>
-        <div class="mt-2 text-gray-700">
+      <div class="border-l-4 border-blue-500 pl-2 md:pl-3">
+        <h4 class="font-medium text-sm md:text-base text-blue-800">第4世代 → 第5世代</h4>
+        <div class="mt-1 md:mt-2 text-gray-700 text-sm md:text-base">
           <p><span class="font-medium">転送方法:</span> ポケシフターを使用</p>
-          <ol class="mt-1 pl-5 list-decimal">
+          <ol class="mt-0.5 md:mt-1 pl-3 md:pl-5 list-decimal">
             <li>2台のDSを用意</li>
             <li>
               第4世代ソフト（ダイヤモンド/パール/プラチナ/ハートゴールド/ソウルシルバー）と第5世代ソフト（ブラック/ホワイト/ブラック2/ホワイト2）を準備
@@ -47,11 +47,11 @@
       </div>
 
       <!-- 第5→第6世代以降 -->
-      <div class="border-l-4 border-red-500 pl-3">
-        <h4 class="font-medium text-red-800">第5世代 → 第6世代以降</h4>
-        <div class="mt-2 text-gray-700">
+      <div class="border-l-4 border-red-500 pl-2 md:pl-3">
+        <h4 class="font-medium text-sm md:text-base text-red-800">第5世代 → 第6世代以降</h4>
+        <div class="mt-1 md:mt-2 text-gray-700 text-sm md:text-base">
           <p><span class="font-medium">転送方法:</span> ポケモンバンク + ポケモンHOMEを使用</p>
-          <ol class="mt-1 pl-5 list-decimal">
+          <ol class="mt-0.5 md:mt-1 pl-3 md:pl-5 list-decimal">
             <li>ポケモンバンクがダウンロード済みの3DSが必要</li>
             <li>ポケモンバンクで第5世代のポケモンを預ける</li>
             <li>ポケモンバンクから第6・7世代ソフトへ転送、または</li>
@@ -65,9 +65,9 @@
       </div>
     </div>
 
-    <div class="mt-6 bg-yellow-50 p-3 rounded-lg">
-      <h4 class="font-medium text-amber-800 mb-2">転送時の注意点</h4>
-      <ul class="list-disc pl-5 text-gray-700">
+    <div class="mt-4 md:mt-6 bg-yellow-50 p-2 md:p-3 rounded-lg">
+      <h4 class="font-medium text-amber-800 text-sm md:text-base mb-1 md:mb-2">転送時の注意点</h4>
+      <ul class="list-disc pl-3 md:pl-5 text-gray-700 text-sm md:text-base">
         <li>特定の技や状態異常がある場合、転送できないことがあります</li>
         <li>持ち物は転送前に外しておくことをおすすめします</li>
         <li>ニックネームに特殊な文字が含まれる場合、転送後に変更される可能性があります</li>

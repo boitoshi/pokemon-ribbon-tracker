@@ -1,27 +1,32 @@
 <template>
   <div>
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-bold">リボン一覧</h2>
+    <div class="flex justify-between items-center mb-2 md:mb-4">
+      <h2 class="text-lg md:text-xl font-bold">リボン一覧</h2>
       <p class="text-gray-600 text-sm">{{ ribbons.length }}個のリボン</p>
     </div>
 
-    <div v-if="ribbons.length === 0" class="bg-gray-50 rounded-lg p-8 text-center">
+    <div v-if="ribbons.length === 0" class="bg-gray-50 rounded-lg p-4 md:p-8 text-center">
       <p class="text-gray-500">条件に一致するリボンがありません😢</p>
       <p class="mt-2 text-sm text-gray-400">フィルターを変更してみてください</p>
     </div>
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
       <!-- リボンカード -->
       <div
         v-for="ribbon in ribbons"
         :key="ribbon.id"
-        class="border rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-        @click="selectRibbon(ribbon)"
+        :class="[
+          'border rounded-lg overflow-hidden transition-shadow',
+          isPokemonCompatible(ribbon)
+            ? 'hover:shadow-md cursor-pointer'
+            : 'opacity-50 cursor-default',
+        ]"
+        @click="isPokemonCompatible(ribbon) && selectRibbon(ribbon)"
       >
-        <div class="flex p-3">
+        <div class="flex p-2 md:p-3">
           <!-- リボンのアイコン部分 -->
           <div
-            class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0"
+            class="w-10 h-10 md:w-12 md:h-12 bg-gray-100 rounded-full flex items-center justify-center mr-2 md:mr-3 flex-shrink-0"
           >
             <img
               v-if="ribbon.image_url"
@@ -34,7 +39,7 @@
 
           <!-- リボン情報 -->
           <div class="flex-1">
-            <h3 class="font-bold text-blue-800">{{ ribbon.name }}</h3>
+            <h3 class="font-bold text-blue-800 text-sm md:text-base">{{ ribbon.name }}</h3>
             <p class="text-sm text-gray-600 line-clamp-2">{{ ribbon.description }}</p>
 
             <!-- リボンメタデータ -->
@@ -48,6 +53,12 @@
               >
                 取得可能
               </span>
+              <span
+                v-if="!isPokemonCompatible(ribbon)"
+                class="inline-block bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded"
+              >
+                取得不可
+              </span>
             </div>
           </div>
         </div>
@@ -58,8 +69,9 @@
 
 <script setup lang="ts">
 import type { Ribbon, Pokemon } from '~/types';
+import { useRibbonProgressStore } from '~/stores/ribbonProgress';
 
-const props = defineProps<{
+defineProps<{
   ribbons: Ribbon[];
   pokemon: Pokemon | null;
 }>();
@@ -68,14 +80,20 @@ const emit = defineEmits<{
   (e: 'select-ribbon', ribbon: Ribbon): void;
 }>();
 
+const store = useRibbonProgressStore();
+
 // リボン選択ハンドラー
 const selectRibbon = (ribbon: Ribbon): void => {
   emit('select-ribbon', ribbon);
 };
 
-// 選択されたポケモンがリボンを取得可能かどうかをチェック
-const isPokemonCompatible = (_ribbon: Ribbon): boolean => {
-  if (!props.pokemon) return true;
-  return true;
+/**
+ * 選択されたポケモンがリボンを取得可能かどうかをチェック。
+ * ポケモンの出身世代以降のリボンのみ取得可能。
+ */
+const isPokemonCompatible = (ribbon: Ribbon): boolean => {
+  const gen = store.selectedPokemonGeneration;
+  if (gen === null) return true;
+  return gen <= ribbon.generation;
 };
 </script>

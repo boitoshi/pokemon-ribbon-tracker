@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h2 class="text-xl font-bold mb-4">リボン王チャート</h2>
+    <h2 class="text-lg md:text-xl font-bold mb-2 md:mb-4">リボン王チャート</h2>
 
-    <div v-if="!pokemon" class="bg-yellow-100 border-yellow-400 border p-4 rounded">
+    <div v-if="!pokemon" class="bg-yellow-100 border-yellow-400 border p-2 md:p-4 rounded text-sm md:text-base">
       ポケモンを選択すると、獲得可能なすべてのリボンのチェックリストが表示されます。
     </div>
 
     <div v-else>
-      <div class="mb-4 p-4 bg-green-50 rounded flex justify-between items-center">
+      <div class="mb-2 md:mb-4 p-2 md:p-4 bg-green-50 rounded flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
         <div>
           <p>
             <strong>{{ pokemon.name }}</strong> のリボン王チャート
@@ -24,12 +24,35 @@
         </button>
       </div>
 
+      <!-- エクスポート/インポート -->
+      <div class="mb-2 md:mb-4 flex flex-wrap gap-2">
+        <button
+          class="px-2 md:px-3 py-1 bg-blue-100 text-blue-700 rounded text-xs md:text-sm hover:bg-blue-200"
+          @click="exportProgress"
+        >
+          進捗をエクスポート
+        </button>
+        <button
+          class="px-2 md:px-3 py-1 bg-green-100 text-green-700 rounded text-xs md:text-sm hover:bg-green-200"
+          @click="triggerImport"
+        >
+          進捗をインポート
+        </button>
+        <input
+          ref="importFile"
+          type="file"
+          accept=".json"
+          class="hidden"
+          @change="handleImportFile"
+        />
+      </div>
+
       <!-- 世代ごとのリボンチェックリスト -->
-      <div class="space-y-6">
+      <div class="space-y-3 md:space-y-6">
         <div v-for="gen in generations" :key="gen" class="border rounded-lg overflow-hidden">
-          <div class="bg-gray-100 p-3 font-bold">第{{ gen }}世代リボン</div>
-          <div class="p-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-gray-100 p-2 md:p-3 text-sm md:text-base font-bold">第{{ gen }}世代リボン</div>
+          <div class="p-2 md:p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
               <div
                 v-for="ribbon in getRibbonsByGeneration(gen)"
                 :key="ribbon.id"
@@ -53,9 +76,9 @@
       </div>
 
       <!-- 進捗まとめ -->
-      <div class="mt-6 bg-blue-50 p-4 rounded">
-        <h3 class="font-bold mb-2">進捗サマリー</h3>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div class="mt-4 md:mt-6 bg-blue-50 p-2 md:p-4 rounded">
+        <h3 class="font-bold text-sm md:text-base mb-1 md:mb-2">進捗サマリー</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
           <div
             v-for="gen in generations"
             :key="`summary-${gen}`"
@@ -74,9 +97,9 @@
       <!-- 認定証セクション -->
       <div
         v-if="store.totalCompletion === 100"
-        class="mt-6 border-2 border-yellow-400 p-4 rounded-lg bg-yellow-50"
+        class="mt-4 md:mt-6 border-2 border-yellow-400 p-3 md:p-4 rounded-lg bg-yellow-50"
       >
-        <h3 class="text-center text-xl font-bold text-yellow-800 mb-3">🏆 リボン制覇達成！ 🏆</h3>
+        <h3 class="text-center text-lg md:text-xl font-bold text-yellow-800 mb-2 md:mb-3">🏆 リボン制覇達成！ 🏆</h3>
         <p class="text-center mb-4">
           おめでとうございます！{{ pokemon.name }}はすべてのリボンを集めました！
         </p>
@@ -92,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRibbonProgressStore } from '~/stores/ribbonProgress';
 import type { Pokemon, Ribbon } from '~/types';
 
@@ -119,7 +142,125 @@ const getCompletionByGeneration = (generation: number): number => {
   return Math.round((checked / genRibbons.length) * 100);
 };
 
-const generateCertificate = () => {
-  alert(`${props.pokemon?.name}のリボン王認定証が生成されました！`);
+/** Canvas API でリボン王認定証を生成し、PNGとしてダウンロード */
+const generateCertificate = (): void => {
+  if (!props.pokemon) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 500;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  // 背景
+  const gradient = ctx.createLinearGradient(0, 0, 800, 500);
+  gradient.addColorStop(0, '#fef9c3');
+  gradient.addColorStop(1, '#fde68a');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 800, 500);
+
+  // 枠線
+  ctx.strokeStyle = '#d97706';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(20, 20, 760, 460);
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(30, 30, 740, 440);
+
+  // タイトル
+  ctx.fillStyle = '#92400e';
+  ctx.font = 'bold 36px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('リボン王 認定証', 400, 90);
+
+  // 装飾ライン
+  ctx.strokeStyle = '#d97706';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(200, 110);
+  ctx.lineTo(600, 110);
+  ctx.stroke();
+
+  // ポケモン名
+  ctx.fillStyle = '#1e3a5f';
+  ctx.font = 'bold 48px sans-serif';
+  ctx.fillText(props.pokemon.name, 400, 190);
+
+  // 認定テキスト
+  ctx.fillStyle = '#374151';
+  ctx.font = '20px sans-serif';
+  ctx.fillText('上記のポケモンは、すべてのリボンを獲得し', 400, 250);
+  ctx.fillText('リボン王の称号を得たことをここに認定します。', 400, 280);
+
+  // 統計情報
+  ctx.font = '18px sans-serif';
+  ctx.fillStyle = '#6b7280';
+  ctx.fillText(`取得リボン数: ${store.currentCheckedRibbons.length} / ${props.ribbons.length}`, 400, 330);
+  ctx.fillText(`達成率: ${store.totalCompletion}%`, 400, 360);
+
+  // 日付
+  const today = new Date().toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  ctx.font = '16px sans-serif';
+  ctx.fillStyle = '#9ca3af';
+  ctx.fillText(`認定日: ${today}`, 400, 420);
+
+  // フッター
+  ctx.font = '14px sans-serif';
+  ctx.fillStyle = '#d1d5db';
+  ctx.fillText('ポケモンリボン制覇支援ツール', 400, 460);
+
+  // ダウンロード
+  const link = document.createElement('a');
+  link.download = `ribbon-master-${props.pokemon.id}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+};
+
+/** 進捗データをJSONファイルとしてダウンロード */
+const exportProgress = (): void => {
+  const json = store.exportProgress();
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ribbon-progress-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+const importFile = ref<HTMLInputElement | null>(null);
+
+/** ファイル選択ダイアログを開く */
+const triggerImport = (): void => {
+  importFile.value?.click();
+};
+
+/** 選択されたJSONファイルから進捗をインポート */
+const handleImportFile = (event: Event): void => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const json = e.target?.result as string;
+      store.importProgress(json);
+      // Reload current pokemon's progress if selected
+      if (props.pokemon) {
+        store.loadProgress(props.pokemon.id);
+      }
+      alert('進捗データをインポートしました');
+    } catch (err) {
+      alert(`インポートに失敗しました: ${err instanceof Error ? err.message : '不明なエラー'}`);
+    }
+  };
+  reader.readAsText(file);
+  // Reset file input so same file can be selected again
+  target.value = '';
 };
 </script>

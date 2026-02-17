@@ -1,12 +1,12 @@
 <template>
-  <div class="pokemon-search p-4 bg-white rounded-lg shadow">
-    <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2"> ポケモンを検索してね～💖 </label>
+  <div class="pokemon-search p-2 md:p-4 bg-white rounded-lg shadow">
+    <div class="mb-2 md:mb-4">
+      <label class="block text-gray-700 text-xs md:text-sm font-bold mb-1 md:mb-2"> ポケモンを検索してね～💖 </label>
       <div class="relative">
         <input
           v-model="searchQuery"
           type="text"
-          class="w-full px-4 py-2 border rounded-lg"
+          class="w-full px-3 py-1.5 md:px-4 md:py-2 border rounded-lg text-sm md:text-base"
           placeholder="ピカチュウ、ヒトカゲなど..."
         />
         <div v-if="isLoading" class="absolute right-3 top-2.5">
@@ -16,7 +16,7 @@
     </div>
 
     <!-- 検索結果表示 -->
-    <div v-if="results.length > 0" class="mt-2 max-h-80 overflow-y-auto">
+    <div v-if="results.length > 0" class="mt-2 max-h-60 md:max-h-80 overflow-y-auto">
       <div
         v-for="pokemon in results"
         :key="pokemon.id"

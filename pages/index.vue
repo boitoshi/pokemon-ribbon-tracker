@@ -1,9 +1,9 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6 text-center">ポケモンリボン制覇支援ツール</h1>
+  <div class="container mx-auto px-2 md:px-4 py-3 md:py-8">
+    <h1 class="text-xl md:text-3xl font-bold mb-3 md:mb-6 text-center">ポケモンリボン制覇支援ツール</h1>
 
     <!-- ポケモン検索セクション -->
-    <div class="mb-8">
+    <div class="mb-4 md:mb-8">
       <div v-if="isLoading" class="py-16 text-center">
         <div class="inline-block animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
         <p class="mt-2 text-gray-500">リボンデータを読み込み中...</p>
@@ -26,17 +26,17 @@
     </div>
 
     <!-- 選択されたポケモン情報 -->
-    <div v-if="store.selectedPokemon" class="mb-8">
+    <div v-if="store.selectedPokemon" class="mb-4 md:mb-8">
       <PokemonDetails :pokemon="store.selectedPokemon" />
     </div>
 
     <!-- メインタブ -->
-    <div class="mb-8">
-      <div class="flex border-b flex-wrap">
+    <div class="mb-4 md:mb-8">
+      <div class="flex border-b overflow-x-auto">
         <button
           v-for="tab in tabs"
           :key="tab.id"
-          :class="['px-4 py-2 mr-2', activeTab === tab.id ? 'bg-blue-500 text-white rounded-t' : 'text-gray-700']"
+          :class="['px-3 py-1.5 mr-1 text-sm md:px-4 md:py-2 md:mr-2 md:text-base whitespace-nowrap', activeTab === tab.id ? 'bg-blue-500 text-white rounded-t' : 'text-gray-700']"
           @click="activeTab = tab.id"
         >
           {{ tab.label }}
@@ -44,7 +44,7 @@
       </div>
 
       <!-- タブコンテンツ -->
-      <div class="mt-4">
+      <div class="mt-2 md:mt-4">
         <div v-if="activeTab === 'ribbons'">
           <RibbonFilter @filter-change="applyFilters" />
           <RibbonsList
@@ -67,10 +67,10 @@
           :ribbons="store.ribbons"
         />
 
-        <div v-if="activeTab === 'guide'" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div v-if="activeTab === 'guide'" class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
           <div class="md:col-span-1">
             <h3 class="text-lg font-bold mb-3">リボンリスト</h3>
-            <div class="border rounded overflow-y-auto max-h-96">
+            <div class="border rounded overflow-y-auto max-h-60 md:max-h-96">
               <div
                 v-for="ribbon in store.ribbons"
                 :key="ribbon.id"
@@ -134,6 +134,14 @@ const applyFilters = (newFilters: typeof filters.value) => {
   filters.value = { ...newFilters };
 };
 
+const CATEGORY_MAP: Record<string, string> = {
+  champion: 'チャンピオン',
+  contest: 'コンテスト',
+  battle: 'バトル施設',
+  memory: '思い出',
+  event: 'イベント',
+};
+
 const filteredRibbons = computed(() => {
   let result = store.ribbons;
 
@@ -142,15 +150,10 @@ const filteredRibbons = computed(() => {
   }
 
   if (filters.value.type) {
-    result = result.filter((r) => {
-      const t = filters.value.type;
-      if (t === 'champion') return r.id.includes('champion');
-      if (t === 'contest') return r.id.includes('contest');
-      if (t === 'battle') return r.id.includes('tower');
-      if (t === 'memory') return r.id.includes('memory');
-      if (t === 'event') return r.id.includes('event');
-      return false;
-    });
+    const categoryName = CATEGORY_MAP[filters.value.type];
+    if (categoryName) {
+      result = result.filter((r) => r.category === categoryName);
+    }
   }
 
   if (filters.value.search) {

@@ -1,15 +1,15 @@
 <template>
   <div class="bg-white border rounded-lg p-4 shadow-sm">
-    <h3 class="text-lg font-bold mb-3">お役立ち情報</h3>
+    <h3 class="text-base md:text-lg font-bold mb-2 md:mb-3">お役立ち情報</h3>
 
-    <div class="space-y-4">
+    <div class="space-y-2 md:space-y-4">
       <div
         v-for="(resource, index) in resources"
         :key="index"
         class="border-b pb-3 last:border-b-0 last:pb-0"
       >
-        <h4 class="font-medium text-blue-800">{{ resource.title }}</h4>
-        <p class="mt-1 text-gray-700">{{ resource.description }}</p>
+        <h4 class="font-medium text-blue-800 text-sm md:text-base">{{ resource.title }}</h4>
+        <p class="mt-0.5 md:mt-1 text-gray-700 text-sm md:text-base">{{ resource.description }}</p>
         <div class="mt-2">
           <a
             v-if="resource.link"
@@ -24,9 +24,9 @@
       </div>
     </div>
 
-    <div class="mt-6">
-      <h4 class="font-medium mb-2">リボンコレクターコミュニティ</h4>
-      <div class="grid grid-cols-2 gap-3">
+    <div class="mt-4 md:mt-6">
+      <h4 class="font-medium text-sm md:text-base mb-1 md:mb-2">リボンコレクターコミュニティ</h4>
+      <div class="grid grid-cols-2 gap-2 md:gap-3">
         <a
           href="https://www.reddit.com/r/pokemonribbons/"
           target="_blank"
