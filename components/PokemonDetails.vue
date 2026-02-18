@@ -24,18 +24,35 @@
       </div>
     </div>
 
+    <!-- マイポケモン追加情報 -->
+    <div v-if="store.activeMyPokemon" class="mt-2 md:mt-3 p-2 md:p-3 bg-blue-50 rounded-lg">
+      <div class="flex flex-wrap gap-2 text-sm">
+        <span v-if="store.activeMyPokemon.nickname" class="inline-flex items-center gap-1">
+          <span class="text-gray-500">NN:</span>
+          <span class="font-medium">{{ store.activeMyPokemon.nickname }}</span>
+        </span>
+        <span v-if="store.activeMyPokemon.originGame" class="inline-flex items-center gap-1">
+          <span class="text-gray-500">出身:</span>
+          <span class="font-medium">{{ getGameName(store.activeMyPokemon.originGame) }}</span>
+        </span>
+      </div>
+      <p v-if="store.activeMyPokemon.memo" class="mt-1 text-xs text-gray-600">
+        {{ store.activeMyPokemon.memo }}
+      </p>
+    </div>
+
     <!-- リボン取得状況 -->
     <div class="mt-2 md:mt-4">
       <h3 class="font-bold text-base md:text-lg mb-1 md:mb-2">リボン取得状況</h3>
-      <div v-if="pokemon.ribbons?.length" class="grid grid-cols-2 md:grid-cols-3 gap-2">
+      <div v-if="store.ribbons.length" class="grid grid-cols-2 md:grid-cols-3 gap-2">
         <div
-          v-for="ribbon in pokemon.ribbons"
+          v-for="ribbon in store.ribbons"
           :key="ribbon.id"
           class="p-2 border rounded flex items-center"
-          :class="{ 'bg-green-50 border-green-200': ribbon.obtained }"
+          :class="{ 'bg-green-50 border-green-200': store.currentCheckedRibbons.includes(ribbon.id) }"
         >
           <div class="w-6 h-6 mr-2 flex-shrink-0">
-            <span v-if="ribbon.obtained" class="text-green-500">✓</span>
+            <span v-if="store.currentCheckedRibbons.includes(ribbon.id)" class="text-green-500">✓</span>
             <span v-else class="text-gray-300">○</span>
           </div>
           <span class="text-sm">{{ ribbon.name }}</span>
@@ -48,7 +65,9 @@
     <div class="mt-2 md:mt-4 bg-gray-50 p-2 md:p-3 rounded-lg">
       <div class="flex justify-between items-center">
         <span class="font-medium">リボン獲得率</span>
-        <span class="font-bold">{{ ribbonPercentage }}%</span>
+        <span class="font-bold"
+          >{{ store.currentCheckedRibbons.length }} / {{ store.ribbons.length }} ({{ ribbonPercentage }}%)</span
+        >
       </div>
       <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
         <div class="bg-blue-500 h-2 rounded-full" :style="`width: ${ribbonPercentage}%`"></div>
@@ -64,19 +83,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Pokemon } from '~/types';
+import { useRibbonProgressStore } from '~/stores/ribbonProgress';
+import { getGameName } from '~/utils/gameNames';
 
 // プロパティ定義
 const props = defineProps<{
   pokemon: Pokemon | null;
 }>();
 
-// リボン獲得率の計算
+const store = useRibbonProgressStore();
+
+// リボン獲得率の計算（store のリアルタイムデータを使用）
 const ribbonPercentage = computed(() => {
   if (!props.pokemon) return 0;
-
-  if (!props.pokemon.ribbons || props.pokemon.ribbons.length === 0) return 0;
-  const obtainedCount = props.pokemon.ribbons.filter((r) => r.obtained).length;
-  return Math.round((obtainedCount / props.pokemon.ribbons.length) * 100);
+  if (store.ribbons.length === 0) return 0;
+  return Math.round((store.currentCheckedRibbons.length / store.ribbons.length) * 100);
 });
 
 // ポケモンタイプに応じたCSSクラスを返す

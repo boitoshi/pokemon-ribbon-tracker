@@ -30,6 +30,9 @@
       <PokemonDetails :pokemon="store.selectedPokemon" />
     </div>
 
+    <!-- マイポケモンパネル -->
+    <MyPokemonPanel />
+
     <!-- メインタブ -->
     <div class="mb-4 md:mb-8">
       <div class="flex border-b overflow-x-auto">
@@ -45,48 +48,13 @@
 
       <!-- タブコンテンツ -->
       <div class="mt-2 md:mt-4">
-        <div v-if="activeTab === 'ribbons'">
-          <RibbonFilter @filter-change="applyFilters" />
-          <RibbonsList
-            :pokemon="store.selectedPokemon"
-            :ribbons="filteredRibbons"
-            @select-ribbon="selectRibbon"
-          />
-        </div>
-
-        <RibbonChart
-          v-if="activeTab === 'chart'"
-          :pokemon="store.selectedPokemon"
-          :ribbons="store.ribbons"
-          :games="store.games"
-        />
+        <RibbonManager v-if="activeTab === 'ribbon-manager'" />
 
         <RibbonMasterChart
-          v-if="activeTab === 'master'"
+          v-if="activeTab === 'progress'"
           :pokemon="store.selectedPokemon"
           :ribbons="store.ribbons"
         />
-
-        <div v-if="activeTab === 'guide'" class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
-          <div class="md:col-span-1">
-            <h3 class="text-lg font-bold mb-3">リボンリスト</h3>
-            <div class="border rounded overflow-y-auto max-h-60 md:max-h-96">
-              <div
-                v-for="ribbon in store.ribbons"
-                :key="ribbon.id"
-                :class="['p-2 cursor-pointer hover:bg-gray-100 border-b last:border-b-0',
-                         selectedRibbon?.id === ribbon.id ? 'bg-blue-50' : '']"
-                @click="selectRibbon(ribbon)"
-              >
-                <div class="font-medium">{{ ribbon.name }}</div>
-                <div class="text-xs text-gray-600">第{{ ribbon.generation }}世代</div>
-              </div>
-            </div>
-          </div>
-          <div class="md:col-span-2">
-            <RibbonGuide :selected-ribbon="selectedRibbon" />
-          </div>
-        </div>
 
         <TransferGuide v-if="activeTab === 'transfer'" />
       </div>
@@ -98,73 +66,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRibbonProgressStore } from '~/stores/ribbonProgress';
 import { usePokemonData } from '~/utils/dataFetcher';
-import type { Ribbon } from '~/types';
 
 const store = useRibbonProgressStore();
 const { isLoading, error, loadAll } = usePokemonData();
 
-const activeTab = ref('ribbons');
-const selectedRibbon = ref<Ribbon | null>(null);
-const filters = ref({
-  generation: null as number | null,
-  type: null as string | null,
-  status: null as string | null,
-  search: '',
-});
+const activeTab = ref('ribbon-manager');
 
 const tabs = [
-  { id: 'ribbons', label: 'リボン一覧' },
-  { id: 'chart', label: 'リボン取得チャート' },
-  { id: 'master', label: 'リボン王チャート' },
-  { id: 'guide', label: '獲得ガイド' },
-  { id: 'transfer', label: '転送方法' },
+  { id: 'ribbon-manager', label: 'リボン管理' },
+  { id: 'progress', label: '進捗ダッシュボード' },
+  { id: 'transfer', label: '転送ガイド' },
 ] as const;
-
-const selectRibbon = (ribbon: Ribbon) => {
-  selectedRibbon.value = ribbon;
-  if (activeTab.value !== 'guide') {
-    activeTab.value = 'guide';
-  }
-};
-
-const applyFilters = (newFilters: typeof filters.value) => {
-  filters.value = { ...newFilters };
-};
-
-const CATEGORY_MAP: Record<string, string> = {
-  champion: 'チャンピオン',
-  contest: 'コンテスト',
-  battle: 'バトル施設',
-  memory: '思い出',
-  event: 'イベント',
-};
-
-const filteredRibbons = computed(() => {
-  let result = store.ribbons;
-
-  if (filters.value.generation) {
-    result = result.filter((r) => r.generation === filters.value.generation);
-  }
-
-  if (filters.value.type) {
-    const categoryName = CATEGORY_MAP[filters.value.type];
-    if (categoryName) {
-      result = result.filter((r) => r.category === categoryName);
-    }
-  }
-
-  if (filters.value.search) {
-    const q = filters.value.search.toLowerCase();
-    result = result.filter(
-      (r) => r.name.toLowerCase().includes(q) || r.description.toLowerCase().includes(q)
-    );
-  }
-
-  return result;
-});
 
 const loadData = async () => {
   try {
@@ -172,6 +87,7 @@ const loadData = async () => {
     store.setPokemonList(pokemonData);
     store.setRibbons(ribbonData);
     store.setGames(gameData);
+    store.loadMyPokemonList();  // ← 追加
     console.log(`✅ ${pokemonData.length}匹 / ${ribbonData.length}リボン / ${gameData.length}ゲーム`);
   } catch {
     // error は usePokemonData 内で管理される

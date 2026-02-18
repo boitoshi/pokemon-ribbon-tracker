@@ -1,13 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { Ribbon } from '~/types';
-
-const CATEGORY_MAP: Record<string, string> = {
-  champion: 'チャンピオン',
-  contest: 'コンテスト',
-  battle: 'バトル施設',
-  memory: '思い出',
-  event: 'イベント',
-};
+import { CATEGORY_MAP } from '../../utils/ribbonFilter';
 
 /**
  * フィルタータイプIDを日本語カテゴリ名に変換する

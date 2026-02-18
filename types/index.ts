@@ -53,6 +53,16 @@ export interface Game {
   platform: string;
 }
 
+/** マイポケモン（個体ごとの登録情報） */
+export interface MyPokemon {
+  id: string;
+  pokemonId: string;
+  nickname: string;
+  originGame: string;
+  memo: string;
+  createdAt: string;
+}
+
 /** リボンフィルタの状態 */
 export interface FilterState {
   generation: number | null;

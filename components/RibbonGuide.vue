@@ -56,9 +56,6 @@
         </ul>
       </div>
 
-      <div class="mt-2 md:mt-4 text-xs md:text-sm text-gray-500">
-        <p>最終更新: {{ new Date().toLocaleDateString('ja-JP') }}</p>
-      </div>
     </div>
   </div>
 </template>

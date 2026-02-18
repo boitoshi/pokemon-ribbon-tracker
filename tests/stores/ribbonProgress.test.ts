@@ -318,4 +318,217 @@ describe('useRibbonProgressStore', () => {
       expect(store.totalCompletion).toBe(100);
     });
   });
+
+  describe('マイポケモン管理', () => {
+    beforeEach(() => {
+      vi.stubGlobal('crypto', { randomUUID: () => 'test-uuid' });
+    });
+
+    it('addMyPokemon で新規マイポケモンを登録できる', () => {
+      const store = useRibbonProgressStore();
+      const result = store.addMyPokemon({
+        pokemonId: 'pikachu',
+        nickname: 'ピカ',
+        originGame: 'red',
+        memo: 'テスト',
+      });
+
+      expect(store.myPokemonList).toHaveLength(1);
+      expect(result.id).toBe('test-uuid');
+      expect(result.createdAt).toBeTruthy();
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'my_pokemon_list',
+        JSON.stringify(store.myPokemonList)
+      );
+    });
+
+    it('updateMyPokemon でマイポケモンを編集できる', () => {
+      const store = useRibbonProgressStore();
+      const added = store.addMyPokemon({
+        pokemonId: 'pikachu',
+        nickname: 'ピカ',
+        originGame: 'red',
+        memo: 'テスト',
+      });
+
+      store.updateMyPokemon(added.id, { nickname: '新しい名前' });
+
+      expect(store.myPokemonList[0].nickname).toBe('新しい名前');
+      expect(store.myPokemonList[0].memo).toBe('テスト');
+      expect(store.myPokemonList[0].originGame).toBe('red');
+    });
+
+    it('removeMyPokemon でマイポケモンを削除できる', () => {
+      const store = useRibbonProgressStore();
+      const added = store.addMyPokemon({
+        pokemonId: 'pikachu',
+        nickname: 'ピカ',
+        originGame: 'red',
+        memo: 'テスト',
+      });
+      store.toggleRibbon(added.id, 'champion-hoenn');
+
+      store.removeMyPokemon(added.id);
+
+      expect(store.myPokemonList).toHaveLength(0);
+      expect(store.progress[added.id]).toBeUndefined();
+    });
+
+    it('removeMyPokemon でアクティブなマイポケモンを削除するとリセットされる', () => {
+      const store = useRibbonProgressStore();
+      store.setPokemonList([testPokemonDetail]);
+      const added = store.addMyPokemon({
+        pokemonId: 'pikachu',
+        nickname: 'ピカ',
+        originGame: 'red',
+        memo: 'テスト',
+      });
+
+      store.switchMyPokemon(added.id);
+      expect(store.activeMyPokemonId).toBe(added.id);
+
+      store.removeMyPokemon(added.id);
+      expect(store.activeMyPokemonId).toBeNull();
+    });
+
+    it('switchMyPokemon でアクティブポケモンを切り替えられる', () => {
+      const store = useRibbonProgressStore();
+      store.setPokemonList([testPokemonDetail]);
+      const added = store.addMyPokemon({
+        pokemonId: 'pikachu',
+        nickname: 'ピカ',
+        originGame: 'red',
+        memo: 'テスト',
+      });
+
+      store.switchMyPokemon(added.id);
+
+      expect(store.activeMyPokemonId).toBe(added.id);
+      expect(store.selectedPokemon).not.toBeNull();
+      expect(store.selectedPokemon?.id).toBe('pikachu');
+    });
+
+    it('activeMyPokemonId がある場合 currentCheckedRibbons はマイポケモンの進捗を返す', () => {
+      const store = useRibbonProgressStore();
+      store.setPokemonList([testPokemonDetail]);
+      const added = store.addMyPokemon({
+        pokemonId: 'pikachu',
+        nickname: 'ピカ',
+        originGame: 'red',
+        memo: 'テスト',
+      });
+
+      store.switchMyPokemon(added.id);
+      store.toggleRibbon('dummy', 'ribbon1');
+
+      expect(store.currentCheckedRibbons).toContain('ribbon1');
+      expect(store.progress[added.id]).toContain('ribbon1');
+    });
+
+    it('selectPokemon すると activeMyPokemonId がリセットされる', () => {
+      const store = useRibbonProgressStore();
+      store.setPokemonList([testPokemonDetail]);
+      const added = store.addMyPokemon({
+        pokemonId: 'pikachu',
+        nickname: 'ピカ',
+        originGame: 'red',
+        memo: 'テスト',
+      });
+
+      store.switchMyPokemon(added.id);
+      expect(store.activeMyPokemonId).toBe(added.id);
+
+      store.selectPokemon(testPokemon);
+      expect(store.activeMyPokemonId).toBeNull();
+    });
+
+    it('loadMyPokemonList で localStorage から読み込める', () => {
+      const store = useRibbonProgressStore();
+      const savedList: MyPokemon[] = [
+        {
+          id: 'saved-uuid',
+          pokemonId: 'pikachu',
+          nickname: '保存済みピカチュウ',
+          originGame: 'red',
+          memo: '保存テスト',
+          createdAt: '2026-01-01T00:00:00.000Z',
+        },
+      ];
+      localStorageMock.setItem('my_pokemon_list', JSON.stringify(savedList));
+
+      store.loadMyPokemonList();
+
+      expect(store.myPokemonList).toHaveLength(1);
+      expect(store.myPokemonList[0].nickname).toBe('保存済みピカチュウ');
+      expect(store.myPokemonList[0].id).toBe('saved-uuid');
+    });
+  });
+
+  describe('エクスポート/インポート（マイポケモン対応）', () => {
+    beforeEach(() => {
+      vi.stubGlobal('crypto', { randomUUID: () => 'test-uuid' });
+    });
+
+    it('exportProgress がマイポケモンリストを含む', () => {
+      const store = useRibbonProgressStore();
+      store.addMyPokemon({
+        pokemonId: 'pikachu',
+        nickname: 'ピカ',
+        originGame: 'red',
+        memo: 'テスト',
+      });
+
+      const exported = JSON.parse(store.exportProgress());
+
+      expect(exported).toHaveProperty('progress');
+      expect(exported).toHaveProperty('myPokemonList');
+      expect(exported.myPokemonList).toHaveLength(1);
+      expect(exported.myPokemonList[0].nickname).toBe('ピカ');
+    });
+
+    it('importProgress で新フォーマット（progress + myPokemonList）を読み込める', () => {
+      const store = useRibbonProgressStore();
+      const newFormat = {
+        progress: { pikachu: ['champion-hoenn', 'effort'] },
+        myPokemonList: [
+          {
+            id: 'imported-uuid',
+            pokemonId: 'pikachu',
+            nickname: 'インポートピカ',
+            originGame: 'red',
+            memo: 'インポートテスト',
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
+        ],
+      };
+
+      store.importProgress(JSON.stringify(newFormat));
+
+      expect(store.progress['pikachu']).toEqual(['champion-hoenn', 'effort']);
+      expect(store.myPokemonList).toHaveLength(1);
+      expect(store.myPokemonList[0].nickname).toBe('インポートピカ');
+    });
+
+    it('importProgress で旧フォーマット（Record<string, string[]>）も読み込める', () => {
+      const store = useRibbonProgressStore();
+      store.addMyPokemon({
+        pokemonId: 'eevee',
+        nickname: 'イーブイ',
+        originGame: 'red',
+        memo: 'テスト',
+      });
+      const beforeMyPokemonList = [...store.myPokemonList];
+
+      const oldFormat: Record<string, string[]> = {
+        pikachu: ['champion-hoenn'],
+        eevee: ['effort'],
+      };
+
+      store.importProgress(JSON.stringify(oldFormat));
+
+      expect(store.progress['pikachu']).toEqual(['champion-hoenn']);
+      expect(store.progress['eevee']).toEqual(['effort']);
+      expect(store.myPokemonList).toEqual(beforeMyPokemonList);
+    });
+  });
 });

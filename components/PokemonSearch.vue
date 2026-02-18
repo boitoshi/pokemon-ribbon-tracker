@@ -9,9 +9,6 @@
           class="w-full px-3 py-1.5 md:px-4 md:py-2 border rounded-lg text-sm md:text-base"
           placeholder="ピカチュウ、ヒトカゲなど..."
         />
-        <div v-if="isLoading" class="absolute right-3 top-2.5">
-          <span class="animate-spin">🔄</span>
-        </div>
       </div>
     </div>
 
@@ -39,7 +36,7 @@
       </div>
     </div>
 
-    <div v-else-if="searchQuery && !isLoading" class="text-center py-4">
+    <div v-else-if="searchQuery" class="text-center py-4">
       <p class="text-gray-500">ポケモンが見つからないよ～😢</p>
       <p class="text-sm text-gray-400">別の名前で検索してみてね！</p>
     </div>
@@ -68,8 +65,6 @@ const results = computed<Pokemon[]>(() => {
   if (!query) return [];
   return props.allPokemon.filter((p) => p.name.includes(query)).map(toPokemon);
 });
-
-const isLoading = computed(() => false);
 
 /** ポケモン選択: 親に emit して検索欄をクリア */
 const selectPokemon = (pokemon: Pokemon): void => {
