@@ -27,7 +27,7 @@
         <!-- カードヘッダー（クリックでアコーディオン開閉） -->
         <div
           class="flex items-center p-2 md:p-3 cursor-pointer hover:bg-gray-50"
-          :class="{ 'opacity-50': !isPokemonCompatible(ribbon) }"
+          :class="{ 'opacity-50': !getRibbonEligibility(ribbon).eligible }"
           @click="toggleExpanded(ribbon.id)"
         >
           <!-- チェックボックス -->
@@ -61,16 +61,23 @@
                 第{{ ribbon.generation }}世代
               </span>
               <span
-                v-if="isPokemonCompatible(ribbon)"
+                v-if="getRibbonEligibility(ribbon).eligible"
                 class="inline-block bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded"
               >
                 取得可能
               </span>
               <span
                 v-else
-                class="inline-block bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded"
+                class="inline-block bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded"
               >
-                取得不可
+                {{ getRibbonEligibility(ribbon).reason || '取得不可' }}
+              </span>
+              <!-- Level warning (eligible but with reason) -->
+              <span
+                v-if="getRibbonEligibility(ribbon).eligible && getRibbonEligibility(ribbon).reason"
+                class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded"
+              >
+                ⚠ {{ getRibbonEligibility(ribbon).reason }}
               </span>
             </div>
           </div>
@@ -121,7 +128,8 @@ import { useRibbonProgressStore } from '~/stores/ribbonProgress';
 import { CATEGORY_MAP } from '~/utils/ribbonFilter';
 import { getRibbonGuide, getRibbonTips } from '~/utils/ribbonGuideData';
 import { getGameName } from '~/utils/gameNames';
-import type { FilterState } from '~/types';
+import { canPokemonGetRibbon } from '~/utils/ribbonEligibility';
+import type { FilterState, Ribbon } from '~/types';
 
 const store = useRibbonProgressStore();
 
@@ -175,11 +183,12 @@ const filteredRibbons = computed(() => {
   return result;
 });
 
-/** 選択中のポケモンが指定リボンを取得可能かどうかを返す */
-const isPokemonCompatible = (ribbon: { generation: number }): boolean => {
-  const gen = store.selectedPokemonGeneration;
-  if (gen === null) return true;
-  return gen <= ribbon.generation;
+/** 選択中のポケモンが指定リボンを取得可能かどうかを判定する */
+const getRibbonEligibility = (ribbon: Ribbon): { eligible: boolean; reason?: string } => {
+  if (!store.selectedPokemon) return { eligible: true };
+  const detail = store.pokemonList.find((p) => p.id === store.selectedPokemon?.id);
+  if (!detail) return { eligible: true };
+  return canPokemonGetRibbon(detail, ribbon, store.activeMyPokemon ?? undefined);
 };
 
 /** ゲームIDの配列を日本語名の文字列にフォーマットする */

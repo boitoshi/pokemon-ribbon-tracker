@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { GAME_NAMES, getGameName } from '~/utils/gameNames';
 
 describe('GAME_NAMES', () => {
-  it('21エントリが定義されていること', () => {
-    expect(Object.keys(GAME_NAMES)).toHaveLength(21);
+  it('25エントリが定義されていること', () => {
+    expect(Object.keys(GAME_NAMES)).toHaveLength(25);
   });
 
   it('lets_go が含まれること', () => {

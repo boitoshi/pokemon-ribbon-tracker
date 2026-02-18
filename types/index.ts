@@ -31,6 +31,13 @@ export interface PokemonDetail {
   abilities: string[];
 }
 
+/** リボンの取得条件 */
+export interface RibbonEligibility {
+  type: 'all' | 'shadow_only' | 'level_max';
+  maxLevel?: number;
+  shadowGames?: string[];
+}
+
 /** リボンの定義データ */
 export interface Ribbon {
   id: string;
@@ -41,6 +48,7 @@ export interface Ribbon {
   category: string;
   requirements?: string;
   image_url?: string;
+  eligibility?: RibbonEligibility;
 }
 
 /** ゲームタイトルの定義データ */
