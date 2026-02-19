@@ -64,6 +64,14 @@
               削除
             </button>
           </div>
+          <!-- 削除確認UI -->
+          <div v-if="removingId === mp.id" class="mt-1 p-1.5 bg-red-50 rounded text-xs border border-red-200">
+            <p class="text-red-700 mb-1">本当に削除しますか？</p>
+            <div class="flex gap-1">
+              <button class="px-2 py-0.5 bg-red-500 text-white rounded hover:bg-red-600" @click.stop="executeRemove">削除</button>
+              <button class="px-2 py-0.5 bg-gray-200 rounded hover:bg-gray-300" @click.stop="cancelRemove">キャンセル</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -131,7 +139,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useRibbonProgressStore } from '~/stores/ribbonProgress';
 import { getGameName } from '~/utils/gameNames';
 import type { MyPokemon } from '~/types';
@@ -142,6 +150,7 @@ const store = useRibbonProgressStore();
 const isOpen = ref(true);
 const showForm = ref(false);
 const editingId = ref<string | null>(null);
+const removingId = ref<string | null>(null);
 
 const form = reactive({
   nickname: '',
@@ -222,10 +231,33 @@ const cancelForm = (): void => {
   editingId.value = null;
 };
 
-/** マイポケモンを削除（確認付き） */
+/** 削除確認状態をセット */
 const confirmRemove = (id: string): void => {
-  if (confirm('このマイポケモンを削除しますか？関連する進捗データも削除されます。')) {
-    store.removeMyPokemon(id);
+  removingId.value = id;
+};
+
+/** 削除を実行 */
+const executeRemove = (): void => {
+  if (removingId.value) {
+    store.removeMyPokemon(removingId.value);
+    removingId.value = null;
   }
 };
+
+/** 削除をキャンセル */
+const cancelRemove = (): void => {
+  removingId.value = null;
+};
+
+// triggerRegisterForm を監視して自動でフォームを開く
+watch(
+  () => store.triggerRegisterForm,
+  (val) => {
+    if (val) {
+      openRegisterForm();
+      isOpen.value = true;
+      store.triggerRegisterForm = false;
+    }
+  }
+);
 </script>

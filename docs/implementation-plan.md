@@ -37,11 +37,7 @@
 - タブバー横スクロール化、フレックスレイアウト最適化
 - 1画面あたりの情報密度を向上
 
----
-
-## 次期フェーズ
-
-### Phase 8: UX 再設計 — タブ統合・情報導線の改善
+### Phase 8: UX 再設計 — タブ統合・情報導線の改善（完了）
 
 現状5タブは機能が分散し、ユーザーがどこで何をすればいいか迷う。
 ユーザー視点で「リボンを調べる → 取り方を知る → チェックする」を一連の流れにする。
@@ -87,7 +83,7 @@
 
 ---
 
-### Phase 9: マイポケモン登録機能
+### Phase 9: マイポケモン登録機能（完了）
 
 バックエンド不要、localStorage で完結するクライアントサイド実装。
 
@@ -117,7 +113,7 @@ interface MyPokemon {
 
 ---
 
-### Phase 10: 外部データソース整備
+### Phase 10: 外部データソース整備（完了）
 ダミーデータから実データへの移行。
 
 #### 10a. pokemon-data リポジトリのセットアップ
@@ -139,7 +135,42 @@ interface MyPokemon {
 
 ---
 
-### Phase 11: デプロイ・CI
+### Phase 11 (前倒し): UX 改善フェーズ（完了）
+
+`docs/ux-improvement-proposal.md` の8提案を実装。
+
+#### 完了した提案
+
+| 提案 | 内容 | 変更ファイル |
+|------|------|-------------|
+| A | オンボーディング表示（初回のみ・3ステップ） | `pages/index.vue` |
+| B | 2カラムレイアウト（デスクトップ: lg以上） | `pages/index.vue` |
+| C | タブを5→2に統合（進捗ダッシュボード廃止、リボン管理に統合） | `pages/index.vue`, `components/RibbonManager.vue` |
+| D | フィルター折りたたみ＋アクティブバッジ | `components/RibbonFilter.vue` |
+| E | PokemonDetails 内に登録ボタン追加 + triggerRegisterForm フラグ | `components/PokemonDetails.vue`, `components/MyPokemonPanel.vue`, `stores/ribbonProgress.ts` |
+| F | トースト通知 (`useToast` composable + `AppToast.vue`) | `composables/useToast.ts`, `components/AppToast.vue` |
+| H | 「特殊」カテゴリをフィルターに追加 | `utils/ribbonFilter.ts` |
+
+#### 追加実装（提案外）
+
+- **Lv.制限リボン警告バナー**: Lv.50以下制限のリボンが未取得の場合に RibbonManager 上部に警告表示
+- **リボン取得チャート（フェーズ別）**: 取得推奨順序をフェーズ別に可視化
+  - Phase 1（赤）: レベル制限あり（最優先）
+  - Phase 2（黄）: コンテスト
+  - Phase 3（緑）: ストーリー・バトル・その他
+  - 取得不可リボンを折りたたみで表示（理由付き）
+  - 進捗バーの分母を「取得可能数」に（FR/LG など出身ゲームで変化）
+  - 新規コンポーネント: `components/PhaseSection.vue`, `components/RibbonChartRow.vue`
+  - `utils/ribbonEligibility.ts` に `getAcquisitionPhase()` 追加
+- **転送ガイド改善**: 第3世代リボン取得推奨順序セクションを追加
+
+#### 未実装（スコープ外）
+
+- 提案 G: 検索結果にタイプ・世代を表示、図鑑番号検索
+
+---
+
+### Phase 12: デプロイ・CI
 
 #### 11a. GitHub Pages（SSG）
 - `nuxt.config.ts` に `ssr: false` + `nitro.preset: 'github-pages'` 設定
@@ -152,7 +183,7 @@ interface MyPokemon {
 
 ---
 
-### Phase 12: アクセシビリティ・ダークモード
+### Phase 13: アクセシビリティ・ダークモード
 
 #### 12a. アクセシビリティ
 - タブ: `role="tablist"` / `role="tab"` / `aria-selected` / `role="tabpanel"`
@@ -167,7 +198,7 @@ interface MyPokemon {
 
 ---
 
-### Phase 13: テスト拡充
+### Phase 14: テスト拡充
 
 #### 13a. 未テストのストアアクション
 - `exportProgress` / `importProgress` のテスト（正常系 + 異常系）
@@ -186,11 +217,12 @@ interface MyPokemon {
 
 ## 推奨実施順序
 
-| 優先度 | Phase | 理由 |
-|--------|-------|------|
-| **高** | Phase 8（UX再設計 + バグ修正） | ユーザー体験の根本改善。壊れた機能の修正を含む |
-| **高** | Phase 9（マイポケモン登録） | 「自分のポケモンの進捗を管理する」という核心機能 |
-| **高** | Phase 10（データ整備） | ダミーデータ3件では実用不可 |
-| **中** | Phase 11（デプロイ + CI） | ユーザーがアクセスできる状態にする |
-| **中** | Phase 13（テスト） | リファクタリング後の品質保証 |
-| **低** | Phase 12（a11y + ダークモード） | UX 向上だが機能的にはなくても使える |
+| 優先度 | Phase | 状態 | 理由 |
+|--------|-------|------|------|
+| ~~**高**~~ | ~~Phase 8（UX再設計 + バグ修正）~~ | ✅ 完了 | |
+| ~~**高**~~ | ~~Phase 9（マイポケモン登録）~~ | ✅ 完了 | |
+| ~~**高**~~ | ~~Phase 10（データ整備）~~ | ✅ 完了 | |
+| ~~**中**~~ | ~~Phase 11 前倒し（UX改善 A-H）~~ | ✅ 完了 | |
+| **高** | Phase 12（デプロイ + CI） | 未着手 | ユーザーがアクセスできる状態にする |
+| **中** | Phase 14（テスト拡充） | 未着手 | リファクタリング後の品質保証 |
+| **低** | Phase 13（a11y + ダークモード） | 未着手 | UX 向上だが機能的にはなくても使える |

@@ -62,3 +62,15 @@ export function canPokemonGetRibbon(
 
   return { eligible: true };
 }
+
+/**
+ * リボンの取得推奨フェーズを返す。
+ * 1: 最優先（レベル制限あり）
+ * 2: コンテスト
+ * 3: ストーリー/バトル/その他
+ */
+export function getAcquisitionPhase(ribbon: Ribbon): 1 | 2 | 3 {
+  if (ribbon.eligibility?.type === 'level_max') return 1;
+  if (ribbon.category === 'コンテスト') return 2;
+  return 3;
+}

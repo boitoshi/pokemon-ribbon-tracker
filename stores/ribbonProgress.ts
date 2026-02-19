@@ -23,6 +23,8 @@ export const useRibbonProgressStore = defineStore('ribbonProgress', {
     myPokemonList: [] as MyPokemon[],
     /** アクティブなマイポケモンID */
     activeMyPokemonId: null as string | null,
+    /** マイポケモン登録フォームをトリガーするフラグ */
+    triggerRegisterForm: false as boolean,
   }),
 
   getters: {

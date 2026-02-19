@@ -1,71 +1,112 @@
 <template>
   <div>
-    <h2 class="text-lg md:text-xl font-bold mb-2 md:mb-4">リボン取得チャート</h2>
-
-    <div v-if="!pokemon" class="bg-yellow-100 border-yellow-400 border p-2 md:p-4 rounded text-sm md:text-base">
-      <p>ポケモンを選択すると、世代別のリボン取得状況が表示されます。</p>
+    <!-- ポケモン未選択時 -->
+    <div v-if="!store.selectedPokemon" class="py-8 text-center bg-gray-50 rounded-lg">
+      <p class="text-gray-500 text-sm">ポケモンを選択すると取得ロードマップが表示されます</p>
     </div>
 
     <div v-else>
-      <!-- ポケモン情報 -->
-      <div class="mb-2 md:mb-4 p-2 md:p-4 bg-green-50 rounded">
-        <h3 class="font-medium">{{ pokemon.name }}のリボンチャート</h3>
-      </div>
-
-      <!-- ゲーム別リボンチャート -->
-      <div class="space-y-3 md:space-y-6">
-        <div
-          v-for="(gameGroup, generation) in gameRibbonsMap"
-          :key="generation"
-          class="border rounded-lg overflow-hidden"
-        >
-          <div class="bg-gray-100 p-2 md:p-3 text-sm md:text-base font-medium">第{{ generation }}世代</div>
-
-          <div v-for="(gameData, game) in gameGroup" :key="game" class="border-b last:border-b-0">
-            <div class="px-2 md:px-4 py-2 md:py-3 bg-gray-50 flex justify-between items-center">
-              <h4 class="font-medium">{{ getGameName(String(game)) }}</h4>
-              <span class="text-xs md:text-sm text-gray-600">{{ gameData.ribbons.length }}個のリボン</span>
-            </div>
-
-            <div class="p-2 md:p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
-              <div
-                v-for="ribbon in gameData.ribbons"
-                :key="`${game}-${ribbon.id}`"
-                class="flex items-center p-2 bg-white border rounded"
-              >
-                <div
-                  class="w-6 h-6 md:w-8 md:h-8 bg-blue-100 rounded-full flex items-center justify-center mr-1.5 md:mr-2 flex-shrink-0"
-                >
-                  <span class="text-xs md:text-sm">🎀</span>
-                </div>
-
-                <div class="flex-1 text-xs md:text-sm">
-                  <div class="font-medium">{{ ribbon.name }}</div>
-                  <div class="text-xs text-gray-500 line-clamp-1">{{ ribbon.description }}</div>
-                </div>
-
-                <div
-                  class="ml-2 w-5 h-5 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center"
-                >
-                  <span v-if="isRibbonObtained(ribbon.id)" class="text-green-800">✓</span>
-                </div>
-              </div>
-            </div>
+      <!-- ヘッダー: 取得可能数サマリー -->
+      <div class="mb-4 p-3 bg-white border rounded-lg">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <span class="text-sm text-gray-500">取得可能なリボン</span>
+            <span class="ml-2 text-lg font-bold text-blue-700">{{ groups.totalObtainable }}個</span>
+            <span class="text-xs text-gray-400 ml-1">/ {{ store.ribbons.length }}個全体</span>
+          </div>
+          <div class="text-right text-xs text-gray-500">
+            <span v-if="groups.ineligible.length > 0">取得不可: {{ groups.ineligible.length }}個</span>
           </div>
         </div>
-      </div>
-
-      <!-- 移行経路 -->
-      <div class="mt-4 md:mt-6 p-2 md:p-4 bg-blue-50 rounded-lg">
-        <h3 class="font-medium text-sm md:text-base mb-1 md:mb-2">世代間移行経路</h3>
-        <div class="text-xs md:text-sm space-y-0.5 md:space-y-1">
-          <p>第3世代 → 第4世代: パルパーク</p>
-          <p>第4世代 → 第5世代: ポケシフター</p>
-          <p>第5世代 → 第6世代: ポケムーバー → ポケバンク</p>
-          <p>第6世代 → 第7世代: ポケバンク</p>
-          <p>第7世代 → 第8世代: ポケバンク → ポケモンHOME</p>
+        <!-- 進捗バー: 取得可能数を分母に -->
+        <div class="flex items-center gap-2">
+          <div class="flex-1 bg-gray-200 rounded-full h-2.5">
+            <div
+              class="bg-blue-500 h-2.5 rounded-full transition-all"
+              :style="`width: ${obtainedPercentage}%`"
+            ></div>
+          </div>
+          <span class="text-xs font-medium text-blue-700 flex-shrink-0">
+            {{ groups.obtained }} / {{ groups.totalObtainable }} ({{ obtainedPercentage }}%)
+          </span>
         </div>
       </div>
+
+      <!-- Phase 1: レベル制限 (最優先) -->
+      <PhaseSection
+        v-if="groups.phase1.length > 0"
+        title="先に取ること — レベル制限あり"
+        :count="groups.phase1.length"
+        :obtained-count="countObtained(groups.phase1)"
+        color="red"
+        note="このフェーズのリボンはレベルが上がると参加できなくなります。最優先で取得してください。"
+        :default-open="true"
+      >
+        <RibbonChartRow
+          v-for="ribbon in groups.phase1"
+          :key="ribbon.id"
+          :ribbon="ribbon"
+          :is-checked="store.currentCheckedRibbons.includes(ribbon.id)"
+          @toggle="toggleRibbon(ribbon.id)"
+        />
+      </PhaseSection>
+
+      <!-- Phase 2: コンテスト -->
+      <PhaseSection
+        v-if="groups.phase2.length > 0"
+        title="コンテスト"
+        :count="groups.phase2.length"
+        :obtained-count="countObtained(groups.phase2)"
+        color="yellow"
+        note="対応ゲーム: ルビー・サファイア・エメラルド"
+        :default-open="true"
+      >
+        <RibbonChartRow
+          v-for="ribbon in groups.phase2"
+          :key="ribbon.id"
+          :ribbon="ribbon"
+          :is-checked="store.currentCheckedRibbons.includes(ribbon.id)"
+          @toggle="toggleRibbon(ribbon.id)"
+        />
+      </PhaseSection>
+
+      <!-- Phase 3: ストーリー/バトル/その他 -->
+      <PhaseSection
+        v-if="groups.phase3.length > 0"
+        title="ストーリー・バトル・その他"
+        :count="groups.phase3.length"
+        :obtained-count="countObtained(groups.phase3)"
+        color="green"
+        :default-open="true"
+      >
+        <RibbonChartRow
+          v-for="ribbon in groups.phase3"
+          :key="ribbon.id"
+          :ribbon="ribbon"
+          :is-checked="store.currentCheckedRibbons.includes(ribbon.id)"
+          @toggle="toggleRibbon(ribbon.id)"
+        />
+      </PhaseSection>
+
+      <!-- 取得不可セクション (デフォルト折りたたみ) -->
+      <PhaseSection
+        v-if="groups.ineligible.length > 0"
+        title="このポケモンでは取得不可"
+        :count="groups.ineligible.length"
+        :obtained-count="0"
+        color="gray"
+        :default-open="false"
+      >
+        <div
+          v-for="item in groups.ineligible"
+          :key="item.ribbon.id"
+          class="flex items-center gap-2 px-3 py-2 text-sm text-gray-400 border-b last:border-b-0"
+        >
+          <span class="w-5 h-5 flex-shrink-0 text-center">✗</span>
+          <span class="flex-1">{{ item.ribbon.name }}</span>
+          <span class="text-xs bg-gray-100 px-2 py-0.5 rounded">{{ item.reason }}</span>
+        </div>
+      </PhaseSection>
     </div>
   </div>
 </template>
@@ -73,36 +114,72 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRibbonProgressStore } from '~/stores/ribbonProgress';
-import { getGameName } from '~/utils/gameNames';
-import type { Pokemon, Ribbon, Game } from '~/types';
-
-const props = defineProps<{
-  pokemon: Pokemon | null;
-  ribbons: Ribbon[];
-  games: Game[];
-}>();
+import { canPokemonGetRibbon, getAcquisitionPhase } from '~/utils/ribbonEligibility';
+import type { Ribbon } from '~/types';
 
 const store = useRibbonProgressStore();
 
-const isRibbonObtained = (ribbonId: string): boolean =>
-  store.currentCheckedRibbons.includes(ribbonId);
+interface RibbonGroup {
+  phase1: Ribbon[];
+  phase2: Ribbon[];
+  phase3: Ribbon[];
+  ineligible: { ribbon: Ribbon; reason: string }[];
+  totalObtainable: number;
+  obtained: number;
+}
 
-const gameRibbonsMap = computed(() => {
-  const map: Record<number, Record<string, { name: string; ribbons: Ribbon[] }>> = {};
+/** リボンをフェーズ別に分類する */
+const groups = computed((): RibbonGroup => {
+  const phase1: Ribbon[] = [];
+  const phase2: Ribbon[] = [];
+  const phase3: Ribbon[] = [];
+  const ineligible: { ribbon: Ribbon; reason: string }[] = [];
 
-  props.games.forEach((game) => {
-    if (!map[game.generation]) {
-      map[game.generation] = {};
+  const detail = store.selectedPokemon
+    ? store.pokemonList.find((p) => p.id === store.selectedPokemon!.id)
+    : undefined;
+
+  for (const ribbon of store.ribbons) {
+    const result = detail
+      ? canPokemonGetRibbon(detail, ribbon, store.activeMyPokemon ?? undefined)
+      : { eligible: true };
+
+    if (!result.eligible) {
+      ineligible.push({ ribbon, reason: result.reason ?? '取得不可' });
+      continue;
     }
-    const gameRibbons = props.ribbons.filter(
-      (ribbon) => ribbon.games && ribbon.games.includes(game.id)
-    );
-    map[game.generation][game.id] = {
-      name: getGameName(game.id),
-      ribbons: gameRibbons,
-    };
-  });
 
-  return map;
+    const phase = getAcquisitionPhase(ribbon);
+    if (phase === 1) phase1.push(ribbon);
+    else if (phase === 2) phase2.push(ribbon);
+    else phase3.push(ribbon);
+  }
+
+  const totalObtainable = phase1.length + phase2.length + phase3.length;
+
+  return {
+    phase1,
+    phase2,
+    phase3,
+    ineligible,
+    totalObtainable,
+    obtained: store.currentCheckedRibbons.length,
+  };
 });
+
+/** 取得済みリボン数の割合（取得可能数を分母） */
+const obtainedPercentage = computed(() => {
+  if (groups.value.totalObtainable === 0) return 0;
+  return Math.round((groups.value.obtained / groups.value.totalObtainable) * 100);
+});
+
+/** リボン配列中の取得済み数 */
+const countObtained = (ribbons: Ribbon[]): number =>
+  ribbons.filter((r) => store.currentCheckedRibbons.includes(r.id)).length;
+
+/** リボンの取得状態をトグル */
+const toggleRibbon = (ribbonId: string): void => {
+  if (!store.selectedPokemon) return;
+  store.toggleRibbon(store.selectedPokemon.id, ribbonId);
+};
 </script>

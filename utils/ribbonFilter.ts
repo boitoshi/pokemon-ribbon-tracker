@@ -5,4 +5,5 @@ export const CATEGORY_MAP: Record<string, string> = {
   battle: 'バトル施設',
   memory: '思い出',
   event: 'イベント',
+  special: '特殊',
 };

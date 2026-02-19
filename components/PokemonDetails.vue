@@ -41,24 +41,14 @@
       </p>
     </div>
 
-    <!-- リボン取得状況 -->
-    <div class="mt-2 md:mt-4">
-      <h3 class="font-bold text-base md:text-lg mb-1 md:mb-2">リボン取得状況</h3>
-      <div v-if="store.ribbons.length" class="grid grid-cols-2 md:grid-cols-3 gap-2">
-        <div
-          v-for="ribbon in store.ribbons"
-          :key="ribbon.id"
-          class="p-2 border rounded flex items-center"
-          :class="{ 'bg-green-50 border-green-200': store.currentCheckedRibbons.includes(ribbon.id) }"
-        >
-          <div class="w-6 h-6 mr-2 flex-shrink-0">
-            <span v-if="store.currentCheckedRibbons.includes(ribbon.id)" class="text-green-500">✓</span>
-            <span v-else class="text-gray-300">○</span>
-          </div>
-          <span class="text-sm">{{ ribbon.name }}</span>
-        </div>
-      </div>
-      <p v-else class="text-gray-500 text-sm">リボンデータはリボン王チャートで管理できます</p>
+    <!-- マイポケモン登録ボタン（未登録時のみ表示） -->
+    <div v-if="isNotRegistered" class="mt-2 md:mt-3">
+      <button
+        class="w-full px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm font-medium"
+        @click="triggerRegister"
+      >
+        {{ pokemon?.name }} をマイポケモンに登録
+      </button>
     </div>
 
     <!-- リボン獲得率 -->
@@ -92,6 +82,17 @@ const props = defineProps<{
 }>();
 
 const store = useRibbonProgressStore();
+
+/** 選択中のポケモンがマイポケモンに未登録かどうか */
+const isNotRegistered = computed(() => {
+  if (!props.pokemon) return false;
+  return !store.myPokemonList.some((mp) => mp.pokemonId === props.pokemon!.id);
+});
+
+/** マイポケモン登録フォームをトリガー */
+const triggerRegister = (): void => {
+  store.triggerRegisterForm = true;
+};
 
 // リボン獲得率の計算（store のリアルタイムデータを使用）
 const ribbonPercentage = computed(() => {
