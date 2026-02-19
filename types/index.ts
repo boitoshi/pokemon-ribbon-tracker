@@ -46,6 +46,7 @@ export interface Ribbon {
   generation: number;
   games: string[];
   category: string;
+  type?: 'ribbon' | 'mark';
   requirements?: string;
   image_url?: string;
   eligibility?: RibbonEligibility;

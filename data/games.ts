@@ -42,4 +42,11 @@ export const GAMES: Game[] = [
   // Gen 8 (Switch)
   { id: 'sword', name: 'ポケットモンスター ソード', shortName: 'ソード', generation: 8, releaseDate: '2019-11-15', platform: 'Switch' },
   { id: 'shield', name: 'ポケットモンスター シールド', shortName: 'シールド', generation: 8, releaseDate: '2019-11-15', platform: 'Switch' },
+
+  // Gen 8 (Switch) - Legends
+  { id: 'legends_arceus', name: 'Pokémon LEGENDS アルセウス', shortName: 'LA', generation: 8, releaseDate: '2022-01-28', platform: 'Switch' },
+
+  // Gen 9 (Switch)
+  { id: 'scarlet', name: 'ポケットモンスター スカーレット', shortName: 'SV', generation: 9, releaseDate: '2022-11-18', platform: 'Switch' },
+  { id: 'violet', name: 'ポケットモンスター バイオレット', shortName: 'バイオレット', generation: 9, releaseDate: '2022-11-18', platform: 'Switch' },
 ];
