@@ -1,8 +1,21 @@
 # SvelteKit 全面書き直し実装計画
 
 > 作成日: 2026-02-27
-> ステータス: 計画中
+> 最終更新: 2026-02-27
+> ステータス: 実装中（Phase 3 完了）
 > 目標: Nuxt3→SvelteKit2 完全移行 + UX抜本改善
+
+## 進捗サマリー
+
+| フェーズ | 内容 | 状態 |
+|---------|------|------|
+| Phase 0 | SvelteKit セットアップ・データ移植 | ✅ 完了 |
+| Phase 1 | コアトラッカー（Runes ストア + 基本UI） | ✅ 完了 |
+| Phase 2 | セットアップウィザード（所持ゲーム・ハード登録） | ✅ 完了 |
+| Phase 3 | ロードマップビュー（/roadmap） | ✅ 完了 |
+| Phase 4 | クイックチェックモード | 🔜 未着手 |
+| Phase 5 | ガイドページ（SSG参照ページ群） | 🔜 未着手 |
+| Phase 6 | PWA完成 + Gen9データ整備 | 🔜 未着手 |
 
 ---
 
@@ -261,7 +274,7 @@ export const setup = new SetupStore();
 
 ## 6. 実装フェーズ
 
-### Phase 0: プロジェクトセットアップ（0.5日）
+### Phase 0: プロジェクトセットアップ ✅ 完了
 
 ```bash
 npx sv create pokemon-ribbon-tracker-v2
@@ -282,7 +295,7 @@ npm i -D vitest @vitest/coverage-v8
 
 ---
 
-### Phase 1: コアトラッカー（3〜4日）
+### Phase 1: コアトラッカー ✅ 完了
 
 **目標**: 現状アプリと同等の機能を SvelteKit で実現
 
@@ -304,7 +317,7 @@ npm i -D vitest @vitest/coverage-v8
 
 ---
 
-### Phase 2: セットアップウィザード（1〜2日）
+### Phase 2: セットアップウィザード ✅ 完了
 
 **目標**: 所持ゲーム・ハードを登録し、取得不可リボンをグレーアウト
 
@@ -321,7 +334,7 @@ npm i -D vitest @vitest/coverage-v8
 
 ---
 
-### Phase 3: ロードマップビュー（3〜4日）
+### Phase 3: ロードマップビュー ✅ 完了
 
 **目標**: 「今何をすべきか」を世代別ステップで表示するキラー機能
 
@@ -348,7 +361,7 @@ npm i -D vitest @vitest/coverage-v8
 
 ---
 
-### Phase 4: クイックチェックモード（1〜2日）
+### Phase 4: クイックチェックモード 🔜 未着手
 
 **目標**: ゲーム機の横に置いて片手で操作できるUI
 
@@ -367,7 +380,7 @@ npm i -D vitest @vitest/coverage-v8
 
 ---
 
-### Phase 5: ガイドページ（2〜3日）
+### Phase 5: ガイドページ 🔜 未着手
 
 **目標**: 「このゲームで取れるリボンは?」参照ページ群（SSG / SEO対応）
 
@@ -395,7 +408,7 @@ npm i -D vitest @vitest/coverage-v8
 
 ---
 
-### Phase 6: PWA + データ整備（2日）
+### Phase 6: PWA + データ整備 🔜 未着手
 
 **目標**: オフライン動作 + リボンデータの最終検証
 
