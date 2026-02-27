@@ -6,6 +6,7 @@
 
 	const navItems = [
 		{ href: '/', label: 'トラッカー', icon: '🎀' },
+		{ href: '/roadmap', label: 'ロードマップ', icon: '🗺️' },
 		{ href: '/guide', label: 'ガイド', icon: '📖' },
 		{ href: '/setup', label: '設定', icon: '⚙️' }
 	];
