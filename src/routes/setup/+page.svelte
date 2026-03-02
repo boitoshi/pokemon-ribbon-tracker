@@ -3,6 +3,7 @@
 	import { GAMES } from '$lib/data/games';
 	import { TRANSFER_ROUTES } from '$lib/data/transfer-routes';
 	import { setup } from '$lib/stores/setup.svelte';
+	import { toast } from '$lib/stores/toast.svelte';
 	import type { Game, Hardware, TransferRoute } from '$lib/types';
 
 	// ステップ管理
@@ -42,11 +43,11 @@
 
 	// 転送ルート判定関数
 	function isRouteAvailable(route: TransferRoute): boolean {
-		return route.hardwareRequired.every((hw) => setup.ownedHardware.includes(hw));
+		return setup.evaluateRouteAvailability(route).available;
 	}
 
 	function getMissingHardware(route: TransferRoute): Hardware[] {
-		return route.hardwareRequired.filter((hw) => !setup.ownedHardware.includes(hw));
+		return setup.getRouteMissingHardware(route);
 	}
 
 	// ハード名を返すヘルパー
@@ -57,6 +58,7 @@
 	// セットアップ完了処理
 	function handleComplete(): void {
 		setup.completeSetup();
+		toast.success('セットアップ完了！次はポケモンを登録してみよう 🎉');
 		goto('/');
 	}
 </script>
@@ -277,18 +279,18 @@
 									Gen{route.fromGeneration} → Gen{route.toGeneration}
 								</div>
 
-								{#if route.hardwareRequired.length > 0}
+								{#if route.requirements.anyOf.length > 0}
 									<div class="mt-2 flex flex-wrap gap-1">
-										{#each route.hardwareRequired as hw (hw)}
+										{#each route.requirements.anyOf as option (option.id)}
 											<span
 												class={[
 													'rounded border px-2 py-0.5 text-xs',
-													setup.ownedHardware.includes(hw)
+													option.allOf.every((hw) => setup.ownedHardware.includes(hw))
 														? 'border-green-300 bg-green-100 text-green-700'
 														: 'border-red-300 bg-red-50 text-red-600'
 												].join(' ')}
 											>
-												{getHardwareName(hw)}
+												{option.label}
 											</span>
 										{/each}
 									</div>

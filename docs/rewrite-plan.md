@@ -1,8 +1,8 @@
 # SvelteKit 全面書き直し実装計画
 
 > 作成日: 2026-02-27
-> 最終更新: 2026-02-27
-> ステータス: 実装中（Phase 3 完了）
+> 最終更新: 2026-03-03
+> ステータス: Phase 5 まで完了、UX改善フェーズ継続中
 > 目標: Nuxt3→SvelteKit2 完全移行 + UX抜本改善
 
 ## 進捗サマリー
@@ -13,9 +13,41 @@
 | Phase 1 | コアトラッカー（Runes ストア + 基本UI） | ✅ 完了 |
 | Phase 2 | セットアップウィザード（所持ゲーム・ハード登録） | ✅ 完了 |
 | Phase 3 | ロードマップビュー（/roadmap） | ✅ 完了 |
-| Phase 4 | クイックチェックモード | 🔜 未着手 |
-| Phase 5 | ガイドページ（SSG参照ページ群） | 🔜 未着手 |
+| Phase 4 | クイックチェックモード | ✅ 完了 |
+| Phase 5 | ガイドページ（SSG参照ページ群） | ✅ 完了 |
+| UX改善 A〜E | 不可逆転送UX刷新・理由キー・手動変更・文言一元化 | ✅ 完了 |
+| UX改善 F | グリッド表示・オンボーディング・確認UI重み・状態表示強化 | ✅ 完了 |
+| UX改善 G | currentフェーズ折りたたみ・バナー永続化・リセット確認UI・長押しToast | ✅ 完了 |
 | Phase 6 | PWA完成 + Gen9データ整備 | 🔜 未着手 |
+
+### 直近の更新（2026-03-03 UX改善フェーズG）
+
+**ロードマップ改善**
+- `RoadmapStep.svelte`: currentフェーズの折りたたみ制限を削除、全フェーズをトグル可能に（「🎯 今ここ！」バッジは維持）
+- `RoadmapView.svelte`: 未選択バナーをシンプルなスカイ色バナー（「← トラッカーで選ぶ」リンク付き）に置換
+
+**バナー/ヒント永続化**
+- `quick/+page.svelte`: 説明バナーに × 閉じるボタン追加、`localStorage('quickHelperDismissed')` で永続化
+- `QuickCheck.svelte`: スワイプヒントをスワイプ後に非表示 + `localStorage('swipeHintDismissed')` で永続化
+
+**リセット確認UI**
+- `routes/+page.svelte`: `confirm()` を廃止、インライン確認UI（キャンセル/リセットボタン）に置換
+
+**グリッドカード長押し情報表示**
+- `RibbonCard.svelte`: グリッドモードで600ms長押し時にToastで「リボン名: 状態ラベル — 理由」を表示
+
+**ガイドページ**
+- `guide/+page.svelte`: リボン一覧タブに「全て展開」「全て折りたたむ」ボタン追加
+
+`npm run lint` / `npm run check 0 errors 0 warnings` / `npm run test 12/12` すべて通過。
+
+### 次のアクション
+
+| 優先度 | タスク | 内容 |
+|--------|--------|------|
+| 🟠 中 | G-1: ガイドリボン検索 | `guide/+page.svelte` に `searchQuery` + `$derived` フィルタリング |
+| 🔜 次フェーズ | Phase 6: PWA完成 | `vite-plugin-pwa` 設定、オフライン対応 |
+| 🔜 次フェーズ | Phase 6: Gen9データ整備 | SV DLC追加リボン、marks-gen9.ts 確認・補完 |
 
 ---
 
@@ -91,63 +123,30 @@ ESLint + Prettier      Lint / Format
 ```
 src/
 ├── lib/
-│   ├── data/                    ← 現 data/ をそのままコピー
-│   │   ├── ribbons-gen3.ts
-│   │   ├── ribbons-gen4.ts
-│   │   ├── ribbons-gen5.ts
-│   │   ├── ribbons-gen6.ts
-│   │   ├── ribbons-gen7.ts
-│   │   ├── ribbons-gen8.ts
-│   │   ├── ribbons-gen9.ts
-│   │   ├── marks-gen9.ts
-│   │   ├── games.ts
-│   │   ├── pokemon-gen3.ts
-│   │   └── shadow-pokemon.ts
-│   ├── types.ts                 ← 現 types/index.ts（拡張あり）
-│   ├── utils/                   ← 現 utils/ をそのままコピー
-│   │   ├── ribbonEligibility.ts
-│   │   ├── ribbonFilter.ts
-│   │   ├── ribbonGuideData.ts
-│   │   ├── gameNames.ts
-│   │   ├── pokemonMapper.ts
-│   │   └── dataFetcher.ts
-│   ├── stores/                  ← 現 Pinia → Svelte Runes
-│   │   ├── ribbonProgress.svelte.ts   (メインストア)
-│   │   ├── setup.svelte.ts            (所持ゲーム/ハード) ← 新規
-│   │   └── toast.svelte.ts            (トースト通知)
+│   ├── data/                    リボン・ゲーム・転送ルート定義
+│   ├── types.ts                 共通型
+│   ├── utils/                   判定/表示用ユーティリティ
+│   ├── stores/                  Runesストア
+│   │   ├── ribbonProgress.svelte.ts
+│   │   ├── setup.svelte.ts
+│   │   └── toast.svelte.ts
 │   └── components/
-│       ├── tracker/             ← トラッカーUI
-│       │   ├── PokemonSearch.svelte
-│       │   ├── PokemonDetails.svelte
-│       │   ├── MyPokemonPanel.svelte
-│       │   ├── RibbonCard.svelte      (アコーディオン + チェック)
-│       │   ├── RibbonFilter.svelte
-│       │   ├── RoadmapView.svelte     ← 新規・キラー機能
-│       │   ├── RoadmapStep.svelte     ← 新規
-│       │   ├── TransferArrow.svelte   ← 新規
-│       │   └── QuickCheck.svelte      ← 新規・モバイル最適化
-│       ├── guide/               ← 参照ページUI
-│       │   ├── GameGuideSection.svelte
-│       │   └── TransferStepDetail.svelte
-│       └── ui/                  ← 共通UI部品
-│           ├── Toast.svelte
-│           ├── Badge.svelte
-│           ├── ProgressBar.svelte
-│           └── Modal.svelte
+│       ├── tracker/             トラッカー/クイックUI
+│       ├── roadmap/             ロードマップUI
+│       └── ui/                  共通UI
 ├── routes/
 │   ├── +layout.svelte           (アプリシェル・ナビゲーション)
 │   ├── +layout.ts               (SSG設定: prerender = true)
 │   ├── +page.svelte             (/ メイントラッカー)
+│   ├── roadmap/
+│   │   ├── +page.svelte         (/roadmap)
+│   │   └── +page.ts
+│   ├── quick/
+│   │   └── +page.svelte         (/quick)
 │   ├── setup/
 │   │   └── +page.svelte         (/setup 初回セットアップ)
 │   └── guide/
-│       ├── +page.svelte         (/guide ガイドインデックス)
-│       ├── transfer/
-│       │   └── +page.svelte     (/guide/transfer 完全転送ガイド)
-│       └── games/
-│           └── [id]/
-│               ├── +page.ts     (静的パラメータ生成)
-│               └── +page.svelte (/guide/games/[id] ゲーム別辞典)
+│       └── +page.svelte         (/guide ハイブリッド参照ページ)
 ├── app.html
 └── app.css                      (Tailwind v4 インポート)
 ```

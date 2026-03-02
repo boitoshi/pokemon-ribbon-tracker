@@ -12,20 +12,37 @@
 	let genFilter = $state<number | null>(null);
 	let touchStartX = $state(0);
 	let touchStartY = $state(0);
+	let showSwipeHint = $state(true);
+
+	$effect(() => {
+		if (typeof localStorage !== 'undefined' && localStorage.getItem('swipeHintDismissed') === '1') {
+			showSwipeHint = false;
+		}
+	});
 
 	// --- 派生値 ---
+	const STATE_SORT_ORDER = { urgent: 0, missed: 1, available: 2, obtained: 3, future: 4, locked: 5 };
+
 	const filteredRibbons = $derived(
-		genFilter === null
-			? [...ribbonProgress.allRibbons].sort((a, b) => a.generation - b.generation)
-			: [...ribbonProgress.allRibbons]
-					.filter((r) => r.generation === genFilter)
-					.sort((a, b) => a.generation - b.generation)
+		(genFilter === null
+			? [...ribbonProgress.allRibbons]
+			: [...ribbonProgress.allRibbons].filter((r) => r.generation === genFilter)
+		).sort((a, b) => {
+			const sa = STATE_SORT_ORDER[ribbonProgress.getRibbonState(a)] ?? 9;
+			const sb = STATE_SORT_ORDER[ribbonProgress.getRibbonState(b)] ?? 9;
+			if (sa !== sb) return sa - sb;
+			return a.generation - b.generation;
+		})
 	);
 
 	const currentRibbon = $derived<Ribbon | null>(filteredRibbons[currentIndex] ?? null);
 
 	const isChecked = $derived(
 		currentRibbon !== null && ribbonProgress.currentCheckedRibbons.includes(currentRibbon.id)
+	);
+
+	const currentRibbonState = $derived(
+		currentRibbon ? ribbonProgress.getRibbonState(currentRibbon) : null
 	);
 
 	const availableGenerations = $derived(
@@ -71,6 +88,10 @@
 
 	function toggleCurrent(): void {
 		if (currentRibbon === null) return;
+		if (!ribbonProgress.activeMyPokemonId) {
+			toast.show('ポケモンを選ぶと記録できるよ！', 'info');
+			return;
+		}
 		ribbonProgress.toggleRibbon(currentRibbon.id);
 	}
 
@@ -83,6 +104,10 @@
 		const deltaX = e.changedTouches[0].clientX - touchStartX;
 		const deltaY = e.changedTouches[0].clientY - touchStartY;
 		if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > SWIPE_THRESHOLD) {
+			if (showSwipeHint) {
+				showSwipeHint = false;
+				localStorage.setItem('swipeHintDismissed', '1');
+			}
 			if (deltaX < 0) {
 				// 左スワイプ = 次
 				next();
@@ -121,26 +146,21 @@
 	</div>
 
 	<!-- マイポケモン未選択時 -->
-	{#if !ribbonProgress.activeMyPokemonId}
-		<div class="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-			<p class="text-2xl">🎀</p>
-			<p class="text-lg font-bold text-gray-700">マイポケモンを選んでね！</p>
-			<p class="text-gray-500">
-				トラッカーページでポケモンを選択すると<br />リボンをチェックできるよ
-			</p>
-			<a href="/" class="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white">
-				トラッカーへ →
-			</a>
-		</div>
-
-	<!-- リボンなし時 -->
-	{:else if filteredRibbons.length === 0}
+	{#if filteredRibbons.length === 0}
 		<div class="flex flex-1 items-center justify-center">
 			<p class="text-gray-500">この世代のリボンはないよ</p>
 		</div>
 
 	<!-- メイン表示 -->
 	{:else}
+		<!-- 参照モードバナー -->
+		{#if !ribbonProgress.activeMyPokemonId}
+			<div class="flex items-center gap-2 border-b border-sky-100 bg-sky-50 px-3 py-2 text-xs text-sky-700">
+				<span>ℹ</span>
+				<span><strong>参照モード</strong> — タップしても記録されません。<a href="/" class="underline hover:text-sky-900">ポケモンを選ぶ →</a></span>
+			</div>
+		{/if}
+
 		<!-- カウンター表示 -->
 		<div class="py-2 text-center text-sm text-gray-500">
 			{currentIndex + 1} / {filteredRibbons.length}&nbsp;·&nbsp;未取得 {uncheckedCount}件
@@ -149,25 +169,55 @@
 		<!-- リボン表示エリア（タップ全体でトグル） -->
 		<button
 			class="flex w-full flex-1 flex-col items-center justify-center gap-4 p-8 transition-colors
-				{isChecked ? 'bg-green-50' : 'bg-white'}"
+				{isChecked
+					? 'bg-green-50'
+					: currentRibbonState === 'urgent'
+						? 'bg-orange-50'
+						: currentRibbonState === 'missed'
+							? 'bg-red-50'
+							: 'bg-white'}"
 			onclick={toggleCurrent}
 			ontouchstart={onTouchStart}
 			ontouchend={onTouchEnd}
 			aria-label={isChecked ? 'チェック済み（タップで解除）' : '未チェック（タップで取得済みにする）'}
 		>
+			<!-- 状態バッジ -->
+			{#if currentRibbonState === 'urgent'}
+				<span class="rounded-full bg-orange-500 px-3 py-1 text-sm font-bold text-white">⚡ 今すぐ取得必須！</span>
+			{:else if currentRibbonState === 'missed'}
+				<span class="rounded-full bg-red-500 px-3 py-1 text-sm font-bold text-white">❌ 取り逃し</span>
+			{:else if currentRibbonState === 'locked'}
+				<span class="rounded-full bg-gray-400 px-3 py-1 text-sm font-bold text-white">🚫 取得不可</span>
+			{:else if currentRibbonState === 'future'}
+				<span class="rounded-full bg-gray-300 px-3 py-1 text-sm font-medium text-gray-600">🔒 未来のリボン</span>
+			{/if}
+
 			<!-- チェック状態アイコン（大きく） -->
 			<div
 				class="flex h-20 w-20 items-center justify-center rounded-full border-4 text-4xl
 					{isChecked
-					? 'border-green-500 bg-green-500 text-white'
-					: 'border-gray-300 bg-white text-transparent'}"
+						? 'border-green-500 bg-green-500 text-white'
+						: currentRibbonState === 'urgent'
+							? 'border-orange-400 bg-white text-orange-400'
+							: currentRibbonState === 'missed'
+								? 'border-red-400 bg-white text-red-400'
+								: 'border-gray-300 bg-white text-transparent'}"
 			>
-				✓
+				{isChecked ? '✓' : currentRibbonState === 'urgent' ? '⚡' : currentRibbonState === 'missed' ? '×' : '✓'}
 			</div>
 
 			<!-- リボン名 -->
 			{#if currentRibbon}
-				<h2 class="text-center text-2xl font-bold {isChecked ? 'text-green-800' : 'text-gray-900'}">
+				<h2
+					class="text-center text-2xl font-bold
+						{isChecked
+							? 'text-green-800'
+							: currentRibbonState === 'urgent'
+								? 'text-orange-800'
+								: currentRibbonState === 'missed'
+									? 'text-red-800'
+									: 'text-gray-900'}"
+				>
 					{currentRibbon.name}
 				</h2>
 
@@ -202,7 +252,9 @@
 			{/if}
 
 			<!-- スワイプヒント -->
-			<p class="mt-2 text-xs text-gray-400">← スワイプで前後移動 →</p>
+			{#if showSwipeHint}
+				<p class="mt-2 text-xs text-gray-400">← スワイプで前後移動 →</p>
+			{/if}
 		</button>
 
 		<!-- ナビゲーションボタン -->

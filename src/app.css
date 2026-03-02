@@ -38,3 +38,9 @@
 .ribbon-collect {
   animation: ribbon-collect 0.4s ease-out;
 }
+
+.irreversible-warning {
+	border-color: color-mix(in srgb, var(--color-poke-red) 35%, white);
+	background: color-mix(in srgb, var(--color-poke-red) 8%, white);
+	color: #7a1f1f;
+}

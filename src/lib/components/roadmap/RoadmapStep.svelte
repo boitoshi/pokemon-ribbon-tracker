@@ -15,12 +15,17 @@
 	} = $props();
 
 	// future だけデフォルト折りたたみ（current / past は展開）
-	// group.phase はマウント時に安定するため、初期値として直接参照する
-	let isOpen = $state(group.phase !== 'future');
+	let isOpen = $state(true);
 	let isLockedOpen = $state(false);
+	let isInitialized = $state(false);
 
-	// current フェーズはトグル不可
-	const canToggle = $derived(group.phase !== 'current');
+	$effect(() => {
+		if (isInitialized) return;
+		isOpen = group.phase !== 'future';
+		isInitialized = true;
+	});
+
+	const canToggle = true;
 
 	const completionPercent: number = $derived(
 		genProgress && genProgress.total > 0
@@ -86,9 +91,7 @@
 			{:else}
 				<span class="text-sm text-gray-400">{totalInGroup}個</span>
 			{/if}
-			{#if canToggle}
 				<span class="text-xs text-gray-400">{isOpen ? '▲' : '▼'}</span>
-			{/if}
 		</div>
 	</button>
 
@@ -101,7 +104,7 @@
 
 	<!-- 折りたたみコンテンツ -->
 	{#if isOpen}
-		<div class="px-4 py-3">
+		<div class="px-4 py-4">
 			<!-- 1. 緊急リボン -->
 			{#if group.urgentRibbons.length > 0}
 				<div class="mb-3 rounded-lg border border-orange-200 bg-orange-50 p-3">
@@ -111,20 +114,29 @@
 							<RibbonCard
 								{ribbon}
 								ribbonState={ribbonProgress.getRibbonState(ribbon)}
+								reasonLabels={ribbonProgress.getRibbonReasonLabels(ribbon)}
 								onToggle={() => onToggle(ribbon.id)}
+								onToggleManualMissed={() => {
+									if (!ribbonProgress.activeMyPokemonId) return;
+									ribbonProgress.toggleManualMissed(ribbonProgress.activeMyPokemonId, ribbon.id);
+								}}
+								isManualMissed={ribbonProgress.isManualMissed(ribbon.id)}
+								manualMissedUpdatedAt={ribbonProgress.getManualMissedUpdatedAt(ribbon.id)}
 							/>
 						{/each}
 					</div>
 				</div>
 			{/if}
 
-			<!-- 2. 通常リボン（available / obtained） -->
+			<!-- 2. 通常リボン（available / obtained）: グリッド表示 -->
 			{#if group.ribbons.length > 0}
-				<div class="flex flex-col gap-2">
+				<div class="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6">
 					{#each group.ribbons as ribbon (ribbon.id)}
 						<RibbonCard
 							{ribbon}
+							view="grid"
 							ribbonState={ribbonProgress.getRibbonState(ribbon)}
+							reasonLabels={ribbonProgress.getRibbonReasonLabels(ribbon)}
 							onToggle={() => onToggle(ribbon.id)}
 						/>
 					{/each}
@@ -138,14 +150,16 @@
 						❌ 取り逃し（{group.missedRibbons.length}個）
 					</summary>
 					<p class="px-3 pb-1 text-xs text-red-500">
-						この世代には戻れません。次の周回で取得してください。
+						不可逆転送済みの場合、この世代には戻れません。確認日を目安に計画してください。
 					</p>
-					<div class="flex flex-col gap-2 px-3 pb-3">
-						{#each group.missedRibbons as ribbon (ribbon.id)}
-							<RibbonCard
-								{ribbon}
-								ribbonState="missed"
-								onToggle={() => onToggle(ribbon.id)}
+				<div class="grid grid-cols-4 gap-3 px-3 pb-3 sm:grid-cols-5 md:grid-cols-6">
+					{#each group.missedRibbons as ribbon (ribbon.id)}
+						<RibbonCard
+							{ribbon}
+							view="grid"
+							ribbonState="missed"
+							reasonLabels={ribbonProgress.getRibbonReasonLabels(ribbon)}
+							onToggle={() => onToggle(ribbon.id)}
 							/>
 						{/each}
 					</div>
@@ -165,11 +179,13 @@
 						<span class="ml-auto text-xs text-gray-400">{isLockedOpen ? '▲' : '▼'}</span>
 					</button>
 					{#if isLockedOpen}
-						<div class="mt-2 flex flex-col gap-2">
+					<div class="mt-2 grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6">
 							{#each group.lockedRibbons as ribbon (ribbon.id)}
 								<RibbonCard
 									{ribbon}
+									view="grid"
 									ribbonState="locked"
+									reasonLabels={ribbonProgress.getRibbonReasonLabels(ribbon)}
 									onToggle={() => {}}
 								/>
 							{/each}

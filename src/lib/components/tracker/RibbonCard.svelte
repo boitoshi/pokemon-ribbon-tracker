@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Ribbon, RibbonState } from '$lib/types';
 	import { getGameName } from '$lib/utils/gameNames';
+	import { toast } from '$lib/stores/toast.svelte';
 
 	/** カテゴリカラーマップ */
 	const CATEGORY_STYLE: Record<string, { bg: string; label: string }> = {
@@ -17,16 +18,25 @@
 		ribbon,
 		ribbonState,
 		onToggle,
+    reasonLabels = [],
+    onToggleManualMissed,
+    isManualMissed = false,
+    manualMissedUpdatedAt,
 		view = 'grid'
 	}: {
 		ribbon: Ribbon;
 		ribbonState: RibbonState;
 		onToggle: () => void;
+      reasonLabels?: string[];
+      onToggleManualMissed?: () => void;
+      isManualMissed?: boolean;
+      manualMissedUpdatedAt?: string;
 		view?: 'list' | 'grid';
 	} = $props();
 
 	const isObtained = $derived(ribbonState === 'obtained');
 	const isDisabled = $derived(ribbonState === 'future' || ribbonState === 'locked');
+  const canManualEditMissed = $derived(ribbonState !== 'future' && ribbonState !== 'locked');
 
 	/** カテゴリスタイル解決 */
 	const style = $derived(
@@ -95,27 +105,75 @@
 		}
 		onToggle();
 	}
+
+	/** 状態ラベル（長押しToast用） */
+	function getStateLabel(state: RibbonState): string {
+		switch (state) {
+			case 'urgent':    return '⚡ 今すぐ取得必須！';
+			case 'missed':    return '❌ 取り逃し';
+			case 'locked':    return '🔒 取得不可';
+			case 'obtained':  return '✅ 取得済み';
+			case 'available': return '🎯 取得可能';
+			case 'future':    return '🔜 将来のリボン';
+			default:          return '';
+		}
+	}
+
+	/** 長押しタイマー（グリッドモード用） */
+	let longPressTimer: ReturnType<typeof setTimeout> | null = null;
+	const LONG_PRESS_DURATION = 600;
+
+	function onGridPointerDown(): void {
+		longPressTimer = setTimeout(() => {
+			const stateLabel = getStateLabel(ribbonState);
+			const reason = reasonLabels.length > 0 ? ` — ${reasonLabels[0]}` : '';
+			toast.show(`${ribbon.name}: ${stateLabel}${reason}`);
+			longPressTimer = null;
+		}, LONG_PRESS_DURATION);
+	}
+
+	function onGridPointerUp(): void {
+		if (longPressTimer !== null) {
+			clearTimeout(longPressTimer);
+			longPressTimer = null;
+		}
+	}
 </script>
 
 {#if view === 'grid'}
-  <!-- グリッドビュー: 丸いバッジボタン -->
-  <button
-    class="group relative h-14 w-14 rounded-full transition-all duration-200
-      {gridButtonClass()}
-      {justCollected ? 'ribbon-collect' : ''}"
-    onclick={handleToggle}
-    disabled={isDisabled}
-    aria-label="{ribbon.name} {isObtained ? '取得済み' : '未取得'}"
-  >
-    <span class="text-xl">{style.label}</span>
-    <div class="absolute bottom-full left-1/2 z-10 mb-1 hidden w-max -translate-x-1/2
-                rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block">
-      {ribbon.name}
-      {#if gridStateLabel()}
-        <span class="block text-yellow-300 text-xs">{gridStateLabel()}</span>
-      {/if}
-    </div>
-  </button>
+  <!-- グリッドビュー: 丸いバッジボタン + リボン名ラベル -->
+  <div class="flex flex-col items-center gap-1">
+    <button
+      class="group relative h-14 w-14 rounded-full transition-all duration-200
+        {gridButtonClass()}
+        {justCollected ? 'ribbon-collect' : ''}"
+      onclick={handleToggle}
+      onpointerdown={onGridPointerDown}
+      onpointerup={onGridPointerUp}
+      onpointercancel={onGridPointerUp}
+      onpointerleave={onGridPointerUp}
+      disabled={isDisabled}
+      aria-label="{ribbon.name} {isObtained ? '取得済み' : '未取得'}"
+    >
+      <span class="text-xl">{style.label}</span>
+      <!-- デスクトップ用ホバーツールチップ（状態ラベル＋理由） -->
+      <div class="absolute bottom-full left-1/2 z-10 mb-1 hidden w-max max-w-48 -translate-x-1/2
+                  rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block">
+        {#if reasonLabels.length > 0}
+          <span class="block text-left text-[10px] text-gray-200">{reasonLabels[0]}</span>
+        {/if}
+        {#if gridStateLabel()}
+          <span class="block text-yellow-300 text-xs">{gridStateLabel()}</span>
+        {/if}
+      </div>
+    </button>
+    <!-- モバイル含む常時表示リボン名 -->
+    <span
+      class="block w-14 truncate text-center text-[9px] leading-tight
+        {isObtained ? 'text-green-700 font-medium' : ribbonState === 'urgent' ? 'text-orange-600 font-medium' : ribbonState === 'missed' ? 'text-red-500' : 'text-gray-500'}"
+      title={ribbon.name}
+    >{ribbon.name}</span>
+  </div>
 {:else}
   <!-- リストビュー: 既存のアコーディオンUI -->
   <div
@@ -198,6 +256,34 @@
     <!-- アコーディオン展開エリア -->
     {#if isExpanded}
       <div class="border-t border-gray-100 px-3 pb-3 pt-2">
+      {#if reasonLabels.length > 0}
+        <div class="mb-2 rounded bg-gray-50 p-2">
+          <p class="mb-1 text-xs font-medium text-gray-700">判定理由</p>
+          <ul class="space-y-0.5">
+            {#each reasonLabels as label (label)}
+              <li class="text-xs text-gray-600">• {label}</li>
+            {/each}
+          </ul>
+        </div>
+      {/if}
+
+      {#if canManualEditMissed && onToggleManualMissed}
+        <div class="mb-2 rounded border border-red-200 bg-red-50 p-2">
+          <div class="flex items-center justify-between gap-2">
+            <p class="text-xs font-medium text-red-700">取り逃し状態を手動変更</p>
+            <button
+              class="rounded px-2 py-1 text-xs font-semibold text-white {isManualMissed ? 'bg-gray-500' : 'bg-red-600'}"
+              onclick={onToggleManualMissed}
+            >
+              {isManualMissed ? '取り逃し解除' : '取り逃しにする'}
+            </button>
+          </div>
+          {#if manualMissedUpdatedAt}
+            <p class="mt-1 text-[11px] text-red-600">最終更新日: {manualMissedUpdatedAt}</p>
+          {/if}
+        </div>
+      {/if}
+
         <!-- 説明文 -->
         {#if ribbon.description}
           <p class="mb-2 text-xs text-gray-600">{ribbon.description}</p>

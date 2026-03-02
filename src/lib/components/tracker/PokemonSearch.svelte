@@ -19,6 +19,8 @@
 		})()
 	);
 
+	const SEARCH_INPUT_ID = 'pokemon-search-input';
+
 	/** ポケモンを選択する */
 	function selectPokemon(pokemon: PokemonDetail): void {
 		ribbonProgress.selectPokemon(pokemon);
@@ -33,9 +35,12 @@
 
 <div class="rounded-lg bg-white p-2 shadow md:p-4">
 	<div class="mb-2 md:mb-4">
-		<label class="mb-1 block text-xs font-bold text-gray-700 md:mb-2"> ポケモンを検索 </label>
+		<label for={SEARCH_INPUT_ID} class="mb-1 block text-xs font-bold text-gray-700 md:mb-2">
+			ポケモンを検索
+		</label>
 		<div class="relative">
 			<input
+				id={SEARCH_INPUT_ID}
 				type="text"
 				bind:value={searchQuery}
 				placeholder="ピカチュウ、フシギダネなど..."

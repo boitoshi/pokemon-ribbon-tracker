@@ -3,6 +3,7 @@
 	import { GAMES } from '$lib/data/games';
 	import { TRANSFER_ROUTES } from '$lib/data/transfer-routes';
 	import { loadAllData } from '$lib/utils/dataFetcher';
+	import { getTransferUxText } from '$lib/utils/transferUxText';
 	import type { Ribbon } from '$lib/types';
 
 	const GENERATIONS = [3, 4, 5, 6, 7, 8, 9] as const;
@@ -56,6 +57,9 @@
 	function genLabel(gen: number): string {
 		return `Gen${gen}`;
 	}
+
+	const irreversibleRouteCount = $derived(TRANSFER_ROUTES.filter((route) => route.isIrreversible).length);
+	const deprecatedRouteCount = $derived(TRANSFER_ROUTES.filter((route) => route.isDeprecated).length);
 </script>
 
 <svelte:head>
@@ -89,6 +93,16 @@
 
 	<!-- ===== リボン一覧タブ ===== -->
 	{#if activeTab === 'ribbons'}
+		<div class="mb-3 flex items-center justify-end gap-3">
+			<button
+				class="text-xs text-sky-600 underline"
+				onclick={() => GENERATIONS.forEach((g) => openGens.add(g))}
+			>全て展開</button>
+			<button
+				class="text-xs text-sky-600 underline"
+				onclick={() => GENERATIONS.forEach((g) => openGens.delete(g))}
+			>全て折りたたむ</button>
+		</div>
 		<div class="space-y-3">
 			{#each ribbonsByGen as { gen, ribbons } (gen)}
 				<div class="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
@@ -150,13 +164,35 @@
 	<!-- ===== 転送ルートタブ ===== -->
 	{:else if activeTab === 'transfer'}
 		<div class="space-y-4">
-			<p class="text-sm text-gray-600">
-				ポケモンを世代間で転送するための経路と注意事項をまとめています。
-				転送は基本的に<strong class="text-gray-800">一方通行</strong>です。
-			</p>
+			<div class="rounded-xl border border-red-200 bg-gradient-to-r from-red-50 to-amber-50 p-4 shadow-sm">
+				<div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+					<div>
+						<p class="text-xs font-semibold tracking-wide text-red-700">不可逆転送アラート</p>
+						<h2 class="mt-0.5 text-base font-bold text-gray-900">次世代へ送る前に、この画面で最終確認</h2>
+						<p class="mt-1 text-xs text-gray-700">
+							転送は取り返しがつかないため、手段・制約・廃止情報を必ず確認してください。
+						</p>
+					</div>
+					<div class="grid grid-cols-2 gap-2 text-center">
+						<div class="rounded-lg border border-red-200 bg-white px-3 py-2">
+							<p class="text-[11px] text-gray-500">不可逆ルート</p>
+							<p class="text-lg font-bold text-red-700">{irreversibleRouteCount}</p>
+						</div>
+						<div class="rounded-lg border border-orange-200 bg-white px-3 py-2">
+							<p class="text-[11px] text-gray-500">要注意ルート</p>
+							<p class="text-lg font-bold text-orange-700">{deprecatedRouteCount}</p>
+						</div>
+					</div>
+				</div>
+				<ul class="mt-3 space-y-1 text-xs text-gray-700">
+					<li>1. 必要手段（いずれか）を満たしているか確認</li>
+					<li>2. 一方通行・日次制限・サービス状況を確認</li>
+					<li>3. リボンの取り残しがないことを確認してから実行</li>
+				</ul>
+			</div>
 
 			<!-- 転送フロー図（テキストベース） -->
-			<div class="overflow-x-auto rounded-xl border border-gray-200 bg-gray-50 px-4 py-4">
+			<div class="overflow-x-auto rounded-xl border border-gray-200 bg-gray-50 px-4 py-4 shadow-sm">
 				<div class="flex flex-wrap items-center gap-2 text-sm font-medium text-gray-700 whitespace-nowrap">
 					<span class="rounded bg-red-100 px-2 py-1 text-red-700">Gen3</span>
 					<span class="text-gray-400">→ パルパーク →</span>
@@ -172,11 +208,20 @@
 
 			<!-- 各ルートカード -->
 			{#each TRANSFER_ROUTES as route (route.id)}
+				{@const transferText = getTransferUxText(route.explanationKey)}
 				<div class="overflow-hidden rounded-xl border shadow-sm
-					{route.isDeprecated ? 'border-red-200' : 'border-gray-200'}">
+					{route.isDeprecated
+						? 'border-red-200 bg-red-50/30'
+						: route.isIrreversible
+							? 'border-rose-200 bg-rose-50/30'
+							: 'border-gray-200 bg-white'}">
 					<!-- カードヘッダー -->
-					<div class="flex items-center gap-3 px-4 py-3
-						{route.isDeprecated ? 'bg-red-50' : 'bg-gray-50'}">
+					<div class="flex flex-wrap items-center gap-3 px-4 py-3
+						{route.isDeprecated
+							? 'bg-red-50'
+							: route.isIrreversible
+								? 'bg-rose-50'
+								: 'bg-gray-50'}">
 						<div class="flex items-center gap-2">
 							<span class="rounded bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">
 								{genLabel(route.fromGeneration)}
@@ -187,6 +232,9 @@
 							</span>
 						</div>
 						<h3 class="text-sm font-bold text-gray-800">{route.methodName}</h3>
+						{#if route.isIrreversible}
+							<span class="rounded bg-rose-100 px-2 py-0.5 text-xs font-bold text-rose-700">不可逆</span>
+						{/if}
 						{#if route.isDeprecated}
 							<span class="ml-auto rounded bg-red-100 px-2 py-0.5 text-xs font-bold text-red-700">
 								注意: 廃止予定
@@ -196,12 +244,13 @@
 
 					<!-- カード本体 -->
 					<div class="px-4 py-3 space-y-2">
+						<p class="rounded bg-white/80 px-2 py-1 text-xs text-gray-700 ring-1 ring-gray-100">{transferText.guideSummary}</p>
 						<!-- 必要ハード -->
 						<div class="flex flex-wrap gap-1 items-center">
-							<span class="text-xs text-gray-500 mr-1">必要ハード:</span>
-							{#each route.hardwareRequired as hw (hw)}
+							<span class="text-xs text-gray-500 mr-1">必要手段（いずれか）:</span>
+							{#each route.requirements.anyOf as option (option.id)}
 								<span class="rounded border border-gray-200 bg-white px-2 py-0.5 text-xs font-medium text-gray-700">
-									{hw.toUpperCase()}
+									{option.label}
 								</span>
 							{/each}
 						</div>

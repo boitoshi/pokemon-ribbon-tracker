@@ -125,6 +125,12 @@
 			: 0
 	);
 
+	const lastConfirmedDate = $derived(
+		ribbonProgress.activeMyPokemonId
+			? ribbonProgress.getLastConfirmationDate(ribbonProgress.activeMyPokemonId)
+			: undefined
+	);
+
 	/** アクティブポケモンの表示名 */
 	const activePokemonName = $derived(
 		ribbonProgress.activeMyPokemon
@@ -140,6 +146,8 @@
 			? ribbonProgress.allPokemon.find((p) => p.id === ribbonProgress.activeMyPokemon!.pokemonId)?.image
 			: undefined
 	);
+
+	const hasNoActivePokemon = $derived(ribbonProgress.activeMyPokemonId === null);
 
 	/** マイポケモン一覧の表示名取得 */
 	function getMyPokemonName(mp: { id: string; pokemonId: string; nickname: string }): string {
@@ -171,13 +179,28 @@
 		ribbonProgress.toggleRibbon(ribbonId);
 	}
 
-	/** 進捗リセット */
+	function handleToggleManualMissed(ribbonId: string): void {
+		if (!ribbonProgress.activeMyPokemonId) {
+			toast.info('マイポケモンを選択してください');
+			return;
+		}
+		ribbonProgress.toggleManualMissed(ribbonProgress.activeMyPokemonId, ribbonId);
+		toast.success('取り逃し状態を更新しました');
+	}
+
+	let showResetConfirm = $state(false);
+
+	/** 進捗リセット確認 */
 	function handleResetProgress(): void {
 		if (!ribbonProgress.activeMyPokemonId) return;
-		if (confirm('このポケモンのリボン進捗をリセットしますか？')) {
-			ribbonProgress.resetProgress();
-			toast.success('進捗をリセットしました');
-		}
+		showResetConfirm = true;
+	}
+
+	/** 進捗リセット実行 */
+	function executeResetProgress(): void {
+		ribbonProgress.resetProgress();
+		toast.success('進捗をリセットしました');
+		showResetConfirm = false;
 	}
 
 	/** 進捗エクスポート */
@@ -363,6 +386,23 @@
 
 		<!-- ===== メインエリア（フィルター・リボン一覧） ===== -->
 		<main class="min-w-0 flex-1">
+			{#if hasNoActivePokemon}
+				<div class="mb-4 rounded-xl border border-sky-200 bg-sky-50 px-4 py-4">
+					<p class="text-xs font-semibold text-sky-700">はじめての人向けガイド</p>
+					<p class="mt-1 text-sm text-sky-800">
+						今は<strong>参照モード</strong>です（一覧・フィルタ・可否確認）。
+						マイポケモンを選ぶと<strong>記録モード</strong>になり、進捗や取り逃しを保存できます。
+					</p>
+					<div class="mt-3 flex flex-wrap gap-2">
+						<a
+							href="/setup"
+							class="inline-flex items-center gap-1 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 active:bg-sky-800"
+						>⚙️ セットアップを始める</a>
+						<p class="self-center text-xs text-sky-600">← 所持ゲーム・ハードを登録するとリボンの取得可否が分かります</p>
+					</div>
+				</div>
+			{/if}
+
 			<!-- ヒーローカード -->
 			{#if ribbonProgress.activeMyPokemon}
 				{@const activeGen = ribbonProgress.genMap.get(ribbonProgress.activeMyPokemon?.originGame ?? '')}
@@ -400,6 +440,9 @@
 								{#if missedRibbons.length > 0}
 									<p class="text-xs text-red-600 font-medium">❌ 取り逃し {missedRibbons.length}個</p>
 								{/if}
+								{#if lastConfirmedDate}
+									<p class="text-xs text-gray-600">不可逆転送の最終確認日: {lastConfirmedDate}</p>
+								{/if}
 							</div>
 						</div>
 					</div>
@@ -417,8 +460,23 @@
 							class="rounded bg-red-50 px-2 py-1 text-xs text-red-600 hover:bg-red-100"
 							onclick={handleResetProgress}
 						>リセット</button>
+					</div>				{#if showResetConfirm}
+					<div class="border-t border-red-100 bg-white/80 px-3 py-2">
+						<div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm">
+							<p class="mb-2 text-red-700">リボン進捗をリセットしますか？</p>
+							<div class="flex gap-2">
+								<button
+									class="rounded bg-gray-200 px-3 py-1 text-xs text-gray-700 hover:bg-gray-300"
+									onclick={() => (showResetConfirm = false)}
+								>キャンセル</button>
+								<button
+									class="rounded bg-red-600 px-3 py-1 text-xs text-white hover:bg-red-700"
+									onclick={executeResetProgress}
+								>リセット</button>
+							</div>
+						</div>
 					</div>
-					<!-- 世代別ミニ進捗グリッド -->
+				{/if}					<!-- 世代別ミニ進捗グリッド -->
 					<div class="grid grid-cols-4 gap-1 border-t bg-white/50 p-2 md:grid-cols-7">
 						{#each generationProgressEntries as { gen, obtained, total } (gen)}
 							<div class="rounded bg-white/70 p-1.5 text-center">
@@ -458,7 +516,11 @@
 							<RibbonCard
 								{ribbon}
 								ribbonState={ribbonProgress.getRibbonState(ribbon)}
+								reasonLabels={ribbonProgress.getRibbonReasonLabels(ribbon)}
 								onToggle={() => handleToggleRibbon(ribbon.id)}
+								onToggleManualMissed={() => handleToggleManualMissed(ribbon.id)}
+								isManualMissed={ribbonProgress.isManualMissed(ribbon.id)}
+								manualMissedUpdatedAt={ribbonProgress.getManualMissedUpdatedAt(ribbon.id)}
 								view="list"
 							/>
 						{/each}
@@ -531,7 +593,11 @@
 							<RibbonCard
 								{ribbon}
 								ribbonState={ribbonProgress.getRibbonState(ribbon)}
+								reasonLabels={ribbonProgress.getRibbonReasonLabels(ribbon)}
 								onToggle={() => handleToggleRibbon(ribbon.id)}
+								onToggleManualMissed={() => handleToggleManualMissed(ribbon.id)}
+								isManualMissed={ribbonProgress.isManualMissed(ribbon.id)}
+								manualMissedUpdatedAt={ribbonProgress.getManualMissedUpdatedAt(ribbon.id)}
 								view="grid"
 							/>
 						{/each}
@@ -542,7 +608,11 @@
 							<RibbonCard
 								{ribbon}
 								ribbonState={ribbonProgress.getRibbonState(ribbon)}
+								reasonLabels={ribbonProgress.getRibbonReasonLabels(ribbon)}
 								onToggle={() => handleToggleRibbon(ribbon.id)}
+								onToggleManualMissed={() => handleToggleManualMissed(ribbon.id)}
+								isManualMissed={ribbonProgress.isManualMissed(ribbon.id)}
+								manualMissedUpdatedAt={ribbonProgress.getManualMissedUpdatedAt(ribbon.id)}
 								view="list"
 							/>
 						{/each}

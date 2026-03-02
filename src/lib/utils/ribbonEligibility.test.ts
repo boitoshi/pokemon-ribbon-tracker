@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
-import { getRibbonState } from '$lib/utils/ribbonEligibility';
+import { getRibbonEvaluation, getRibbonState } from '$lib/utils/ribbonEligibility';
 import type { Ribbon, PokemonDetail, MyPokemon } from '$lib/types';
 
 // ---- フィクスチャ ----
@@ -188,5 +188,34 @@ describe('getRibbonState', () => {
   it('myPokemon なし → available', () => {
     // ポケモン未選択（汎用ビュー）→ available
     expect(getRibbonState(gen3Ribbon, gen3Pokemon, undefined, false, gameGenMap)).toBe('available');
+  });
+});
+
+describe('getRibbonEvaluation', () => {
+  it('レベルオーバー時に理由キーを返す', () => {
+    const result = getRibbonEvaluation(
+      gen7LevelMaxRibbon,
+      gen3Pokemon,
+      gen3inGen7HighLevel,
+      false,
+      gameGenMap
+    );
+
+    expect(result.state).toBe('missed');
+    expect(result.reasons).toContain('level_limit_exceeded');
+  });
+
+  it('生まれる前リボンで理由キーを返す', () => {
+    const result = getRibbonEvaluation(gen3Ribbon, null, gen8MyPokemon, false, gameGenMap);
+
+    expect(result.state).toBe('locked');
+    expect(result.reasons).toContain('born_after_ribbon_generation');
+  });
+
+  it('取得可能状態で available_now を返す', () => {
+    const result = getRibbonEvaluation(gen3Ribbon, gen3Pokemon, gen3MyPokemon, false, gameGenMap);
+
+    expect(result.state).toBe('available');
+    expect(result.reasons).toContain('available_now');
   });
 });

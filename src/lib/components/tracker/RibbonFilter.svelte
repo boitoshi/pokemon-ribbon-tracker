@@ -114,7 +114,7 @@
 			<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
 				<!-- カテゴリフィルター -->
 				<div>
-					<label class="mb-1 block text-xs font-medium text-gray-700">カテゴリ</label>
+					<p class="mb-1 block text-xs font-medium text-gray-700">カテゴリ</p>
 					<div class="flex flex-wrap gap-1">
 						<button
 							class="rounded px-2 py-1 text-xs {type === null ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
@@ -135,7 +135,7 @@
 
 				<!-- 取得状況フィルター -->
 				<div>
-					<label class="mb-1 block text-xs font-medium text-gray-700">取得状況</label>
+					<p class="mb-1 block text-xs font-medium text-gray-700">取得状況</p>
 					<div class="flex flex-wrap gap-1">
 						<button
 							class="rounded px-2 py-1 text-xs {status === null ? 'bg-blue-500 text-white' : 'bg-gray-200'}"

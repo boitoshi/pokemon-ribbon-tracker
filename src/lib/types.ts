@@ -9,6 +9,25 @@ export type RibbonState =
 	| 'future' // まだここにいない（未来世代）
 	| 'locked'; // 永続的に取得不可（種族不一致、シャドウ限定、生まれる前）
 
+/** リボン状態の理由キー（UI文言はキーから解決する） */
+export type RibbonReasonKey =
+	| 'already_obtained'
+	| 'species_generation_mismatch'
+	| 'shadow_only_species'
+	| 'shadow_only_origin_game'
+	| 'born_after_ribbon_generation'
+	| 'level_limit_exceeded'
+	| 'past_generation_unreachable'
+	| 'future_generation_not_reached'
+	| 'level_limited_available_now'
+	| 'available_now';
+
+/** 理由付きリボン判定結果 */
+export interface RibbonEvaluation {
+	state: RibbonState;
+	reasons: RibbonReasonKey[];
+}
+
 /** リボンの取得状態を表すUI型 */
 export interface RibbonStatus {
 	id: string;
@@ -85,8 +104,27 @@ export interface MyPokemon {
 	level: number;
 	/** Pokemon HOME に転送済みか */
 	isTransferredToHome: boolean;
+	/** 不可逆転送の最終確認日（YYYY-MM-DD, ローカル時刻） */
+	lastIrreversibleConfirmedAt?: string;
+	/** 個体×ルート単位の確認履歴 */
+	transferConfirmations?: Record<string, TransferConfirmation>;
+	/** リボン状態の手動上書き（missedの手動変更用） */
+	manualRibbonOverrides?: Record<string, ManualRibbonOverride>;
 	memo: string;
 	createdAt: string;
+}
+
+/** 不可逆転送の確認情報 */
+export interface TransferConfirmation {
+	routeId: string;
+	confirmedAt: string;
+	agreedIrreversible: boolean;
+}
+
+/** リボン状態の手動上書き情報 */
+export interface ManualRibbonOverride {
+	isMissed: boolean;
+	updatedAt: string;
 }
 
 /** 所持ゲーム・ハード設定 */
@@ -99,16 +137,35 @@ export interface Setup {
 /** 所持ハード種別 */
 export type Hardware = 'gba' | 'ds_lite' | 'dsi' | '3ds' | 'switch';
 
+/** ハード要件の1候補（AND） */
+export interface TransferRequirementOption {
+	id: string;
+	allOf: Hardware[];
+	labelKey: string;
+	label: string;
+}
+
+/** ハード要件群（OR） */
+export interface TransferRequirement {
+	anyOf: TransferRequirementOption[];
+}
+
 /** 転送ルート定義 */
 export interface TransferRoute {
 	id: string;
 	fromGeneration: number;
 	toGeneration: number;
 	methodName: string;
-	hardwareRequired: Hardware[];
+	requirements: TransferRequirement;
+	/** @deprecated requirements を使用 */
+	hardwareRequired?: Hardware[];
 	/** 要: DS/DS Liteのみ（DSi不可）など特殊制限 */
 	hardwareNote?: string;
 	softwareRequired: string[];
+	/** 不可逆転送かどうか（UIの注意表示で利用） */
+	isIrreversible: boolean;
+	/** 説明文解決用キー */
+	explanationKey: string;
 	dailyLimit?: number;
 	restrictions: string[];
 	isDeprecated?: boolean;

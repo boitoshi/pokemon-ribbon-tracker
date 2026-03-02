@@ -37,6 +37,14 @@
 		memo: ''
 	});
 
+	const FORM_ID = {
+		nickname: 'my-pokemon-nickname',
+		originGame: 'my-pokemon-origin-game',
+		currentGame: 'my-pokemon-current-game',
+		level: 'my-pokemon-level',
+		memo: 'my-pokemon-memo'
+	} as const;
+
 	/** originGameが変わったらcurrentGameをデフォルト設定する */
 	$effect(() => {
 		if (form.originGame) {
@@ -276,8 +284,9 @@
 					<div class="space-y-2">
 						<!-- ニックネーム -->
 						<div>
-							<label class="mb-0.5 block text-xs text-gray-600">ニックネーム（任意）</label>
+							<label for={FORM_ID.nickname} class="mb-0.5 block text-xs text-gray-600">ニックネーム（任意）</label>
 							<input
+								id={FORM_ID.nickname}
 								type="text"
 								bind:value={form.nickname}
 								placeholder="ニックネーム"
@@ -287,8 +296,8 @@
 
 						<!-- 出身ゲーム -->
 						<div>
-							<label class="mb-0.5 block text-xs text-gray-600">出身ゲーム（必須）</label>
-							<select bind:value={form.originGame} class="w-full rounded border bg-white px-2 py-1.5 text-sm">
+							<label for={FORM_ID.originGame} class="mb-0.5 block text-xs text-gray-600">出身ゲーム（必須）</label>
+							<select id={FORM_ID.originGame} bind:value={form.originGame} class="w-full rounded border bg-white px-2 py-1.5 text-sm">
 								<option value="">選択してください</option>
 								{#each GAMES as game (game.id)}
 									<option value={game.id}>{game.name}</option>
@@ -298,8 +307,8 @@
 
 						<!-- 現在のゲーム -->
 						<div>
-							<label class="mb-0.5 block text-xs text-gray-600">現在のゲーム（必須）</label>
-							<select bind:value={form.currentGame} class="w-full rounded border bg-white px-2 py-1.5 text-sm">
+							<label for={FORM_ID.currentGame} class="mb-0.5 block text-xs text-gray-600">現在のゲーム（必須）</label>
+							<select id={FORM_ID.currentGame} bind:value={form.currentGame} class="w-full rounded border bg-white px-2 py-1.5 text-sm">
 								<option value="">選択してください</option>
 								{#each GAMES as game (game.id)}
 									<option value={game.id}>{game.name}</option>
@@ -315,8 +324,9 @@
 
 						<!-- レベル -->
 						<div>
-							<label class="mb-0.5 block text-xs text-gray-600">レベル（{MIN_LEVEL}〜{MAX_LEVEL}）</label>
+							<label for={FORM_ID.level} class="mb-0.5 block text-xs text-gray-600">レベル（{MIN_LEVEL}〜{MAX_LEVEL}）</label>
 							<input
+								id={FORM_ID.level}
 								type="number"
 								bind:value={form.level}
 								min={MIN_LEVEL}
@@ -340,8 +350,9 @@
 
 						<!-- メモ -->
 						<div>
-							<label class="mb-0.5 block text-xs text-gray-600">メモ（任意）</label>
+							<label for={FORM_ID.memo} class="mb-0.5 block text-xs text-gray-600">メモ（任意）</label>
 							<textarea
+								id={FORM_ID.memo}
 								bind:value={form.memo}
 								placeholder="メモ"
 								rows={2}
