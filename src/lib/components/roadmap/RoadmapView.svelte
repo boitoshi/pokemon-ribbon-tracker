@@ -14,29 +14,47 @@
 		GENERATIONS.map((gen) => {
 			const genRibbons = ribbonProgress.allRibbons.filter((r) => r.generation === gen);
 
-			// 緊急（レベル制限・未取得）
+			// 各リボンの取得状態
 			const urgentRibbons = genRibbons.filter(
-				(r) =>
-					r.eligibility?.type === 'level_max' &&
-					!ribbonProgress.currentCheckedRibbons.includes(r.id)
+				(r) => ribbonProgress.ribbonStateMap.get(r.id) === 'urgent'
+			);
+			const missedRibbons = genRibbons.filter(
+				(r) => ribbonProgress.ribbonStateMap.get(r.id) === 'missed'
+			);
+			const futureRibbons = genRibbons.filter(
+				(r) => ribbonProgress.ribbonStateMap.get(r.id) === 'future'
+			);
+			const lockedRibbons = genRibbons.filter(
+				(r) => ribbonProgress.ribbonStateMap.get(r.id) === 'locked'
 			);
 
-			// ロック（所持ゲームがない && セットアップ済み）
-			const lockedRibbons = setup.setupCompleted
-				? genRibbons.filter(
-						(r) =>
-							!urgentRibbons.includes(r) &&
-							r.games.length > 0 &&
-							!r.games.some((g) => setup.ownedGames.includes(g))
-					)
-				: [];
+			// 通常（obtained / available）
+			const normalRibbons = genRibbons.filter((r) => {
+				const state = ribbonProgress.ribbonStateMap.get(r.id);
+				return state === 'obtained' || state === 'available';
+			});
 
-			// 通常（緊急・ロック以外）
-			const normalRibbons = genRibbons.filter(
-				(r) => !urgentRibbons.includes(r) && !lockedRibbons.includes(r)
+			// フェーズ判定（マイポケモン未選択時は 'future' を返す）
+			const currentGen = ribbonProgress.genMap.get(
+				ribbonProgress.activeMyPokemon?.currentGame ?? ''
 			);
+			const phase: 'past' | 'current' | 'future' = currentGen === undefined
+				? 'future'
+				: gen < currentGen
+					? 'past'
+					: gen === currentGen
+						? 'current'
+						: 'future';
 
-			return { generation: gen, ribbons: normalRibbons, urgentRibbons, lockedRibbons } satisfies RibbonGroup;
+			return {
+				generation: gen,
+				phase,
+				ribbons: normalRibbons,
+				urgentRibbons,
+				missedRibbons,
+				futureRibbons,
+				lockedRibbons
+			} satisfies RibbonGroup;
 		})
 	);
 

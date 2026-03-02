@@ -2,10 +2,7 @@
 	import type { FilterState } from '$lib/types';
 
 	/** Props */
-	let { onFilterChange }: { onFilterChange: (f: FilterState) => void } = $props();
-
-	/** 世代リスト定数 */
-	const GENERATIONS = [3, 4, 5, 6, 7, 8, 9] as const;
+	let { onFilterChange }: { onFilterChange: (_f: Omit<FilterState, 'generation'>) => void } = $props();
 
 	/** リボンカテゴリ定義 */
 	const RIBBON_TYPES: { id: string; name: string }[] = [
@@ -25,14 +22,11 @@
 	let searchQuery = $state('');
 
 	/** アクティブなフィルター */
-	let generation = $state<number | null>(null);
 	let type = $state<string | null>(null);
 	let status = $state<FilterState['status']>(null);
 
-	/** アクティブなフィルター数 */
-	const activeFilterCount = $derived(
-		(generation !== null ? 1 : 0) + (type !== null ? 1 : 0) + (status !== null ? 1 : 0)
-	);
+	/** アクティブなフィルター数（generation 除外） */
+	const activeFilterCount = $derived((type !== null ? 1 : 0) + (status !== null ? 1 : 0));
 
 	/** タイプIDから日本語名を取得する */
 	function getRibbonTypeName(typeId: string): string {
@@ -41,12 +35,7 @@
 
 	/** フィルター変更をコールバックで通知する */
 	function emitFilterChange(): void {
-		onFilterChange({ generation, type, status, search: searchQuery });
-	}
-
-	function toggleGeneration(gen: number | null): void {
-		generation = generation === gen ? null : gen;
-		emitFilterChange();
+		onFilterChange({ type, status, search: searchQuery });
 	}
 
 	function toggleType(t: string | null): void {
@@ -64,7 +53,6 @@
 	}
 
 	function resetFilters(): void {
-		generation = null;
 		type = null;
 		status = null;
 		searchQuery = '';
@@ -105,12 +93,6 @@
 	<!-- アクティブフィルターチップ（折りたたみ時に表示） -->
 	{#if !isExpanded && activeFilterCount > 0}
 		<div class="mt-1.5 flex flex-wrap gap-1">
-			{#if generation !== null}
-				<span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-800">
-					第{generation}世代
-					<button class="hover:text-blue-500" onclick={() => toggleGeneration(null)}>×</button>
-				</span>
-			{/if}
 			{#if type !== null}
 				<span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-800">
 					{getRibbonTypeName(type)}
@@ -129,28 +111,7 @@
 	<!-- 折りたたみフィルターパネル -->
 	{#if isExpanded}
 		<div class="mt-2 rounded-lg border bg-gray-50 p-3">
-			<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-				<!-- 世代フィルター -->
-				<div>
-					<label class="mb-1 block text-xs font-medium text-gray-700">世代</label>
-					<div class="flex flex-wrap gap-1">
-						<button
-							class="rounded px-2 py-1 text-xs {generation === null ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
-							onclick={() => toggleGeneration(null)}
-						>
-							すべて
-						</button>
-						{#each GENERATIONS as gen (gen)}
-							<button
-								class="rounded px-2 py-1 text-xs {generation === gen ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
-								onclick={() => toggleGeneration(gen)}
-							>
-								第{gen}世代
-							</button>
-						{/each}
-					</div>
-				</div>
-
+			<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
 				<!-- カテゴリフィルター -->
 				<div>
 					<label class="mb-1 block text-xs font-medium text-gray-700">カテゴリ</label>

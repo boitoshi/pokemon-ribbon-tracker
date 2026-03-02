@@ -1,5 +1,14 @@
 // ポケモンリボントラッカー v2 共通型定義
 
+/** リボンの取得状態を表す判定型 */
+export type RibbonState =
+	| 'obtained' // 取得済み
+	| 'missed' // 取り逃し（通過済み世代の未取得、またはレベル超過）
+	| 'urgent' // 今すぐ取れ！（現在世代 & level_max 制限あり）
+	| 'available' // 取得可能（現在世代 & 制限なし）
+	| 'future' // まだここにいない（未来世代）
+	| 'locked'; // 永続的に取得不可（種族不一致、シャドウ限定、生まれる前）
+
 /** リボンの取得状態を表すUI型 */
 export interface RibbonStatus {
 	id: string;
@@ -72,8 +81,6 @@ export interface MyPokemon {
 	originGame: string;
 	/** 今どのゲーム/BOXにいるか */
 	currentGame: string;
-	/** 現在の世代 */
-	currentGeneration: number;
 	/** 現在のレベル（レベル制限リボンの判定に使用） */
 	level: number;
 	/** Pokemon HOME に転送済みか */
@@ -119,7 +126,10 @@ export interface FilterState {
 /** ロードマップ表示用リボングループ */
 export interface RibbonGroup {
 	generation: number;
+	phase: 'past' | 'current' | 'future';
 	ribbons: Ribbon[];
 	urgentRibbons: Ribbon[];
+	missedRibbons: Ribbon[];
+	futureRibbons: Ribbon[];
 	lockedRibbons: Ribbon[];
 }

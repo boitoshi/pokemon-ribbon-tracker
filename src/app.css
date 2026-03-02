@@ -27,3 +27,14 @@
 	--color-type-ghost: #705898;
 	--color-type-steel: #b8b8d0;
 }
+
+/* リボン取得アニメーション */
+@keyframes ribbon-collect {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.4); filter: brightness(1.8) drop-shadow(0 0 6px currentColor); }
+  100% { transform: scale(1); }
+}
+
+.ribbon-collect {
+  animation: ribbon-collect 0.4s ease-out;
+}

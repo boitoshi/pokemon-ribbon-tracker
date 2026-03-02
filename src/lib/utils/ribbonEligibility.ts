@@ -1,66 +1,69 @@
-import type { PokemonDetail, Ribbon, MyPokemon } from '$lib/types';
+import type { PokemonDetail, Ribbon, MyPokemon, RibbonState } from '$lib/types';
 import { isShadowPokemon } from '$lib/data/shadow-pokemon';
 
 /**
- * ポケモンが指定リボンを取得可能かどうかを判定する。
- * @param pokemon 対象ポケモンの詳細情報
- * @param ribbon 対象リボンの定義
- * @param myPokemon マイポケモンの個体情報（省略可）
- * @returns { eligible: boolean; reason?: string } - eligible=false の場合、reason に理由を入れる
+ * ポケモン個体のリボン取得状態を判定する。
+ * @param ribbon 対象リボン
+ * @param pokemon 種族データ（選択中ポケモン）
+ * @param myPokemon マイポケモン個体情報（未選択時はundefined）
+ * @param isObtained 取得済みかどうか
+ * @param gameGenMap ゲームID → 世代番号のマップ
  */
-export function canPokemonGetRibbon(
-  pokemon: PokemonDetail,
+export function getRibbonState(
   ribbon: Ribbon,
-  myPokemon?: MyPokemon,
-): { eligible: boolean; reason?: string } {
-  // 世代チェック: ポケモンの世代がリボンの世代以下でなければ取得不可
-  if (pokemon.generation > ribbon.generation) {
-    return {
-      eligible: false,
-      reason: `第${ribbon.generation}世代以前のポケモンのみ取得可能`,
-    };
+  pokemon: PokemonDetail | null,
+  myPokemon: MyPokemon | undefined,
+  isObtained: boolean,
+  gameGenMap: ReadonlyMap<string, number>
+): RibbonState {
+  if (isObtained) return 'obtained';
+
+  // 種族チェック: ポケモン種族の登場世代 > リボンの定義世代 → locked
+  if (pokemon && pokemon.generation > ribbon.generation) return 'locked';
+
+  // シャドウ限定チェック
+  if (ribbon.eligibility?.type === 'shadow_only') {
+    if (!isShadowPokemon(pokemon?.id ?? '')) return 'locked';
+    if (
+      myPokemon?.originGame &&
+      ribbon.eligibility.shadowGames &&
+      !ribbon.eligibility.shadowGames.includes(myPokemon.originGame)
+    )
+      return 'locked';
   }
 
-  // eligibilityフィールドがない、またはtype='all'の場合は取得可能
-  if (!ribbon.eligibility || ribbon.eligibility.type === 'all') {
-    return { eligible: true };
+  // ポケモン未選択 → generic ビュー
+  if (!myPokemon) return 'available';
+
+  // リボンが取得できるゲームの世代番号リスト
+  const ribbonGameGens = ribbon.games
+    .map((gid) => gameGenMap.get(gid))
+    .filter((g): g is number => g !== undefined);
+  if (ribbonGameGens.length === 0) return 'available';
+
+  const maxRibbonGen = Math.max(...ribbonGameGens);
+  const minRibbonGen = Math.min(...ribbonGameGens);
+  const originGen = gameGenMap.get(myPokemon.originGame) ?? 0;
+  const currentGen = gameGenMap.get(myPokemon.currentGame) ?? 0;
+
+  // 生まれた世代より前にしか存在しないリボン → locked
+  if (maxRibbonGen < originGen) return 'locked';
+
+  // level_max でレベルオーバー → missed（レベルは下げられない）
+  if (ribbon.eligibility?.type === 'level_max') {
+    if (myPokemon.level > (ribbon.eligibility.maxLevel ?? Infinity)) return 'missed';
   }
 
-  // シャドウポケモン限定チェック
-  if (ribbon.eligibility.type === 'shadow_only') {
-    const isShadow = isShadowPokemon(pokemon.id);
+  // 全ゲームが現在世代より前 → missed（もう戻れない）
+  if (maxRibbonGen < currentGen) return 'missed';
 
-    if (!isShadow) {
-      return {
-        eligible: false,
-        reason: 'シャドウポケモンのみ取得可能',
-      };
-    }
+  // 全ゲームが現在世代より後 → future
+  if (minRibbonGen > currentGen) return 'future';
 
-    // myPokemonが提供されている場合、originGameがshadowGamesに含まれるかチェック
-    if (myPokemon && ribbon.eligibility.shadowGames) {
-      const originGameAllowed = ribbon.eligibility.shadowGames.includes(myPokemon.originGame);
-      if (!originGameAllowed) {
-        return {
-          eligible: false,
-          reason: 'コロシアム/XD出身のポケモンのみ取得可能',
-        };
-      }
-    }
+  // 現在世代で取得可能 & level_max → urgent
+  if (ribbon.eligibility?.type === 'level_max') return 'urgent';
 
-    return { eligible: true };
-  }
-
-  // レベル上限チェック: 取得可能だが警告理由を付ける
-  if (ribbon.eligibility.type === 'level_max') {
-    const maxLevel = ribbon.eligibility.maxLevel;
-    return {
-      eligible: true,
-      reason: `Lv.${maxLevel}以下のポケモンのみ参加可能`,
-    };
-  }
-
-  return { eligible: true };
+  return 'available';
 }
 
 /**

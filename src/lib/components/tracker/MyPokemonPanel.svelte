@@ -13,14 +13,13 @@
 		nickname: string;
 		originGame: string;
 		currentGame: string;
-		currentGeneration: number;
 		level: number;
 		isTransferredToHome: boolean;
 		memo: string;
 	}
 
 	/** パネルの開閉状態 */
-	let isOpen = $state(true);
+	let isOpen = $state(false);
 	/** フォーム表示状態 */
 	let showForm = $state(false);
 	/** 編集中のマイポケモンID（nullは新規登録） */
@@ -33,22 +32,17 @@
 		nickname: '',
 		originGame: '',
 		currentGame: '',
-		currentGeneration: 0,
 		level: 1,
 		isTransferredToHome: false,
 		memo: ''
 	});
 
-	/** originGameが変わったらcurrentGenerationを自動計算する */
+	/** originGameが変わったらcurrentGameをデフォルト設定する */
 	$effect(() => {
 		if (form.originGame) {
-			const game = ribbonProgress.allGames.find((g) => g.id === form.originGame);
-			if (game) {
-				form.currentGeneration = game.generation;
-				// currentGameがまだ未設定なら出身ゲームをデフォルトにする
-				if (!form.currentGame) {
-					form.currentGame = form.originGame;
-				}
+			// currentGameがまだ未設定なら出身ゲームをデフォルトにする
+			if (!form.currentGame) {
+				form.currentGame = form.originGame;
 			}
 		}
 	});
@@ -78,7 +72,6 @@
 			nickname: '',
 			originGame: '',
 			currentGame: '',
-			currentGeneration: 0,
 			level: 1,
 			isTransferredToHome: false,
 			memo: ''
@@ -100,7 +93,6 @@
 			nickname: mp.nickname,
 			originGame: mp.originGame,
 			currentGame: mp.currentGame,
-			currentGeneration: mp.currentGeneration,
 			level: mp.level,
 			isTransferredToHome: mp.isTransferredToHome,
 			memo: mp.memo
@@ -118,7 +110,6 @@
 				nickname: form.nickname,
 				originGame: form.originGame,
 				currentGame: form.currentGame,
-				currentGeneration: form.currentGeneration,
 				level: form.level,
 				isTransferredToHome: form.isTransferredToHome,
 				memo: form.memo
@@ -130,7 +121,6 @@
 				nickname: form.nickname,
 				originGame: form.originGame,
 				currentGame: form.currentGame,
-				currentGeneration: form.currentGeneration,
 				level: form.level,
 				isTransferredToHome: form.isTransferredToHome,
 				memo: form.memo
@@ -315,6 +305,12 @@
 									<option value={game.id}>{game.name}</option>
 								{/each}
 							</select>
+							{#if form.currentGame}
+								{@const currentGen = ribbonProgress.allGames.find(g => g.id === form.currentGame)?.generation}
+								{#if currentGen}
+									<p class="text-xs text-gray-500">現在の世代: Gen{currentGen}（自動）</p>
+								{/if}
+							{/if}
 						</div>
 
 						<!-- レベル -->

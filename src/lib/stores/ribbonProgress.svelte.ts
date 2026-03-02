@@ -1,6 +1,6 @@
-import type { Ribbon, Game, PokemonDetail, MyPokemon } from '$lib/types';
+import type { Ribbon, Game, PokemonDetail, MyPokemon, RibbonState } from '$lib/types';
 import { loadAllData } from '$lib/utils/dataFetcher';
-import { canPokemonGetRibbon } from '$lib/utils/ribbonEligibility';
+import { getRibbonState } from '$lib/utils/ribbonEligibility';
 
 /** localStorageキー定数 */
 const PROGRESS_STORAGE_KEY = 'rt_progress';
@@ -39,6 +39,35 @@ class RibbonProgressStore {
 		this.activeMyPokemonId ? (this.progress[this.activeMyPokemonId] ?? []) : []
 	);
 
+	/** ゲームID → 世代番号のマップ */
+	private gameGenMap: ReadonlyMap<string, number> = $derived(
+		new Map(this.allGames.map((g) => [g.id, g.generation]))
+	);
+	get genMap(): ReadonlyMap<string, number> {
+		return this.gameGenMap;
+	}
+
+	/** 全リボンの取得状態マップ */
+	ribbonStateMap: ReadonlyMap<string, RibbonState> = $derived(
+		(() => {
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity
+			const map = new Map<string, RibbonState>();
+			for (const ribbon of this.allRibbons) {
+				map.set(
+					ribbon.id,
+					getRibbonState(
+						ribbon,
+						this.selectedPokemon,
+						this.activeMyPokemon ?? undefined,
+						this.currentCheckedRibbons.includes(ribbon.id),
+						this.gameGenMap
+					)
+				);
+			}
+			return map;
+		})()
+	);
+
 	/** 世代別完了率: Record<number, { obtained: number; total: number }> */
 	generationProgress = $derived(
 		(() => {
@@ -46,9 +75,10 @@ class RibbonProgressStore {
 			for (const ribbon of this.allRibbons) {
 				const gen = ribbon.generation;
 				if (!result[gen]) result[gen] = { obtained: 0, total: 0 };
-				result[gen].total++;
-				if (this.currentCheckedRibbons.includes(ribbon.id)) {
-					result[gen].obtained++;
+				const state = this.ribbonStateMap.get(ribbon.id) ?? 'available';
+				if (state === 'obtained' || state === 'available' || state === 'urgent') {
+					result[gen].total++;
+					if (state === 'obtained') result[gen].obtained++;
 				}
 			}
 			return result;
@@ -134,10 +164,18 @@ class RibbonProgressStore {
 		}
 	}
 
-	/** ポケモンが指定リボンを取得可能かどうかを判定する */
+	/** リボンの取得状態を返す */
+	getRibbonState(ribbon: Ribbon): RibbonState {
+		return this.ribbonStateMap.get(ribbon.id) ?? 'available';
+	}
+
+	/** @deprecated getRibbonState を使ってください */
 	getRibbonEligibility(ribbon: Ribbon): { eligible: boolean; reason?: string } {
-		if (!this.selectedPokemon) return { eligible: true };
-		return canPokemonGetRibbon(this.selectedPokemon, ribbon, this.activeMyPokemon ?? undefined);
+		const state = this.getRibbonState(ribbon);
+		return {
+			eligible: state !== 'locked',
+			reason: state === 'locked' ? '取得不可' : undefined
+		};
 	}
 
 	/** 進捗データをJSONファイルとしてダウンロードする */
