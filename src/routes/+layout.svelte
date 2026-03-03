@@ -40,13 +40,13 @@
 	</header>
 
 	<!-- メインコンテンツ -->
-	<main class="pb-20 md:pb-0">
+	<main class="pb-nav-safe md:pb-0">
 		{@render children()}
 	</main>
 
 	<!-- モバイル底部ナビ -->
 	<nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white md:hidden">
-		<div class="flex">
+		<div class="flex pb-safe">
 			{#each navItems as item (item.href)}
 				<a
 					href={item.href}

@@ -14,7 +14,8 @@
 		"lint:fix": "eslint . --fix",
 		"format": "prettier --write .",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"gen-icons": "node scripts/gen-icons.mjs"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.0",

@@ -4,6 +4,7 @@
 	import { TRANSFER_ROUTES } from '$lib/data/transfer-routes';
 	import { loadAllData } from '$lib/utils/dataFetcher';
 	import { getTransferUxText } from '$lib/utils/transferUxText';
+	import { normalizeForSearch } from '$lib/utils/searchNormalize';
 	import type { Ribbon } from '$lib/types';
 
 	const GENERATIONS = [3, 4, 5, 6, 7, 8, 9] as const;
@@ -38,11 +39,11 @@
 				ribbons: searchQuery.trim() === ''
 					? ribbons
 					: ribbons.filter((r) => {
-						const q = searchQuery.toLowerCase();
+						const q = normalizeForSearch(searchQuery);
 						return (
-							r.name.toLowerCase().includes(q) ||
-							(r.requirements?.toLowerCase().includes(q) ?? false) ||
-							r.category.toLowerCase().includes(q)
+							normalizeForSearch(r.name).includes(q) ||
+							(r.requirements ? normalizeForSearch(r.requirements).includes(q) : false) ||
+							normalizeForSearch(r.category).includes(q)
 						);
 					})
 			}))

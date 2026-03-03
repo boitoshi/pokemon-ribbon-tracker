@@ -51,6 +51,13 @@ export default [
 		}
 	},
 	{
+		// Node.js スクリプト（scripts/*.mjs など）
+		files: ['scripts/**/*.mjs', 'scripts/**/*.js'],
+		languageOptions: {
+			globals: { ...globals.node }
+		}
+	},
+	{
 		ignores: ['.svelte-kit/', 'build/', 'node_modules/', '.output/', '.nuxt/']
 	}
 ];
