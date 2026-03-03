@@ -27,12 +27,46 @@
 		}))
 	);
 
+	/** 検索クエリ */
+	let searchQuery = $state<string>('');
+
+	/** 検索フィルタ済み世代別リボンデータ（0件の世代は除外） */
+	const filteredRibbonsByGen = $derived(
+		ribbonsByGen
+			.map(({ gen, ribbons }) => ({
+				gen,
+				ribbons: searchQuery.trim() === ''
+					? ribbons
+					: ribbons.filter((r) => {
+						const q = searchQuery.toLowerCase();
+						return (
+							r.name.toLowerCase().includes(q) ||
+							(r.requirements?.toLowerCase().includes(q) ?? false) ||
+							r.category.toLowerCase().includes(q)
+						);
+					})
+			}))
+			.filter(({ ribbons }) => ribbons.length > 0)
+	);
+
+	/** 検索ヒット件数 */
+	const filteredRibbonCount = $derived(
+		filteredRibbonsByGen.reduce((acc, { ribbons }) => acc + ribbons.length, 0)
+	);
+
 	/** 世代別折りたたみ状態（Gen3 を初期展開） */
 	const openGens = new SvelteSet<number>([3]);
 	function toggleGen(gen: number): void {
 		if (openGens.has(gen)) openGens.delete(gen);
 		else openGens.add(gen);
 	}
+
+	/** 検索クエリが変化したとき、ヒットした Gen を自動展開 */
+	$effect(() => {
+		if (searchQuery.trim()) {
+			filteredRibbonsByGen.forEach(({ gen }) => openGens.add(gen));
+		}
+	});
 
 	/** カテゴリ → タグ色クラス */
 	const CATEGORY_COLOR: Record<string, string> = {
@@ -93,18 +127,45 @@
 
 	<!-- ===== リボン一覧タブ ===== -->
 	{#if activeTab === 'ribbons'}
-		<div class="mb-3 flex items-center justify-end gap-3">
-			<button
-				class="text-xs text-sky-600 underline"
-				onclick={() => GENERATIONS.forEach((g) => openGens.add(g))}
-			>全て展開</button>
-			<button
-				class="text-xs text-sky-600 underline"
-				onclick={() => GENERATIONS.forEach((g) => openGens.delete(g))}
-			>全て折りたたむ</button>
+		<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+			<!-- 検索ボックス（左側） -->
+			<div class="relative flex-1 min-w-44 max-w-xs">
+				<input
+					type="text"
+					bind:value={searchQuery}
+					placeholder="リボン名・条件・カテゴリで検索…"
+					class="w-full rounded-lg border border-gray-300 bg-white py-1.5 pl-3 pr-8 text-sm text-gray-800 placeholder-gray-400 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-300"
+				/>
+				{#if searchQuery}
+					<button
+						class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+						aria-label="検索をクリア"
+						onclick={() => (searchQuery = '')}
+					>✕</button>
+				{/if}
+			</div>
+			<!-- 右側コントロール -->
+			<div class="flex items-center gap-3 flex-shrink-0">
+				{#if searchQuery}
+					<span class="text-xs text-gray-500">該当: <span class="font-semibold text-sky-600">{filteredRibbonCount}</span> 件</span>
+				{/if}
+				<button
+					class="text-xs text-sky-600 underline"
+					onclick={() => GENERATIONS.forEach((g) => openGens.add(g))}
+				>全て展開</button>
+				<button
+					class="text-xs text-sky-600 underline"
+					onclick={() => GENERATIONS.forEach((g) => openGens.delete(g))}
+				>全て折りたたむ</button>
+			</div>
 		</div>
 		<div class="space-y-3">
-			{#each ribbonsByGen as { gen, ribbons } (gen)}
+			{#if filteredRibbonsByGen.length === 0}
+				<div class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-8 text-center text-sm text-gray-500">
+					リボンが見つかりませんでした
+				</div>
+			{/if}
+			{#each filteredRibbonsByGen as { gen, ribbons } (gen)}
 				<div class="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
 					<!-- アコーディオンヘッダー -->
 					<button
