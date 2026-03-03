@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PokemonDetail } from '$lib/types';
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
+	import { normalizeForSearch } from '$lib/utils/searchNormalize';
 
 	/** Props */
 	let { allPokemon }: { allPokemon: PokemonDetail[] } = $props();
@@ -13,9 +14,11 @@
 
 	const results = $derived(
 		(() => {
-			const query = searchQuery.trim();
+			const query = normalizeForSearch(searchQuery.trim());
 			if (!query) return [];
-			return allPokemon.filter((p) => p.name.includes(query)).slice(0, MAX_RESULTS);
+			return allPokemon
+				.filter((p) => normalizeForSearch(p.name).includes(query))
+				.slice(0, MAX_RESULTS);
 		})()
 	);
 

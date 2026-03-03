@@ -199,8 +199,9 @@
 								{ribbonProgress.activeMyPokemonId === mp.id ? 'bg-blue-50 ring-2 ring-blue-500' : ''}"
 							role="button"
 							tabindex="0"
+							aria-pressed={ribbonProgress.activeMyPokemonId === mp.id}
 							onclick={() => ribbonProgress.switchMyPokemon(mp.id)}
-							onkeydown={(e) => e.key === 'Enter' && ribbonProgress.switchMyPokemon(mp.id)}
+							onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), ribbonProgress.switchMyPokemon(mp.id))}
 						>
 							<div class="flex items-center gap-2">
 								<!-- ポケモン画像 -->
@@ -259,7 +260,7 @@
 								</div>
 							{/if}
 						</div>
-					{/each}
+				{/each}
 				</div>
 			{/if}
 

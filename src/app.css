@@ -44,3 +44,21 @@
 	background: color-mix(in srgb, var(--color-poke-red) 8%, white);
 	color: #7a1f1f;
 }
+
+/* safe-area インセット — iOS ノッチ・ホームインジケーター対応 */
+:root {
+	--safe-area-inset-top: env(safe-area-inset-top, 0px);
+	--safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+	--safe-area-inset-left: env(safe-area-inset-left, 0px);
+	--safe-area-inset-right: env(safe-area-inset-right, 0px);
+}
+
+.pb-safe {
+	padding-bottom: var(--safe-area-inset-bottom);
+}
+.pt-safe {
+	padding-top: var(--safe-area-inset-top);
+}
+.mb-safe {
+	margin-bottom: var(--safe-area-inset-bottom);
+}

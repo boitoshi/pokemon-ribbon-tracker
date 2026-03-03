@@ -2,6 +2,7 @@
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
 	import { toast } from '$lib/stores/toast.svelte';
 	import { getGameName } from '$lib/utils/gameNames';
+	import { detectSwipe } from '$lib/utils/swipeDetect';
 	import type { Ribbon } from '$lib/types';
 
 	/** スワイプ判定の閾値（px） */
@@ -13,6 +14,8 @@
 	let touchStartX = $state(0);
 	let touchStartY = $state(0);
 	let showSwipeHint = $state(true);
+	/** スワイプ成立フラグ: true のとき次の onclick を抑止する */
+	let swipeHandled = false;
 
 	$effect(() => {
 		if (typeof localStorage !== 'undefined' && localStorage.getItem('swipeHintDismissed') === '1') {
@@ -38,7 +41,7 @@
 	const currentRibbon = $derived<Ribbon | null>(filteredRibbons[currentIndex] ?? null);
 
 	const isChecked = $derived(
-		currentRibbon !== null && ribbonProgress.currentCheckedRibbons.includes(currentRibbon.id)
+		currentRibbon !== null && ribbonProgress.currentCheckedSet.has(currentRibbon.id)
 	);
 
 	const currentRibbonState = $derived(
@@ -50,7 +53,7 @@
 	);
 
 	const uncheckedCount = $derived(
-		filteredRibbons.filter((r) => !ribbonProgress.currentCheckedRibbons.includes(r.id)).length
+		filteredRibbons.filter((r) => !ribbonProgress.currentCheckedSet.has(r.id)).length
 	);
 
 	// --- 操作メソッド ---
@@ -70,14 +73,14 @@
 
 		// currentIndex + 1 から末尾まで探す
 		for (let i = currentIndex + 1; i < len; i++) {
-			if (!ribbonProgress.currentCheckedRibbons.includes(filteredRibbons[i].id)) {
+			if (!ribbonProgress.currentCheckedSet.has(filteredRibbons[i].id)) {
 				currentIndex = i;
 				return;
 			}
 		}
-		// 見つからなければ 0 から currentIndex まで探す
+		// 見つからなけれで0からcurrentIndexまで探す
 		for (let i = 0; i <= currentIndex; i++) {
-			if (!ribbonProgress.currentCheckedRibbons.includes(filteredRibbons[i].id)) {
+			if (!ribbonProgress.currentCheckedSet.has(filteredRibbons[i].id)) {
 				currentIndex = i;
 				return;
 			}
@@ -103,16 +106,16 @@
 	function onTouchEnd(e: TouchEvent): void {
 		const deltaX = e.changedTouches[0].clientX - touchStartX;
 		const deltaY = e.changedTouches[0].clientY - touchStartY;
-		if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > SWIPE_THRESHOLD) {
+		const direction = detectSwipe(deltaX, deltaY, SWIPE_THRESHOLD);
+		if (direction !== null) {
+			swipeHandled = true; // 次の onclick を抑止
 			if (showSwipeHint) {
 				showSwipeHint = false;
 				localStorage.setItem('swipeHintDismissed', '1');
 			}
-			if (deltaX < 0) {
-				// 左スワイプ = 次
+			if (direction === 'next') {
 				next();
 			} else {
-				// 右スワイプ = 前
 				prev();
 			}
 		}
@@ -124,7 +127,7 @@
 	}
 </script>
 
-<div class="flex h-[calc(100vh-5rem)] flex-col md:h-screen">
+<div class="flex h-[calc(100dvh-5rem)] flex-col md:h-screen">
 	<!-- 世代フィルター -->
 	<div class="flex gap-2 overflow-x-auto border-b p-3">
 		<button
@@ -176,9 +179,9 @@
 						: currentRibbonState === 'missed'
 							? 'bg-red-50'
 							: 'bg-white'}"
-			onclick={toggleCurrent}
 			ontouchstart={onTouchStart}
 			ontouchend={onTouchEnd}
+			onclick={(e) => { if (swipeHandled) { swipeHandled = false; e.preventDefault(); return; } toggleCurrent(); }}
 			aria-label={isChecked ? 'チェック済み（タップで解除）' : '未チェック（タップで取得済みにする）'}
 		>
 			<!-- 状態バッジ -->

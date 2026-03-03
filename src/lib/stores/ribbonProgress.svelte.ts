@@ -10,6 +10,7 @@ import type {
 } from '$lib/types';
 import { loadAllData } from '$lib/utils/dataFetcher';
 import { getRibbonEvaluation, getRibbonReasonLabel } from '$lib/utils/ribbonEligibility';
+import { isValidMyPokemon } from '$lib/utils/myPokemonValidator';
 
 /** localStorageキー定数 */
 const PROGRESS_STORAGE_KEY = 'rt_progress';
@@ -23,6 +24,9 @@ export interface GenerationProgress {
 
 /** リボン進捗を管理するメインストア */
 class RibbonProgressStore {
+	// 初期化フラグ（再呼び出しガード用）
+	private initialized = false;
+
 	// マスターデータ
 	allRibbons = $state<Ribbon[]>([]);
 	allGames = $state<Game[]>([]);
@@ -48,6 +52,11 @@ class RibbonProgressStore {
 		this.activeMyPokemonId ? (this.progress[this.activeMyPokemonId] ?? []) : []
 	);
 
+	/** 取得済みリボンID の Set（O(1) 参照用） */
+	currentCheckedSet: ReadonlySet<string> = $derived(
+		new Set(this.currentCheckedRibbons)
+	);
+
 	/** ゲームID → 世代番号のマップ */
 	private gameGenMap: ReadonlyMap<string, number> = $derived(
 		new Map(this.allGames.map((g) => [g.id, g.generation]))
@@ -66,7 +75,7 @@ class RibbonProgressStore {
 					ribbon,
 					this.selectedPokemon,
 					this.activeMyPokemon ?? undefined,
-					this.currentCheckedRibbons.includes(ribbon.id),
+					this.currentCheckedSet.has(ribbon.id),
 					this.gameGenMap
 				);
 				const manualOverride = this.activeMyPokemon?.manualRibbonOverrides?.[ribbon.id];
@@ -89,7 +98,7 @@ class RibbonProgressStore {
 						ribbon,
 						this.selectedPokemon,
 						this.activeMyPokemon ?? undefined,
-						this.currentCheckedRibbons.includes(ribbon.id),
+						this.currentCheckedSet.has(ribbon.id),
 						this.gameGenMap
 					)
 				);
@@ -117,6 +126,8 @@ class RibbonProgressStore {
 
 	/** 全データをロードしてlocalStorageから進捗を復元する */
 	init(): void {
+		if (this.initialized) return;
+		this.initialized = true;
 		const { pokemonData, ribbonData, gameData } = loadAllData();
 		this.allPokemon = pokemonData;
 		this.allRibbons = ribbonData;
@@ -330,11 +341,18 @@ class RibbonProgressStore {
 			}
 			this.progress = data.progress;
 			if (Array.isArray(data.myPokemonList)) {
-				this.myPokemonList = data.myPokemonList.map((mp) => ({
-					...mp,
-					transferConfirmations: mp.transferConfirmations ?? {},
-					manualRibbonOverrides: mp.manualRibbonOverrides ?? {}
-				}));
+				const valid = (data.myPokemonList as unknown[])
+					.filter(isValidMyPokemon)
+					.map((mp) => ({
+						...mp,
+						transferConfirmations: mp.transferConfirmations ?? {},
+						manualRibbonOverrides: mp.manualRibbonOverrides ?? {}
+					}));
+				const skipped = (data.myPokemonList as unknown[]).length - valid.length;
+				if (skipped > 0) {
+					console.warn(`importProgress: ${skipped}件のマイポケモンデータが不正なためスキップしました`);
+				}
+				this.myPokemonList = valid;
 				this.saveMyPokemonList();
 			}
 			this.saveProgress();

@@ -4,6 +4,7 @@
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
 	import { toast } from '$lib/stores/toast.svelte';
 	import { CATEGORY_MAP } from '$lib/utils/ribbonFilter';
+	import { focusTrap } from '$lib/actions/focusTrap';
 	import Toast from '$lib/components/ui/Toast.svelte';
 	import PokemonSearch from '$lib/components/tracker/PokemonSearch.svelte';
 	import PokemonDetails from '$lib/components/tracker/PokemonDetails.svelte';
@@ -39,6 +40,18 @@
 
 	/** モバイルボトムシートの表示状態 */
 	let showMobilePanel = $state(false);
+	/** ボトムシートを開いたトリガー要素（閉じたときにフォーカス復帰） */
+	let panelTriggerEl = $state<HTMLElement | null>(null);
+
+	function openMobilePanel(e: MouseEvent): void {
+		panelTriggerEl = e.currentTarget as HTMLElement;
+		showMobilePanel = true;
+	}
+	function closeMobilePanel(): void {
+		showMobilePanel = false;
+		panelTriggerEl?.focus();
+		panelTriggerEl = null;
+	}
 
 	/** モバイルヘッダー内ポケモン検索クエリ */
 	let mobileSearchQuery = $state('');
@@ -75,11 +88,11 @@
 
 			if (filterState.status === 'obtained') {
 				ribbons = ribbons.filter((r) =>
-					ribbonProgress.currentCheckedRibbons.includes(r.id)
+					ribbonProgress.currentCheckedSet.has(r.id)
 				);
 			} else if (filterState.status === 'not-obtained') {
 				ribbons = ribbons.filter(
-					(r) => !ribbonProgress.currentCheckedRibbons.includes(r.id)
+					(r) => !ribbonProgress.currentCheckedSet.has(r.id)
 				);
 			}
 
@@ -280,7 +293,7 @@
 		<!-- マイポケモンボタン -->
 		<button
 			class="shrink-0 rounded-md bg-blue-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-600"
-			onclick={() => (showMobilePanel = true)}
+			onclick={openMobilePanel}
 		>
 			マイポケモン ▼
 		</button>
@@ -310,7 +323,7 @@
 		<!-- + 追加ボタン -->
 		<button
 			class="shrink-0 rounded-full border border-dashed border-gray-300 px-2 py-1 text-xs text-gray-500 hover:border-blue-400 hover:text-blue-500"
-			onclick={() => (showMobilePanel = true)}
+			onclick={openMobilePanel}
 		>
 			+ 追加
 		</button>
@@ -343,22 +356,25 @@
 
 <!-- ===== モバイルボトムシートオーバーレイ（md:hidden） ===== -->
 {#if showMobilePanel}
-	<!-- バックドロップ -->
+	<!-- バックドロップ（クリックで閉じる） -->
 	<div
-		class="fixed inset-0 z-[55] bg-black/50 md:hidden"
-		role="button"
-		tabindex="0"
-		onclick={() => (showMobilePanel = false)}
-		onkeydown={(e) => e.key === 'Escape' && (showMobilePanel = false)}
-		aria-label="パネルを閉じる"
+		class="fixed inset-0 z-55 bg-black/50 md:hidden"
+		role="presentation"
+		onclick={closeMobilePanel}
 	></div>
 	<!-- パネル本体 -->
-	<div class="fixed bottom-0 left-0 right-0 z-[60] max-h-[80vh] overflow-y-auto rounded-t-2xl bg-white shadow-2xl md:hidden">
+	<div
+		class="fixed bottom-0 left-0 right-0 z-60 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-white shadow-2xl md:hidden"
+		role="dialog"
+		aria-modal="true"
+		aria-label="マイポケモン"
+		use:focusTrap={{ onEscape: closeMobilePanel }}
+	>
 		<div class="sticky top-0 flex items-center justify-between border-b bg-white px-4 py-3">
 			<h2 class="text-sm font-bold">マイポケモン</h2>
 			<button
 				class="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-				onclick={() => (showMobilePanel = false)}
+				onclick={closeMobilePanel}
 			>
 				✕
 			</button>

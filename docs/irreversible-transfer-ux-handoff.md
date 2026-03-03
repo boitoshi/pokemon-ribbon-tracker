@@ -263,6 +263,65 @@
 - 懸念・リスク:
   - 大きな機能リスクは解消済み。残りは体験品質のチューニング中心。
 
+## 実装前懸念レジスタ
+
+> 記録日: 2026-03-03（コードレビュー＋スマホUXレビューより抽出）
+> ステータス凡例: 🔴 未着手 / 🟡 対応中 / ✅ 解決済み
+
+### P0 — すぐ着手すべき（誤操作・アクセシビリティ・仕様矛盾）
+
+| # | severity | category | ファイル | 問題 | 提案 | ステータス |
+|---|----------|----------|---------|------|------|-----------|
+| 1 | High | mobile-ux | `src/lib/components/tracker/QuickCheck.svelte` | `onTouchEnd` でスワイプ成立しても `onclick` が引き続き発火し、意図しないリボントグルが起きる（競合確認済み: L103〜L119） | スワイプ移動量フラグを立て、`toggleCurrent` の冒頭で抑止。`pointer` イベントへの統一も検討 | ✅ |
+| 2 | High | a11y | `src/routes/+page.svelte` | モバイルボトムシートが `div` 実装でフォーカストラップ・`aria-modal`・開閉時のフォーカス復帰が未実装 | `<dialog>` 相当に寄せ、開閉時に適切なフォーカス制御を追加 | ✅ |
+| 3 | High | mobile-ux | `src/routes/+layout.svelte`, `src/lib/components/ui/Toast.svelte`, `src/routes/+page.svelte` | 下部固定ナビ（`z-50`）＋右下トースト（`bottom-4 right-4 z-50`）＋画面下固定パネルが同時出現し操作領域が競合 | トーストをモバイルで上寄せ（`top-4`）に切り替えるか、safe-area込みのオフセットをapp.cssに共通化 | ✅ |
+| 4 | High | feature | `src/lib/data/ribbons-gen9.ts` | `master-ribbon`（マスターリボン）が通常リボンと同構造で手動トグル可能。全リボン取得で自動付与されるべき実績なので仕様矛盾 | 派生実績（他リボン全取得で自動算出）として扱い手動チェック不可に。要仕様確定 | ✅ |
+
+### P1 — 体験品質の安定化
+
+| # | severity | category | ファイル | 問題 | 提案 | ステータス |
+|---|----------|----------|---------|------|------|-----------|
+| 5 | Med | mobile-ux | `src/lib/components/tracker/QuickCheck.svelte` | `h-[calc(100vh-5rem)]` はモバイルブラウザのアドレスバー展開/縮小で高さがズレる | `100dvh` 系に置換（例: `h-[calc(100dvh-5rem)]`） | ✅ |
+| 6 | Med | perf | `src/routes/+page.svelte`, `src/lib/stores/ribbonProgress.svelte.ts` | `includes` を多用したフィルタと状態別Mapが毎回再構築され、ポケモン数・リボン数増加で線形コスト増 | `$derived` で `checkedSet`（`Set<string>`）を事前計算し、全参照箇所を `.has()` に置換 | ✅ |
+| 7 | Med | a11y | `src/lib/components/tracker/MyPokemonPanel.svelte` | カード選択が `div role="button"` で Enter のみ対応、Space 操作と `aria-pressed` による選択状態通知が弱い | 実ボタン化または Space キーハンドラ追加、`aria-pressed` で選択状態を公開 | ✅ |
+| 8 | Med | a11y | `src/lib/components/tracker/RibbonCard.svelte` | 状態理由がホバー時ツールチップ中心で、タッチデバイスとキーボード操作では情報到達性が低い | `urgent`/`missed` など重要な理由は常設のサブテキストで表示、ツールチップは補足扱いへ | ✅ |
+
+### P2 — 中長期改善
+
+| # | severity | category | ファイル | 問題 | 提案 | ステータス |
+|---|----------|----------|---------|------|------|-----------|
+| 9 | Med | code | `src/lib/stores/ribbonProgress.svelte.ts` | `importProgress` で `myPokemonList` の構造バリデーションが最小限で、破損データ耐性が低い | ランタイムで必須キー・型を検証し、不正データは部分復元または警告表示に倒す | ✅ |
+| 10 | Low | mobile-ux | `src/lib/components/tracker/PokemonSearch.svelte` | 部分一致のみで正規化なし、カタカナ/ひらがな揺れや大文字小文字の違いで検索漏れが発生 | 入力側とデータ側を正規化（カタカナ統一・小文字化）してから比較 | ✅ |
+| 11 | Low | perf | `src/routes/+page.svelte`, `src/routes/quick/+page.svelte`, `src/routes/roadmap/+page.svelte` | 各ページで `init()` を都度呼ぶ構成で、同一データの再初期化が起きやすい | 初期化済みフラグをストアに持ち、呼び出し側でガードする | ✅ |
+| 12 | Low | mobile-ux | `src/app.css`, `src/routes/+layout.svelte` | `env(safe-area-inset-*)` の使用が散在または未適用で、ノッチ機種での操作エリア食い込みリスク | safe-area トークンを `app.css` の `@theme {}` に共通化 | ✅ |
+
+---
+
+## 不要画像整理 — 2026-03-03 実施記録
+
+### 削除対象（ルート直下 PNG 8件、参照0件を確認済み）
+
+| ファイル | 判定理由 |
+|---------|---------|
+| `roadmap-padding.png` | コード内参照なし、調査時スクリーンショットと推定 |
+| `tracker-desktop.png` | コード内参照なし、調査時スクリーンショットと推定 |
+| `roadmap-transfer-arrow.png` | コード内参照なし、調査時スクリーンショットと推定 |
+| `roadmap-grid.png` | コード内参照なし、調査時スクリーンショットと推定 |
+| `guide-transfer-refresh-actual.png` | コード内参照なし、調査時スクリーンショットと推定 |
+| `roadmap-refresh.png` | コード内参照なし、調査時スクリーンショットと推定 |
+| `guide-transfer-refresh.png` | コード内参照なし、調査時スクリーンショットと推定 |
+| `setup-page.png` | コード内参照なし、調査時スクリーンショットと推定 |
+
+### 保持対象
+
+| ファイル | 保持理由 |
+|---------|---------|
+| `static/favicon.ico` | `src/app.html`（L7）・`vite.config.ts`（L12）で参照、PWAアイコンとして必須 |
+| `static/apple-touch-icon.png` | `src/app.html`（L8）・`vite.config.ts`（L12）で参照、iOS PWAアイコンとして必須 |
+| `src/lib/assets/favicon.svg` | 今回スコープ外（参照なしだが将来利用の可能性あり、次回整理時に再判断） |
+
+---
+
 ## 反映漏れ防止ルール
 
 1. 要件ごとに「実装箇所」と「確認箇所」を1対1で対応表にする。

@@ -16,8 +16,8 @@
 	};
 </script>
 
-<!-- トーストスタック（画面右下固定） -->
-<div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+<!-- トーストスタック（モバイル上部・デスクトップ右下固定） -->
+<div class="fixed right-4 top-4 z-50 flex flex-col gap-2 md:bottom-4 md:top-auto">
 	{#each toast.toasts as t (t.id)}
 		<div
 			class="flex min-w-60 max-w-80 items-start gap-2 rounded-lg px-4 py-3 shadow-lg {TYPE_STYLES[t.type] ??

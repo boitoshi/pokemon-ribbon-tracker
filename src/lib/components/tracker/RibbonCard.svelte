@@ -173,6 +173,13 @@
         {isObtained ? 'text-green-700 font-medium' : ribbonState === 'urgent' ? 'text-orange-600 font-medium' : ribbonState === 'missed' ? 'text-red-500' : 'text-gray-500'}"
       title={ribbon.name}
     >{ribbon.name}</span>
+    <!-- urgent/missed 時の理由常設表示（タッチでも見える） -->
+    {#if (ribbonState === 'urgent' || ribbonState === 'missed') && reasonLabels.length > 0}
+      <span
+        class="block w-14 truncate text-center text-[8px] leading-tight text-gray-500"
+        title={reasonLabels[0]}
+      >{reasonLabels[0]}</span>
+    {/if}
   </div>
 {:else}
   <!-- リストビュー: 既存のアコーディオンUI -->
@@ -216,7 +223,10 @@
           {:else if ribbonState === 'future'}
             <span class="rounded-full bg-gray-300 px-1.5 py-0.5 text-xs text-gray-600">🔒 未来</span>
           {/if}
-
+          <!-- urgent/missed 時の理由常設表示（リストビュー、展開不要で見える） -->
+          {#if (ribbonState === 'urgent' || ribbonState === 'missed') && reasonLabels.length > 0}
+            <span class="text-xs text-gray-500">— {reasonLabels[0]}</span>
+          {/if}
           <!-- カテゴリタグ -->
           <span class="rounded-full bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700">
             {ribbon.category}
