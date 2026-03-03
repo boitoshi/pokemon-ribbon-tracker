@@ -458,6 +458,30 @@ export const MARKS_GEN9: Ribbon[] = [
   },
 
   // ============================================================
+  // サイズのあかし
+  // ============================================================
+  {
+    id: 'jumbo-mark',
+    name: 'でっかいあかし',
+    description: '特別に大きいポケモンに付くあかし',
+    generation: 9,
+    games: ['scarlet', 'violet'],
+    category: 'あかし',
+    type: 'mark',
+    requirements: 'テーブルシティ西の「やまガール」に、サイズ値255（最大）の個体を見せる',
+  },
+  {
+    id: 'mini-mark',
+    name: 'ちっちゃいあかし',
+    description: '特別に小さいポケモンに付くあかし',
+    generation: 9,
+    games: ['scarlet', 'violet'],
+    category: 'あかし',
+    type: 'mark',
+    requirements: 'テーブルシティ西の「やまガール」に、サイズ値0（最小）の個体を見せる',
+  },
+
+  // ============================================================
   // 外付けあかし（捕獲後に取得可能）
   // ============================================================
   {
@@ -471,14 +495,34 @@ export const MARKS_GEN9: Ribbon[] = [
     requirements: 'ピクニック中にポケモンと遊ぶ',
   },
   {
-    id: 'gourmand-mark',
-    name: 'くいしんぼのあかし',
-    description: '食いしん坊なポケモンに付くあかし',
+    id: 'companion-mark',
+    name: 'あいぼうのあかし',
+    description: '長い時間を共に歩んだポケモンに付くあかし',
     generation: 9,
     games: ['scarlet', 'violet'],
     category: 'あかし',
     type: 'mark',
-    requirements: 'ピクニックでポケモンにごはんを食べさせる',
+    requirements: 'なかよし度200以上の手持ちポケモンに対し、プレイヤーが10000歩歩くたびに判定。ボールの外に出す必要はなし',
+  },
+  {
+    id: 'collector-mark',
+    name: 'ものひろいのあかし',
+    description: 'レッツゴーで道具を拾ったポケモンに付くあかし',
+    generation: 9,
+    games: ['scarlet', 'violet'],
+    category: 'あかし',
+    type: 'mark',
+    requirements: 'レッツゴーで道具を拾う（Ver.2.0.1以降）',
+  },
+  {
+    id: 'gourmand-mark',
+    name: 'グルメなあかし',
+    description: 'グルメなポケモンに付くあかし',
+    generation: 9,
+    games: ['scarlet', 'violet'],
+    category: 'あかし',
+    type: 'mark',
+    requirements: 'サンドウィッチを作るか買った後、パーティの各ポケモンごとにランダムで判定を受ける',
   },
   {
     id: 'mightiest-mark',
@@ -499,5 +543,19 @@ export const MARKS_GEN9: Ribbon[] = [
     category: 'あかし',
     type: 'mark',
     requirements: 'ヌシポケモンを倒した後に捕まえる',
+  },
+
+  // ============================================================
+  // 他作品からの引き継ぎあかし
+  // ============================================================
+  {
+    id: 'alpha-mark',
+    name: 'オヤブンのあかし',
+    description: 'LEGENDS アルセウスでオヤブンとして生きていたポケモンに付くあかし',
+    generation: 8,
+    games: ['legends_arceus'],
+    category: 'あかし',
+    type: 'mark',
+    requirements: 'LEGENDS アルセウスでオヤブンポケモンを捕まえ、HOMEを経由してSVに連れてくる',
   },
 ];

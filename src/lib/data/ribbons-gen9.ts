@@ -6,7 +6,7 @@ export const RIBBONS_GEN9: Ribbon[] = [
   // ============================================================
   {
     id: 'champion-paldea',
-    name: 'パルデアチャンピオンリボン',
+    name: 'パルデアチャンプリボン',
     description: 'パルデア地方で最強のトレーナーとして認められた証',
     generation: 9,
     games: ['scarlet', 'violet'],
@@ -41,25 +41,16 @@ export const RIBBONS_GEN9: Ribbon[] = [
   },
 
   // ============================================================
-  // DLC（碧の仮面・藍の円盤）
+  // パートナー
   // ============================================================
   {
-    id: 'kitakami-ribbon',
-    name: 'キタカミリボン',
-    description: 'キタカミの里の伝承を調べ、DLCメインストーリーをクリアした証',
+    id: 'partner-ribbon-sv',
+    name: 'パートナーリボン',
+    description: '特別な絆で結ばれたポケモンに贈られるリボン',
     generation: 9,
     games: ['scarlet', 'violet'],
-    category: 'チャンピオン',
-    requirements: '碧の仮面DLC（キタカミの里）メインストーリーをクリアする',
-  },
-  {
-    id: 'blueberry-ribbon',
-    name: 'ブルーベリーリボン',
-    description: 'ブルーベリー学園のBBリーグチャンピオンになった証',
-    generation: 9,
-    games: ['scarlet', 'violet'],
-    category: 'チャンピオン',
-    requirements: '藍の円盤DLC（ブルーベリー学園）メインストーリーをクリアし、BBリーグチャンピオンになる',
+    category: '思い出',
+    requirements: '// TODO: 要確認',
   },
 
   // ============================================================
