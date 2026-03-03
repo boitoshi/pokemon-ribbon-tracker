@@ -3,6 +3,7 @@
 	import { GAMES } from '$lib/data/games';
 	import { TRANSFER_ROUTES } from '$lib/data/transfer-routes';
 	import { setup } from '$lib/stores/setup.svelte';
+	import { toast } from '$lib/stores/toast.svelte';
 	import type { Game, Hardware, TransferRoute } from '$lib/types';
 
 	// ステップ管理
@@ -42,11 +43,11 @@
 
 	// 転送ルート判定関数
 	function isRouteAvailable(route: TransferRoute): boolean {
-		return route.hardwareRequired.every((hw) => setup.ownedHardware.includes(hw));
+		return setup.evaluateRouteAvailability(route).available;
 	}
 
 	function getMissingHardware(route: TransferRoute): Hardware[] {
-		return route.hardwareRequired.filter((hw) => !setup.ownedHardware.includes(hw));
+		return setup.getRouteMissingHardware(route);
 	}
 
 	// ハード名を返すヘルパー
@@ -57,6 +58,7 @@
 	// セットアップ完了処理
 	function handleComplete(): void {
 		setup.completeSetup();
+		toast.success('セットアップ完了！次はポケモンを登録してみよう 🎉');
 		goto('/');
 	}
 </script>
@@ -75,7 +77,7 @@
 
 	<!-- ステップインジケーター -->
 	<div class="mb-8 flex items-center justify-center gap-3">
-		{#each [1, 2, 3] as step}
+		{#each [1, 2, 3] as step (step)}
 			<div class="flex items-center gap-3">
 				{#if step > 1}
 					<div class="h-px w-8 bg-gray-300"></div>
@@ -117,13 +119,13 @@
 			<p class="mb-6 text-sm text-gray-500">持っているゲームソフトをすべて選択してください。</p>
 
 			<div class="space-y-6">
-				{#each generations as gen}
+				{#each generations as gen (gen)}
 					<div>
 						<h2 class="mb-3 text-sm font-semibold tracking-wide text-gray-500 uppercase">
 							第{gen}世代
 						</h2>
 						<div class="flex flex-wrap gap-2">
-							{#each gamesByGen[gen] as game}
+							{#each gamesByGen[gen] as game (game.id)}
 								<button
 									type="button"
 									onclick={() => setup.toggleGame(game.id)}
@@ -169,7 +171,7 @@
 			{/if}
 
 			<div class="space-y-3">
-				{#each HARDWARE_INFO as hw}
+				{#each HARDWARE_INFO as hw (hw.id)}
 					<button
 						type="button"
 						onclick={() => setup.toggleHardware(hw.id)}
@@ -194,7 +196,7 @@
 							</div>
 							<div
 								class={[
-									'ml-4 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2',
+									'ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2',
 									setup.ownedHardware.includes(hw.id)
 										? 'border-blue-500 bg-blue-500 text-white'
 										: 'border-gray-300'
@@ -236,7 +238,7 @@
 			</p>
 
 			<div class="space-y-4">
-				{#each TRANSFER_ROUTES as route}
+				{#each TRANSFER_ROUTES as route (route.id)}
 					{@const available = isRouteAvailable(route)}
 					{@const missing = getMissingHardware(route)}
 					<div
@@ -277,18 +279,18 @@
 									Gen{route.fromGeneration} → Gen{route.toGeneration}
 								</div>
 
-								{#if route.hardwareRequired.length > 0}
+								{#if route.requirements.anyOf.length > 0}
 									<div class="mt-2 flex flex-wrap gap-1">
-										{#each route.hardwareRequired as hw}
+										{#each route.requirements.anyOf as option (option.id)}
 											<span
 												class={[
 													'rounded border px-2 py-0.5 text-xs',
-													setup.ownedHardware.includes(hw)
+													option.allOf.every((hw) => setup.ownedHardware.includes(hw))
 														? 'border-green-300 bg-green-100 text-green-700'
 														: 'border-red-300 bg-red-50 text-red-600'
 												].join(' ')}
 											>
-												{getHardwareName(hw)}
+												{option.label}
 											</span>
 										{/each}
 									</div>
@@ -308,7 +310,7 @@
 
 								{#if route.restrictions.length > 0}
 									<ul class="mt-2 space-y-0.5">
-										{#each route.restrictions as restriction}
+										{#each route.restrictions as restriction (restriction)}
 											<li class="text-xs text-gray-500">- {restriction}</li>
 										{/each}
 									</ul>

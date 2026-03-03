@@ -9,6 +9,7 @@ import { RIBBONS_GEN8 } from '$lib/data/ribbons-gen8';
 import { RIBBONS_GEN9 } from '$lib/data/ribbons-gen9';
 import { MARKS_GEN9 } from '$lib/data/marks-gen9';
 import { POKEMON_GEN3 } from '$lib/data/pokemon-gen3';
+import { POKEMON_GEN4_9 } from '$lib/data/pokemon-gen4-9';
 
 export interface AllData {
 	pokemonData: PokemonDetail[];
@@ -19,7 +20,7 @@ export interface AllData {
 /** 全データを同期的に返す（全てローカル定義） */
 export function loadAllData(): AllData {
 	return {
-		pokemonData: POKEMON_GEN3,
+		pokemonData: [...POKEMON_GEN3, ...POKEMON_GEN4_9],
 		ribbonData: [
 			...RIBBONS_GEN3,
 			...RIBBONS_GEN4,

@@ -27,3 +27,42 @@
 	--color-type-ghost: #705898;
 	--color-type-steel: #b8b8d0;
 }
+
+/* リボン取得アニメーション */
+@keyframes ribbon-collect {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.4); filter: brightness(1.8) drop-shadow(0 0 6px currentColor); }
+  100% { transform: scale(1); }
+}
+
+.ribbon-collect {
+  animation: ribbon-collect 0.4s ease-out;
+}
+
+.irreversible-warning {
+	border-color: color-mix(in srgb, var(--color-poke-red) 35%, white);
+	background: color-mix(in srgb, var(--color-poke-red) 8%, white);
+	color: #7a1f1f;
+}
+
+/* safe-area インセット — iOS ノッチ・ホームインジケーター対応 */
+:root {
+	--safe-area-inset-top: env(safe-area-inset-top, 0px);
+	--safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+	--safe-area-inset-left: env(safe-area-inset-left, 0px);
+	--safe-area-inset-right: env(safe-area-inset-right, 0px);
+}
+
+.pb-safe {
+	padding-bottom: var(--safe-area-inset-bottom);
+}
+.pt-safe {
+	padding-top: var(--safe-area-inset-top);
+}
+.mb-safe {
+	margin-bottom: var(--safe-area-inset-bottom);
+}
+/** モバイルボトムナビ分 + Safe Area 込みの main パディング */
+.pb-nav-safe {
+	padding-bottom: calc(5rem + var(--safe-area-inset-bottom));
+}

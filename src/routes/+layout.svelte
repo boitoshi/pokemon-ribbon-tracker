@@ -7,6 +7,7 @@
 	const navItems = [
 		{ href: '/', label: 'トラッカー', icon: '🎀' },
 		{ href: '/roadmap', label: 'ロードマップ', icon: '🗺️' },
+		{ href: '/quick', label: 'クイック', icon: '⚡' },
 		{ href: '/guide', label: 'ガイド', icon: '📖' },
 		{ href: '/setup', label: '設定', icon: '⚙️' }
 	];
@@ -23,7 +24,7 @@
 		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 			<span class="text-lg font-bold text-blue-800">🎀 ポケモンリボン制覇トラッカー</span>
 			<nav class="flex gap-1">
-				{#each navItems as item}
+				{#each navItems as item (item.href)}
 					<a
 						href={item.href}
 						class="rounded-md px-4 py-2 text-sm font-medium transition-colors
@@ -39,14 +40,14 @@
 	</header>
 
 	<!-- メインコンテンツ -->
-	<main class="pb-20 md:pb-0">
+	<main class="pb-nav-safe md:pb-0">
 		{@render children()}
 	</main>
 
 	<!-- モバイル底部ナビ -->
 	<nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white md:hidden">
-		<div class="flex">
-			{#each navItems as item}
+		<div class="flex pb-safe">
+			{#each navItems as item (item.href)}
 				<a
 					href={item.href}
 					class="flex flex-1 flex-col items-center justify-center py-2 text-xs transition-colors

@@ -153,15 +153,17 @@ src/
 │   ├── utils/         純粋関数ユーティリティ
 │   ├── stores/        Svelte 5 Runes ストア（*.svelte.ts）
 │   └── components/
-│       ├── tracker/   トラッカーUI
-│       ├── guide/     ガイドページUI
+│       ├── tracker/   トラッカー/クイックUI
+│       ├── roadmap/   ロードマップUI
 │       └── ui/        共通UIパーツ
 └── routes/
     ├── +layout.svelte  アプリシェル（上部/底部ナビ）
     ├── +layout.ts      prerender = true
     ├── +page.svelte    / メイントラッカー
+    ├── quick/          /quick クイックチェック
+    ├── roadmap/        /roadmap 世代別ロードマップ
     ├── setup/          /setup セットアップウィザード
-    └── guide/          /guide/* 参照ページ群（SSG）
+    └── guide/          /guide 参照ページ（ハイブリッド）
 ```
 
 ---
@@ -171,11 +173,11 @@ src/
 詳細は `docs/rewrite-plan.md` 参照。
 
 - **Phase 0**: ✅ 完了 — SvelteKit セットアップ・データ移植
-- **Phase 1**: 🔜 コアトラッカー（Runes ストア + 基本UI）← 次の目標
-- **Phase 2**: セットアップウィザード（所持ゲーム・ハード登録）
-- **Phase 3**: ロードマップビュー（🏆 キラー機能）
-- **Phase 4**: クイックチェックモード（スマホ片手操作）
-- **Phase 5**: ガイドページ（SSG参照ページ群）
-- **Phase 6**: PWA完成 + Gen9データ整備
+- **Phase 1**: ✅ 完了 — コアトラッカー（Runes ストア + 基本UI）
+- **Phase 2**: ✅ 完了 — セットアップウィザード（所持ゲーム・ハード登録）
+- **Phase 3**: ✅ 完了 — ロードマップビュー（🏆 キラー機能）
+- **Phase 4**: ✅ 完了 — クイックチェックモード（スマホ片手操作）
+- **Phase 5**: ✅ 完了 — ガイドページ（ハイブリッド参照）
+- **Phase 6**: 🔜 継続中 — PWA完成 + Gen9データ整備
 
 > リボン制覇と同じ。順番を守って、一個ずつ確実に。

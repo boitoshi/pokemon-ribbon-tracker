@@ -1,6 +1,16 @@
-import type { Ribbon, Game, PokemonDetail, MyPokemon } from '$lib/types';
+import type {
+	Ribbon,
+	Game,
+	PokemonDetail,
+	MyPokemon,
+	RibbonState,
+	RibbonEvaluation,
+	TransferConfirmation,
+	ManualRibbonOverride
+} from '$lib/types';
 import { loadAllData } from '$lib/utils/dataFetcher';
-import { canPokemonGetRibbon } from '$lib/utils/ribbonEligibility';
+import { getRibbonEvaluation, getRibbonReasonLabel } from '$lib/utils/ribbonEligibility';
+import { isValidMyPokemon } from '$lib/utils/myPokemonValidator';
 
 /** localStorageキー定数 */
 const PROGRESS_STORAGE_KEY = 'rt_progress';
@@ -14,6 +24,9 @@ export interface GenerationProgress {
 
 /** リボン進捗を管理するメインストア */
 class RibbonProgressStore {
+	// 初期化フラグ（再呼び出しガード用）
+	private initialized = false;
+
 	// マスターデータ
 	allRibbons = $state<Ribbon[]>([]);
 	allGames = $state<Game[]>([]);
@@ -39,6 +52,61 @@ class RibbonProgressStore {
 		this.activeMyPokemonId ? (this.progress[this.activeMyPokemonId] ?? []) : []
 	);
 
+	/** 取得済みリボンID の Set（O(1) 参照用） */
+	currentCheckedSet: ReadonlySet<string> = $derived(
+		new Set(this.currentCheckedRibbons)
+	);
+
+	/** ゲームID → 世代番号のマップ */
+	private gameGenMap: ReadonlyMap<string, number> = $derived(
+		new Map(this.allGames.map((g) => [g.id, g.generation]))
+	);
+	get genMap(): ReadonlyMap<string, number> {
+		return this.gameGenMap;
+	}
+
+	/** 全リボンの取得状態マップ */
+	ribbonStateMap: ReadonlyMap<string, RibbonState> = $derived(
+		(() => {
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity
+			const map = new Map<string, RibbonState>();
+			for (const ribbon of this.allRibbons) {
+				const evaluation = getRibbonEvaluation(
+					ribbon,
+					this.selectedPokemon,
+					this.activeMyPokemon ?? undefined,
+					this.currentCheckedSet.has(ribbon.id),
+					this.gameGenMap
+				);
+				const manualOverride = this.activeMyPokemon?.manualRibbonOverrides?.[ribbon.id];
+				const overriddenState: RibbonState =
+					manualOverride?.isMissed && evaluation.state !== 'obtained' ? 'missed' : evaluation.state;
+				map.set(ribbon.id, overriddenState);
+			}
+			return map;
+		})()
+	);
+
+	ribbonEvaluationMap: ReadonlyMap<string, RibbonEvaluation> = $derived(
+		(() => {
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity
+			const map = new Map<string, RibbonEvaluation>();
+			for (const ribbon of this.allRibbons) {
+				map.set(
+					ribbon.id,
+					getRibbonEvaluation(
+						ribbon,
+						this.selectedPokemon,
+						this.activeMyPokemon ?? undefined,
+						this.currentCheckedSet.has(ribbon.id),
+						this.gameGenMap
+					)
+				);
+			}
+			return map;
+		})()
+	);
+
 	/** 世代別完了率: Record<number, { obtained: number; total: number }> */
 	generationProgress = $derived(
 		(() => {
@@ -46,9 +114,10 @@ class RibbonProgressStore {
 			for (const ribbon of this.allRibbons) {
 				const gen = ribbon.generation;
 				if (!result[gen]) result[gen] = { obtained: 0, total: 0 };
-				result[gen].total++;
-				if (this.currentCheckedRibbons.includes(ribbon.id)) {
-					result[gen].obtained++;
+				const state = this.ribbonStateMap.get(ribbon.id) ?? 'available';
+				if (state === 'obtained' || state === 'available' || state === 'urgent') {
+					result[gen].total++;
+					if (state === 'obtained') result[gen].obtained++;
 				}
 			}
 			return result;
@@ -57,6 +126,8 @@ class RibbonProgressStore {
 
 	/** 全データをロードしてlocalStorageから進捗を復元する */
 	init(): void {
+		if (this.initialized) return;
+		this.initialized = true;
 		const { pokemonData, ribbonData, gameData } = loadAllData();
 		this.allPokemon = pokemonData;
 		this.allRibbons = ribbonData;
@@ -93,6 +164,8 @@ class RibbonProgressStore {
 		const id = crypto.randomUUID();
 		const newPokemon: MyPokemon = {
 			...data,
+			transferConfirmations: data.transferConfirmations ?? {},
+			manualRibbonOverrides: data.manualRibbonOverrides ?? {},
 			id,
 			createdAt: new Date().toISOString()
 		};
@@ -134,10 +207,110 @@ class RibbonProgressStore {
 		}
 	}
 
-	/** ポケモンが指定リボンを取得可能かどうかを判定する */
+	/** リボンの取得状態を返す */
+	getRibbonState(ribbon: Ribbon): RibbonState {
+		return this.ribbonStateMap.get(ribbon.id) ?? 'available';
+	}
+
+	getRibbonEvaluation(ribbon: Ribbon): RibbonEvaluation {
+		return this.ribbonEvaluationMap.get(ribbon.id) ?? { state: 'available', reasons: ['available_now'] };
+	}
+
+	getRibbonReasonLabels(ribbon: Ribbon): string[] {
+		const evaluation = this.getRibbonEvaluation(ribbon);
+		return evaluation.reasons.map((reason) => getRibbonReasonLabel(reason));
+	}
+
+	toggleManualMissed(myPokemonId: string, ribbonId: string, date: Date = new Date()): void {
+		const idx = this.myPokemonList.findIndex((mp) => mp.id === myPokemonId);
+		if (idx === -1) return;
+
+		const target = this.myPokemonList[idx];
+		const current = target.manualRibbonOverrides?.[ribbonId];
+		const nextMissed = !(current?.isMissed ?? false);
+		const localDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+			date.getDate()
+		).padStart(2, '0')}`;
+
+		const nextOverride: ManualRibbonOverride = {
+			isMissed: nextMissed,
+			updatedAt: localDate
+		};
+
+		const manualRibbonOverrides = {
+			...(target.manualRibbonOverrides ?? {}),
+			[ribbonId]: nextOverride
+		};
+
+		const updated = [...this.myPokemonList];
+		updated[idx] = {
+			...target,
+			manualRibbonOverrides
+		};
+		this.myPokemonList = updated;
+		this.saveMyPokemonList();
+	}
+
+	isManualMissed(ribbonId: string, myPokemonId?: string): boolean {
+		const key = myPokemonId ?? this.activeMyPokemonId;
+		if (!key) return false;
+		const target = this.myPokemonList.find((mp) => mp.id === key);
+		return target?.manualRibbonOverrides?.[ribbonId]?.isMissed ?? false;
+	}
+
+	getManualMissedUpdatedAt(ribbonId: string, myPokemonId?: string): string | undefined {
+		const key = myPokemonId ?? this.activeMyPokemonId;
+		if (!key) return undefined;
+		const target = this.myPokemonList.find((mp) => mp.id === key);
+		return target?.manualRibbonOverrides?.[ribbonId]?.updatedAt;
+	}
+
+	confirmIrreversibleTransfer(myPokemonId: string, routeId: string, date: Date = new Date()): void {
+		const idx = this.myPokemonList.findIndex((mp) => mp.id === myPokemonId);
+		if (idx === -1) return;
+
+		const localDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+			date.getDate()
+		).padStart(2, '0')}`;
+		const confirmation: TransferConfirmation = {
+			routeId,
+			confirmedAt: localDate,
+			agreedIrreversible: true
+		};
+
+		const target = this.myPokemonList[idx];
+		const transferConfirmations = {
+			...(target.transferConfirmations ?? {}),
+			[routeId]: confirmation
+		};
+
+		const updated = [...this.myPokemonList];
+		updated[idx] = {
+			...target,
+			transferConfirmations,
+			lastIrreversibleConfirmedAt: localDate
+		};
+		this.myPokemonList = updated;
+		this.saveMyPokemonList();
+	}
+
+	getRouteConfirmationDate(myPokemonId: string, routeId: string): string | undefined {
+		const target = this.myPokemonList.find((mp) => mp.id === myPokemonId);
+		return target?.transferConfirmations?.[routeId]?.confirmedAt;
+	}
+
+	getLastConfirmationDate(myPokemonId: string): string | undefined {
+		const target = this.myPokemonList.find((mp) => mp.id === myPokemonId);
+		return target?.lastIrreversibleConfirmedAt;
+	}
+
+	/** @deprecated getRibbonState を使ってください */
 	getRibbonEligibility(ribbon: Ribbon): { eligible: boolean; reason?: string } {
-		if (!this.selectedPokemon) return { eligible: true };
-		return canPokemonGetRibbon(this.selectedPokemon, ribbon, this.activeMyPokemon ?? undefined);
+		const state = this.getRibbonState(ribbon);
+		return {
+			eligible: state !== 'locked',
+			reason: state === 'locked' ? '取得不可' : undefined
+		};
 	}
 
 	/** 進捗データをJSONファイルとしてダウンロードする */
@@ -168,7 +341,18 @@ class RibbonProgressStore {
 			}
 			this.progress = data.progress;
 			if (Array.isArray(data.myPokemonList)) {
-				this.myPokemonList = data.myPokemonList;
+				const valid = (data.myPokemonList as unknown[])
+					.filter(isValidMyPokemon)
+					.map((mp) => ({
+						...mp,
+						transferConfirmations: mp.transferConfirmations ?? {},
+						manualRibbonOverrides: mp.manualRibbonOverrides ?? {}
+					}));
+				const skipped = (data.myPokemonList as unknown[]).length - valid.length;
+				if (skipped > 0) {
+					console.warn(`importProgress: ${skipped}件のマイポケモンデータが不正なためスキップしました`);
+				}
+				this.myPokemonList = valid;
 				this.saveMyPokemonList();
 			}
 			this.saveProgress();
@@ -221,7 +405,13 @@ class RibbonProgressStore {
 		if (typeof localStorage === 'undefined') return;
 		try {
 			const saved = localStorage.getItem(MY_POKEMON_STORAGE_KEY);
-			this.myPokemonList = saved ? (JSON.parse(saved) as MyPokemon[]) : [];
+			this.myPokemonList = saved
+				? (JSON.parse(saved) as MyPokemon[]).map((mp) => ({
+						...mp,
+						transferConfirmations: mp.transferConfirmations ?? {},
+						manualRibbonOverrides: mp.manualRibbonOverrides ?? {}
+					}))
+				: [];
 		} catch {
 			this.myPokemonList = [];
 		}

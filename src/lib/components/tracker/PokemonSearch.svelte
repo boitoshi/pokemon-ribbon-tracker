@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PokemonDetail } from '$lib/types';
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
+	import { normalizeForSearch } from '$lib/utils/searchNormalize';
 
 	/** Props */
 	let { allPokemon }: { allPokemon: PokemonDetail[] } = $props();
@@ -13,11 +14,15 @@
 
 	const results = $derived(
 		(() => {
-			const query = searchQuery.trim();
+			const query = normalizeForSearch(searchQuery.trim());
 			if (!query) return [];
-			return allPokemon.filter((p) => p.name.includes(query)).slice(0, MAX_RESULTS);
+			return allPokemon
+				.filter((p) => normalizeForSearch(p.name).includes(query))
+				.slice(0, MAX_RESULTS);
 		})()
 	);
+
+	const SEARCH_INPUT_ID = 'pokemon-search-input';
 
 	/** ポケモンを選択する */
 	function selectPokemon(pokemon: PokemonDetail): void {
@@ -33,9 +38,12 @@
 
 <div class="rounded-lg bg-white p-2 shadow md:p-4">
 	<div class="mb-2 md:mb-4">
-		<label class="mb-1 block text-xs font-bold text-gray-700 md:mb-2"> ポケモンを検索 </label>
+		<label for={SEARCH_INPUT_ID} class="mb-1 block text-xs font-bold text-gray-700 md:mb-2">
+			ポケモンを検索
+		</label>
 		<div class="relative">
 			<input
+				id={SEARCH_INPUT_ID}
 				type="text"
 				bind:value={searchQuery}
 				placeholder="ピカチュウ、フシギダネなど..."
@@ -53,7 +61,7 @@
 					onclick={() => selectPokemon(pokemon)}
 				>
 					<!-- サムネイル -->
-					<div class="mr-3 h-10 w-10 flex-shrink-0">
+					<div class="mr-3 h-10 w-10 shrink-0">
 						{#if pokemon.image}
 							<img src={pokemon.image} alt={pokemon.name} class="h-full w-full object-contain" />
 						{:else}
