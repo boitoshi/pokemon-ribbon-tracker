@@ -195,7 +195,7 @@
 				<div class="flex gap-2 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-3 lg:grid-cols-4">
 					{#each ribbonProgress.myPokemonList as mp (mp.id)}
 						<div
-							class="w-36 flex-shrink-0 cursor-pointer rounded-lg border p-2 transition-colors hover:bg-gray-50 md:w-auto
+							class="w-36 shrink-0 cursor-pointer rounded-lg border p-2 transition-colors hover:bg-gray-50 md:w-auto
 								{ribbonProgress.activeMyPokemonId === mp.id ? 'bg-blue-50 ring-2 ring-blue-500' : ''}"
 							role="button"
 							tabindex="0"

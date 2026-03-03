@@ -58,7 +58,7 @@
 					onclick={() => selectPokemon(pokemon)}
 				>
 					<!-- サムネイル -->
-					<div class="mr-3 h-10 w-10 flex-shrink-0">
+					<div class="mr-3 h-10 w-10 shrink-0">
 						{#if pokemon.image}
 							<img src={pokemon.image} alt={pokemon.name} class="h-full w-full object-contain" />
 						{:else}

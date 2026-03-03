@@ -145,7 +145,7 @@
 				{/if}
 			</div>
 			<!-- 右側コントロール -->
-			<div class="flex items-center gap-3 flex-shrink-0">
+			<div class="flex items-center gap-3 shrink-0">
 				{#if searchQuery}
 					<span class="text-xs text-gray-500">該当: <span class="font-semibold text-sky-600">{filteredRibbonCount}</span> 件</span>
 				{/if}
@@ -202,7 +202,7 @@
 									</div>
 
 									<!-- カテゴリタグ -->
-									<span class="flex-shrink-0 rounded px-2 py-0.5 text-xs font-medium {getCategoryColor(ribbon.category)}">
+									<span class="shrink-0 rounded px-2 py-0.5 text-xs font-medium {getCategoryColor(ribbon.category)}">
 										{ribbon.category}
 									</span>
 
@@ -225,7 +225,7 @@
 	<!-- ===== 転送ルートタブ ===== -->
 	{:else if activeTab === 'transfer'}
 		<div class="space-y-4">
-			<div class="rounded-xl border border-red-200 bg-gradient-to-r from-red-50 to-amber-50 p-4 shadow-sm">
+			<div class="rounded-xl border border-red-200 bg-linear-to-r from-red-50 to-amber-50 p-4 shadow-sm">
 				<div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 					<div>
 						<p class="text-xs font-semibold tracking-wide text-red-700">不可逆転送アラート</p>
@@ -327,7 +327,7 @@
 						<ul class="space-y-1">
 							{#each route.restrictions as note (note)}
 								<li class="flex items-start gap-1.5 text-xs text-gray-600">
-									<span class="mt-0.5 flex-shrink-0 text-gray-400">•</span>
+									<span class="mt-0.5 shrink-0 text-gray-400">•</span>
 									{note}
 								</li>
 							{/each}
@@ -351,19 +351,19 @@
 				<h2 class="mb-3 text-base font-bold text-gray-800">1. リボン制覇の基本戦略</h2>
 				<ul class="space-y-2">
 					<li class="flex items-start gap-2">
-						<span class="mt-0.5 flex-shrink-0 font-bold text-blue-500">→</span>
+						<span class="mt-0.5 shrink-0 font-bold text-blue-500">→</span>
 						<span>世代を進める前に、<strong>その世代のリボンを全取得</strong>してから転送する。一方通行なので後戻りできない。</span>
 					</li>
 					<li class="flex items-start gap-2">
-						<span class="mt-0.5 flex-shrink-0 font-bold text-orange-500">!</span>
+						<span class="mt-0.5 shrink-0 font-bold text-orange-500">!</span>
 						<span><strong>level_max リボンは最優先。</strong>レベルが上限を超えると永久に取れなくなる。トラッカーの「今すぐ取れる！」セクションを必ず確認すること。</span>
 					</li>
 					<li class="flex items-start gap-2">
-						<span class="mt-0.5 flex-shrink-0 font-bold text-pink-500">♥</span>
+						<span class="mt-0.5 shrink-0 font-bold text-pink-500">♥</span>
 						<span>コンテスト系は時間がかかるので早めに着手。ポロック/ポフィン集めから始めよう。</span>
 					</li>
 					<li class="flex items-start gap-2">
-						<span class="mt-0.5 flex-shrink-0 font-bold text-green-500">√</span>
+						<span class="mt-0.5 shrink-0 font-bold text-green-500">√</span>
 						<span>1匹だけで全リボン制覇を目指す場合、Gen3 から育てたポケモンをずっと連れていくのが最効率。</span>
 					</li>
 				</ul>
@@ -445,7 +445,7 @@
 							<ul class="space-y-1">
 								{#each item.notes as note (note)}
 									<li class="flex items-start gap-1.5 text-xs text-gray-700">
-										<span class="mt-0.5 flex-shrink-0 text-gray-400">•</span>
+										<span class="mt-0.5 shrink-0 text-gray-400">•</span>
 										{note}
 									</li>
 								{/each}
@@ -460,19 +460,19 @@
 				<h2 class="mb-3 text-base font-bold text-gray-800">3. ポケモン HOME 転送について</h2>
 				<ul class="space-y-2">
 					<li class="flex items-start gap-2">
-						<span class="mt-0.5 flex-shrink-0 font-bold text-green-500">√</span>
+						<span class="mt-0.5 shrink-0 font-bold text-green-500">√</span>
 						<span>HOME 転送後もリボンは<strong>すべて保持</strong>される。リボンを付けてから転送して問題なし。</span>
 					</li>
 					<li class="flex items-start gap-2">
-						<span class="mt-0.5 flex-shrink-0 font-bold text-blue-500">→</span>
+						<span class="mt-0.5 shrink-0 font-bold text-blue-500">→</span>
 						<span>Gen3〜5 のリボンはポケモンの「形見」として、HOMEや最新世代でも表示できる。</span>
 					</li>
 					<li class="flex items-start gap-2">
-						<span class="mt-0.5 flex-shrink-0 font-bold text-orange-500">!</span>
+						<span class="mt-0.5 shrink-0 font-bold text-orange-500">!</span>
 						<span>ポケモンバンク経由の転送は実質終了済み（eショップ配信停止）。既存の 3DS DL版のみ利用可能。</span>
 					</li>
 					<li class="flex items-start gap-2">
-						<span class="mt-0.5 flex-shrink-0 font-bold text-orange-500">!</span>
+						<span class="mt-0.5 shrink-0 font-bold text-orange-500">!</span>
 						<span>Switch版 FR/LG があれば Gen3 → HOME 直接転送が可能。GBA ルートをスキップできる。</span>
 					</li>
 				</ul>

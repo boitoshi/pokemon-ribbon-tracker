@@ -118,7 +118,7 @@
 		<p class="mt-1 text-sm text-gray-500">世代順にリボンを取得していくロードマップです</p>
 	</div>
 
-	<div class="mb-6 rounded-xl border border-red-200 bg-gradient-to-r from-red-50 to-amber-50 p-4 shadow-sm">
+	<div class="mb-6 rounded-xl border border-red-200 bg-linear-to-r from-red-50 to-amber-50 p-4 shadow-sm">
 		<div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 			<div>
 				<p class="text-xs font-semibold tracking-wide text-red-700">不可逆転送セーフティチェック</p>

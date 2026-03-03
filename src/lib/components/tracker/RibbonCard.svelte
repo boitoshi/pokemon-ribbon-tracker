@@ -183,7 +183,7 @@
     <div class="flex items-center gap-2 p-3">
       <!-- チェックボックス -->
       <button
-        class="flex-shrink-0"
+        class="shrink-0"
         onclick={onToggle}
         disabled={isDisabled}
         aria-label={isObtained ? 'リボン取得済み（クリックで解除）' : 'リボン未取得（クリックで取得済みにする）'}
@@ -245,7 +245,7 @@
 
       <!-- 展開トグルボタン -->
       <button
-        class="flex-shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+        class="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
         onclick={() => (isExpanded = !isExpanded)}
         aria-label={isExpanded ? '詳細を閉じる' : '詳細を開く'}
       >

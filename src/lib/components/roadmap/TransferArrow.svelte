@@ -191,7 +191,7 @@
 				{:else if confirmStep === 1}
 					<!-- Step 1: 理解確認チェックボックス -->
 					<label class="mt-3 flex cursor-pointer items-start gap-2 text-sm">
-						<input type="checkbox" bind:checked={acknowledgeIrreversible} class="mt-0.5 h-4 w-4 flex-shrink-0 accent-red-600" />
+						<input type="checkbox" bind:checked={acknowledgeIrreversible} class="mt-0.5 h-4 w-4 shrink-0 accent-red-600" />
 						<span>{uxText.confirmStep1Label}</span>
 					</label>
 					<div class="mt-3 flex gap-2">
@@ -209,7 +209,7 @@
 					<!-- Step 2: 最終同意 -->
 					<p class="mt-3 text-sm font-semibold text-red-700">最終同意: {uxText.finalAgreementLabel}</p>
 					<label class="mt-2 flex cursor-pointer items-start gap-2 text-sm">
-						<input type="checkbox" bind:checked={finalAgreement} class="mt-0.5 h-4 w-4 flex-shrink-0 accent-red-600" />
+						<input type="checkbox" bind:checked={finalAgreement} class="mt-0.5 h-4 w-4 shrink-0 accent-red-600" />
 						<span>{uxText.finalAgreementLabel}</span>
 					</label>
 					<div class="mt-3 flex gap-2">

@@ -254,7 +254,7 @@
 	<div class="flex items-center gap-2 px-3 py-2">
 		{#if ribbonProgress.activeMyPokemon}
 			<!-- アバター -->
-			<div class="h-8 w-8 flex-shrink-0">
+			<div class="h-8 w-8 shrink-0">
 				{#if activePokemonImage}
 					<img src={activePokemonImage} alt={activePokemonName} class="h-full w-full object-contain" />
 				{:else}
@@ -271,7 +271,7 @@
 							style="width: {completionPercent}%"
 						></div>
 					</div>
-					<span class="flex-shrink-0 text-xs text-gray-500">{completionPercent}%</span>
+					<span class="shrink-0 text-xs text-gray-500">{completionPercent}%</span>
 				</div>
 			</div>
 		{:else}
@@ -279,7 +279,7 @@
 		{/if}
 		<!-- マイポケモンボタン -->
 		<button
-			class="flex-shrink-0 rounded-md bg-blue-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-600"
+			class="shrink-0 rounded-md bg-blue-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-600"
 			onclick={() => (showMobilePanel = true)}
 		>
 			マイポケモン ▼
@@ -290,10 +290,10 @@
 	<div class="flex items-center gap-2 overflow-x-auto px-3 pb-2">
 		<!-- マイポケモンチップ（横スクロール） -->
 		{#if ribbonProgress.myPokemonList.length > 0}
-			<div class="flex flex-shrink-0 gap-1.5">
+			<div class="flex shrink-0 gap-1.5">
 				{#each ribbonProgress.myPokemonList as mp (mp.id)}
 					<button
-						class="flex flex-shrink-0 items-center gap-1 rounded-full px-2 py-1 text-xs transition-colors
+						class="flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-xs transition-colors
 							{ribbonProgress.activeMyPokemonId === mp.id
 							? 'bg-blue-500 text-white'
 							: 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
@@ -309,13 +309,13 @@
 		{/if}
 		<!-- + 追加ボタン -->
 		<button
-			class="flex-shrink-0 rounded-full border border-dashed border-gray-300 px-2 py-1 text-xs text-gray-500 hover:border-blue-400 hover:text-blue-500"
+			class="shrink-0 rounded-full border border-dashed border-gray-300 px-2 py-1 text-xs text-gray-500 hover:border-blue-400 hover:text-blue-500"
 			onclick={() => (showMobilePanel = true)}
 		>
 			+ 追加
 		</button>
 		<!-- ポケモン検索（インライン） -->
-		<div class="relative flex-shrink-0">
+		<div class="relative shrink-0">
 			<input
 				type="text"
 				bind:value={mobileSearchQuery}
@@ -373,7 +373,7 @@
 <div class="mx-auto max-w-7xl px-2 py-3 md:px-4 md:py-6">
 	<div class="flex flex-col gap-4 md:flex-row md:gap-6">
 		<!-- ===== 左サイドバー（モバイルでは非表示） ===== -->
-		<aside class="hidden md:flex md:w-80 md:flex-shrink-0 md:flex-col md:gap-3">
+		<aside class="hidden md:flex md:w-80 md:shrink-0 md:flex-col md:gap-3">
 			<!-- ポケモン検索 -->
 			<PokemonSearch allPokemon={ribbonProgress.allPokemon} />
 
@@ -409,10 +409,10 @@
 				{@const theme = (activeGen ? GEN_THEME[activeGen] : null) ?? DEFAULT_GEN_THEME}
 				<div class="mb-4 overflow-hidden rounded-xl border shadow-sm {theme.border}">
 					<!-- ヒーローカード本体 -->
-					<div class="bg-gradient-to-r {theme.gradient} p-4">
+					<div class="bg-linear-to-r {theme.gradient} p-4">
 						<div class="flex items-center gap-4">
 							<!-- ポケモン画像（大） -->
-							<div class="h-24 w-24 flex-shrink-0">
+							<div class="h-24 w-24 shrink-0">
 								{#if activePokemonImage}
 									<img src={activePokemonImage} alt={activePokemonName}
 											 class="h-full w-full object-contain drop-shadow-md" />
@@ -429,7 +429,7 @@
 								<!-- プログレスバー -->
 								<div class="mb-1 h-3 w-full overflow-hidden rounded-full bg-white/70">
 									<div
-										class="h-full rounded-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-500"
+										class="h-full rounded-full bg-linear-to-r from-green-400 to-emerald-500 transition-all duration-500"
 										style="width: {completionPercent}%"
 									></div>
 								</div>
@@ -530,7 +530,7 @@
 
 			<!-- 世代コンプリートバナー -->
 			{#each completedGenerations as { gen } (gen)}
-				<div class="mb-2 rounded-lg bg-gradient-to-r from-yellow-400 to-amber-500
+				<div class="mb-2 rounded-lg bg-linear-to-r from-yellow-400 to-amber-500
 								px-3 py-2 text-sm font-bold text-white shadow-md">
 					🎉 Gen{gen} コンプリート！
 				</div>
@@ -539,7 +539,7 @@
 			<!-- 世代ピル（常時表示） -->
 			<div class="mb-2 flex gap-1 overflow-x-auto pb-1">
 				<button
-					class="flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors
+					class="shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors
 						{filterState.generation === null ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
 					onclick={() => toggleGeneration(null)}
 				>
@@ -547,7 +547,7 @@
 				</button>
 				{#each GENERATIONS as gen (gen)}
 					<button
-						class="flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors
+						class="shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors
 							{filterState.generation === gen ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
 						onclick={() => toggleGeneration(gen)}
 					>

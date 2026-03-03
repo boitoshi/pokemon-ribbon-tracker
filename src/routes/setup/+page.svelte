@@ -196,7 +196,7 @@
 							</div>
 							<div
 								class={[
-									'ml-4 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2',
+									'ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2',
 									setup.ownedHardware.includes(hw.id)
 										? 'border-blue-500 bg-blue-500 text-white'
 										: 'border-gray-300'
