@@ -47,7 +47,7 @@
 |--------|--------|------|
 | ✅ 完了 | G-1: ガイドリボン検索 | `guide/+page.svelte` に `searchQuery` + `$derived` + 自動展開 `$effect` |
 | 🔜 次フェーズ | Phase 6: PWA完成 | `vite-plugin-pwa` 設定、オフライン対応 |
-| 🔜 次フェーズ | Phase 6: Gen9データ整備 | SV DLC追加リボン、marks-gen9.ts 確認・補完 |
+| ✅ 完了 | Phase 6-B: Gen9データ整備 | DLCリボン2本追加（キタカミ・ブルーベリー）、partner-mark削除 |
 
 ---
 

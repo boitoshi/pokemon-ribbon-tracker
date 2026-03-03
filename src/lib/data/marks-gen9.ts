@@ -471,16 +471,6 @@ export const MARKS_GEN9: Ribbon[] = [
     requirements: 'ピクニック中にポケモンと遊ぶ',
   },
   {
-    id: 'partner-mark',
-    name: 'バディのあかし',
-    description: 'テイムしてバディになったポケモンに付くあかし',
-    generation: 9,
-    games: ['scarlet', 'violet'],
-    category: 'あかし',
-    type: 'mark',
-    requirements: 'ポケモンをテイムしてバディにする',
-  },
-  {
     id: 'gourmand-mark',
     name: 'くいしんぼのあかし',
     description: '食いしん坊なポケモンに付くあかし',
