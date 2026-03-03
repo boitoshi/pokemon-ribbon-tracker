@@ -50,7 +50,7 @@ export const RIBBONS_GEN9: Ribbon[] = [
     generation: 9,
     games: ['scarlet', 'violet'],
     category: '思い出',
-    requirements: '// TODO: 要確認',
+    requirements: '藍の円盤DLC — ブルーベリー学園の特別講師とポケモンを交換する。ニャオハ（リコ）など一部の配布ポケモンにも付いている',
   },
 
   // ============================================================
