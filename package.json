@@ -15,7 +15,8 @@
 		"format": "prettier --write .",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"gen-icons": "node scripts/gen-icons.mjs"
+		"gen-icons": "node scripts/gen-icons.mjs",
+		"gen-games": "node scripts/generate-games.mjs"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.0",
