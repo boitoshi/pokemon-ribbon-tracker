@@ -1,9 +1,11 @@
+// Gen 4 リボン定義データ
+// ⚠️  このファイルは自動生成です。直接編集しないでください。
+// 生成元: pokemon-data/ribbons/catalog.json
+// 再生成: node scripts/generate-ribbons.mjs
+
 import type { Ribbon } from '$lib/types';
 
 export const RIBBONS_GEN4: Ribbon[] = [
-  // ============================================================
-  // チャンピオン (1)
-  // ============================================================
   {
     id: 'champion-sinnoh',
     name: 'シンオウチャンプリボン',
@@ -13,11 +15,6 @@ export const RIBBONS_GEN4: Ribbon[] = [
     category: 'チャンピオン',
     requirements: '殿堂入りメンバーに入っている',
   },
-
-  // ============================================================
-  // コンテスト (20) — スーパーコンテスト (DP/Pt)
-  // 5カテゴリ × 4ランク
-  // ============================================================
   {
     id: 'cool-ribbon-g4',
     name: 'クールリボン',
@@ -198,10 +195,6 @@ export const RIBBONS_GEN4: Ribbon[] = [
     category: 'コンテスト',
     requirements: 'スーパーコンテスト・たくましさ マスターランクで優勝する',
   },
-
-  // ============================================================
-  // バトル施設
-  // ============================================================
   {
     id: 'ability-ribbon',
     name: 'アビリティリボン',
@@ -262,23 +255,15 @@ export const RIBBONS_GEN4: Ribbon[] = [
     requirements: 'バトルファクトリーで21連勝する',
     eligibility: { type: 'level_max', maxLevel: 50 },
   },
-
-  // ============================================================
-  // 思い出・友情
-  // ============================================================
   {
     id: 'footprint-ribbon',
     name: 'あしあとリボン',
-    description: 'Dr.フットスタンプに認めてもらった証',
+    description: 'あしあと博士になつき度を認めてもらった証',
     generation: 4,
     games: ['diamond', 'pearl', 'platinum'],
     category: '思い出',
     requirements: 'Lv.30以上で十分成長しており、かつ友好度がMAXである',
   },
-
-  // ============================================================
-  // 特殊購入 (HG/SS)
-  // ============================================================
   {
     id: 'gorgeous-ribbon',
     name: 'ゴージャスリボン',
@@ -306,10 +291,6 @@ export const RIBBONS_GEN4: Ribbon[] = [
     category: '特殊',
     requirements: 'リゾートエリアのショップで999,999円で購入する',
   },
-
-  // ============================================================
-  // 特殊 (気分・感情リボン)
-  // ============================================================
   {
     id: 'alert-ribbon',
     name: 'しゃっきリボン',
@@ -373,10 +354,6 @@ export const RIBBONS_GEN4: Ribbon[] = [
     category: '特殊',
     requirements: 'ゲーム内の特定のイベントで贈られる',
   },
-
-  // ============================================================
-  // 記念
-  // ============================================================
   {
     id: 'record-ribbon',
     name: 'レコードリボン',
@@ -394,5 +371,41 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ['diamond', 'pearl'],
     category: '特殊',
     requirements: 'My Pokémon Ranch（ポケモン牧場）に999匹のポケモンを送る',
+  },
+  {
+    id: 'battle-champion-ribbon',
+    name: 'バトルチャンプリボン',
+    description: 'ポケモン公式大会の入賞記念に配布されたリボン',
+    generation: 4,
+    games: ['diamond', 'pearl', 'platinum', 'heartgold', 'soulsilver'],
+    category: 'イベント',
+    requirements: 'ポケモン公式大会の入賞記念に配布される（現実のイベント配布。通常プレイでは入手不可）',
+  },
+  {
+    id: 'regional-champion-ribbon',
+    name: 'エリアチャンプリボン',
+    description: 'ポケモン地方大会の入賞記念に配布されたリボン',
+    generation: 4,
+    games: ['diamond', 'pearl', 'platinum', 'heartgold', 'soulsilver'],
+    category: 'イベント',
+    requirements: 'ポケモン地方大会の入賞記念に配布される（現実のイベント配布。通常プレイでは入手不可）',
+  },
+  {
+    id: 'national-champion-ribbon',
+    name: 'ナショナルチャンプリボン',
+    description: 'ポケモン全国大会の入賞記念に配布されたリボン',
+    generation: 4,
+    games: ['diamond', 'pearl', 'platinum', 'heartgold', 'soulsilver'],
+    category: 'イベント',
+    requirements: 'ポケモン全国大会の入賞記念に配布される（現実のイベント配布。通常プレイでは入手不可）',
+  },
+  {
+    id: 'world-champion-ribbon',
+    name: 'ワールドチャンプリボン',
+    description: 'ポケモン世界大会の入賞記念に配布されたリボン',
+    generation: 4,
+    games: ['diamond', 'pearl', 'platinum', 'heartgold', 'soulsilver'],
+    category: 'イベント',
+    requirements: 'ポケモン世界大会の入賞記念に配布される（現実のイベント配布。通常プレイでは入手不可）',
   },
 ];

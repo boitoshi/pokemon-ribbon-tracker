@@ -1,9 +1,11 @@
+// Gen 5 リボン定義データ
+// ⚠️  このファイルは自動生成です。直接編集しないでください。
+// 生成元: pokemon-data/ribbons/catalog.json
+// 再生成: node scripts/generate-ribbons.mjs
+
 import type { Ribbon } from '$lib/types';
 
 export const RIBBONS_GEN5: Ribbon[] = [
-  // ============================================================
-  // イベント・特殊 (Gen 5 はイベント配布リボンが中心)
-  // ============================================================
   {
     id: 'classic-ribbon',
     name: 'クラシックリボン',

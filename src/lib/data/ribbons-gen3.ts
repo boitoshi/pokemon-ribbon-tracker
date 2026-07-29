@@ -1,11 +1,11 @@
 // Gen 3 リボン定義データ
-// ルビー・サファイア・エメラルド・ファイアレッド・リーフグリーン・コロシアム・XD で取得可能な全29リボン
+// ⚠️  このファイルは自動生成です。直接編集しないでください。
+// 生成元: pokemon-data/ribbons/catalog.json
+// 再生成: node scripts/generate-ribbons.mjs
 
 import type { Ribbon } from '$lib/types';
 
 export const RIBBONS_GEN3: Ribbon[] = [
-  // ── チャンピオン (1) ──────────────────────────────────────────────────────
-
   {
     id: 'champion-hoenn',
     name: 'チャンプリボン',
@@ -15,9 +15,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: 'チャンピオン',
     requirements: '殿堂入りメンバーに入っている',
   },
-
-  // ── コンテスト・クール (4) ────────────────────────────────────────────────
-
   {
     id: 'cool-ribbon',
     name: 'クールリボン',
@@ -54,9 +51,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: 'コンテスト',
     requirements: 'かっこよさ部門マスターランクで優勝する',
   },
-
-  // ── コンテスト・ビューティ (4) ───────────────────────────────────────────
-
   {
     id: 'beauty-ribbon',
     name: 'ビューティリボン',
@@ -93,9 +87,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: 'コンテスト',
     requirements: 'うつくしさ部門マスターランクで優勝する',
   },
-
-  // ── コンテスト・キュート (4) ──────────────────────────────────────────────
-
   {
     id: 'cute-ribbon',
     name: 'キュートリボン',
@@ -132,9 +123,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: 'コンテスト',
     requirements: 'かわいさ部門マスターランクで優勝する',
   },
-
-  // ── コンテスト・ジーニアス (4) ────────────────────────────────────────────
-
   {
     id: 'smart-ribbon',
     name: 'ジーニアスリボン',
@@ -171,9 +159,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: 'コンテスト',
     requirements: 'かしこさ部門マスターランクで優勝する',
   },
-
-  // ── コンテスト・パワフル (4) ──────────────────────────────────────────────
-
   {
     id: 'tough-ribbon',
     name: 'パワフルリボン',
@@ -210,9 +195,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: 'コンテスト',
     requirements: 'たくましさ部門マスターランクで優勝する',
   },
-
-  // ── バトル施設 (2) ────────────────────────────────────────────────────────
-
   {
     id: 'winning-ribbon',
     name: 'ウイニングリボン',
@@ -232,9 +214,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: 'バトル施設',
     requirements: 'バトルタワーのオープンレベルチャレンジで勝ち抜く',
   },
-
-  // ── コンテスト特殊 (1) ────────────────────────────────────────────────────
-
   {
     id: 'artist-ribbon',
     name: 'ブロマイドリボン',
@@ -244,9 +223,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: 'コンテスト',
     requirements: 'マスターランクで最高スコアを獲得し、リルシティ美術館に絵が飾られる',
   },
-
-  // ── 思い出 (1) ────────────────────────────────────────────────────────────
-
   {
     id: 'effort-ribbon',
     name: 'がんばリボン',
@@ -256,9 +232,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: '思い出',
     requirements: '努力値の合計が510に達した状態で特定のNPCに話しかける',
   },
-
-  // ── イベント (2) ──────────────────────────────────────────────────────────
-
   {
     id: 'country-ribbon',
     name: 'カントリーリボン',
@@ -277,9 +250,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     category: 'イベント',
     requirements: '過去のイベント配布・大会で受け取る（現在は入手不可）',
   },
-
-  // ── 特殊（コロシアム / XD専用）(2) ──────────────────────────────────────
-
   {
     id: 'national-ribbon',
     name: 'ナショナルリボン',

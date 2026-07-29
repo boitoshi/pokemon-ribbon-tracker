@@ -16,7 +16,9 @@ import { CANONICAL_RIBBON_NAMES, CANONICAL_MARK_NAMES } from '$lib/data/canonica
 // 「正本 ∪ HOME以前に消滅した旧世代リボンの公式名」に必ず含まれることを固定する。
 
 /**
- * HOME 以前に消滅した（HOME世代のリボン一覧に存在しない）旧世代リボンの公式名。
+ * 正本（pokemon-data/mappings/ribbons.json）に無い公式リボン名。
+ * 大半は HOME 以前に消滅した旧世代リボンだが、コンテストスターリボンのように
+ * 現役でも正本49件に含まれないものがある。
  * 出典: PKHeX text_Ribbons_ja.txt（「 (3世代)」等の注記と全角スペースは除去した表記）
  */
 const LEGACY_RIBBON_NAMES = new Set([
@@ -72,7 +74,9 @@ const LEGACY_RIBBON_NAMES = new Set([
 	// Gen7 バトル施設（RibbonBattleTreeGreat / RibbonBattleTreeMaster / RibbonBattleRoyale）
 	'グレートツリーリボン',
 	'マスターツリーリボン',
-	'ロイヤルマスターリボン'
+	'ロイヤルマスターリボン',
+	// Gen6 ORAS / Gen8 BDSP（RibbonContestStar）。正本49件に無いが現役のリボン
+	'コンテストスターリボン'
 ]);
 
 /**
@@ -80,12 +84,7 @@ const LEGACY_RIBBON_NAMES = new Set([
  */
 const SKIP_CANONICAL_RIBBON_NAMES = new Set([
 	// 入手手段が実装上疑義ありのため未収録（指示書 7 参照）
-	'せんざいいちぐうリボン',
-	// 公式大会・イベントバトル配布のリボン。指示書に追加指定がないため未収録
-	'バトルチャンプリボン',
-	'エリアチャンプリボン',
-	'ナショナルチャンプリボン',
-	'ワールドチャンプリボン'
+	'せんざいいちぐうリボン'
 ]);
 
 const ALL_RIBBON_DATASETS: [string, { id: string; name: string }[]][] = [

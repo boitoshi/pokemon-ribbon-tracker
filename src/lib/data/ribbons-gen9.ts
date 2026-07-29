@@ -1,9 +1,11 @@
+// Gen 9 リボン定義データ
+// ⚠️  このファイルは自動生成です。直接編集しないでください。
+// 生成元: pokemon-data/ribbons/catalog.json
+// 再生成: node scripts/generate-ribbons.mjs
+
 import type { Ribbon } from '$lib/types';
 
 export const RIBBONS_GEN9: Ribbon[] = [
-  // ============================================================
-  // チャンピオン
-  // ============================================================
   {
     id: 'champion-paldea',
     name: 'パルデアチャンプリボン',
@@ -13,10 +15,6 @@ export const RIBBONS_GEN9: Ribbon[] = [
     category: 'チャンピオン',
     requirements: '四天王とチャンピオンを倒して殿堂入りする',
   },
-
-  // ============================================================
-  // パートナー
-  // ============================================================
   {
     id: 'partner-ribbon-sv',
     name: 'パートナーリボン',
@@ -26,5 +24,4 @@ export const RIBBONS_GEN9: Ribbon[] = [
     category: '思い出',
     requirements: '藍の円盤DLC — ブルーベリー学園の特別講師とポケモンを交換する。ニャオハ（リコ）など一部の配布ポケモンにも付いている',
   },
-
 ];

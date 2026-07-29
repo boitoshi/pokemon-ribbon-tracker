@@ -1,17 +1,19 @@
+// Gen 8 リボン定義データ
+// ⚠️  このファイルは自動生成です。直接編集しないでください。
+// 生成元: pokemon-data/ribbons/catalog.json
+// 再生成: node scripts/generate-ribbons.mjs
+
 import type { Ribbon } from '$lib/types';
 
 export const RIBBONS_GEN8: Ribbon[] = [
-  // ============================================================
-  // チャンピオン
-  // ============================================================
   {
-    id: 'champion-galar',
-    name: 'ガラルチャンプリボン',
-    description: 'ガラル地方のポケモンリーグを制覇した証',
+    id: 'effort-ribbon-bdsp',
+    name: 'がんばリボン',
+    description: '努力値を最大まで上げた証',
     generation: 8,
-    games: ['sword', 'shield'],
-    category: 'チャンピオン',
-    requirements: '殿堂入りメンバーに入っている',
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '思い出',
+    requirements: '努力値を最大まで貯めたポケモンをナギサシティの女性に見せる',
   },
   {
     id: 'champion-sinnoh-bdsp',
@@ -22,10 +24,177 @@ export const RIBBONS_GEN8: Ribbon[] = [
     category: 'チャンピオン',
     requirements: '殿堂入りメンバーに入っている',
   },
-
-  // ============================================================
-  // コンテスト
-  // ============================================================
+  {
+    id: 'footprint-ribbon-bdsp',
+    name: 'あしあとリボン',
+    description: 'あしあと博士になつき度を認めてもらった証',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '思い出',
+    requirements: 'なついたポケモンを213番道路のあしあと博士に見せる',
+  },
+  {
+    id: 'gorgeous-ribbon-bdsp',
+    name: 'ゴージャスリボン',
+    description: 'リゾートエリアでお金で手に入れた豪華なリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'リゾートエリアのリボンシンジケートで購入する',
+  },
+  {
+    id: 'royal-ribbon-bdsp',
+    name: 'ロイヤルリボン',
+    description: 'リゾートエリアで高額のお金で手に入れた王家のリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'リゾートエリアのリボンシンジケートで購入する',
+  },
+  {
+    id: 'gorgeous-royal-ribbon-bdsp',
+    name: 'ゴージャスロイヤルリボン',
+    description: 'リゾートエリアで超高額のお金で手に入れた究極のリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'リゾートエリアのリボンシンジケートで購入する',
+  },
+  {
+    id: 'alert-ribbon-bdsp',
+    name: 'しゃっきリボン',
+    description: '何かに気づいているポケモンに贈られる記念のリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）',
+  },
+  {
+    id: 'shock-ribbon-bdsp',
+    name: 'どっきリボン',
+    description: 'いつも驚いているポケモンに贈られる記念のリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）',
+  },
+  {
+    id: 'downcast-ribbon-bdsp',
+    name: 'しょんぼリボン',
+    description: 'いつも悲しそうなポケモンに贈られる記念のリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）',
+  },
+  {
+    id: 'careless-ribbon-bdsp',
+    name: 'うっかリボン',
+    description: 'いつもそそっかしいポケモンに贈られる記念のリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）',
+  },
+  {
+    id: 'relax-ribbon-bdsp',
+    name: 'すっきリボン',
+    description: 'いつものんびりしているポケモンに贈られる記念のリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）',
+  },
+  {
+    id: 'snooze-ribbon-bdsp',
+    name: 'ぐっすリボン',
+    description: 'いつも眠そうなポケモンに贈られる記念のリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）',
+  },
+  {
+    id: 'smile-ribbon-bdsp',
+    name: 'にっこリボン',
+    description: 'いつもニコニコしているポケモンに贈られる記念のリボン',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: '特殊',
+    requirements: 'ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）',
+  },
+  {
+    id: 'coolness-ribbon-bdsp',
+    name: 'かっこよさマスターリボン',
+    description: 'コンテスト・かっこよさ部門のマスターランクで優勝した証',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: 'コンテスト',
+    requirements: 'ヨスガシティのスーパーコンテストショー・かっこよさ部門のマスターランクで優勝する',
+  },
+  {
+    id: 'beauty-ribbon-oras-bdsp',
+    name: 'うつくしさマスターリボン',
+    description: 'コンテスト・うつくしさ部門のマスターランクで優勝した証',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: 'コンテスト',
+    requirements: 'ヨスガシティのスーパーコンテストショー・うつくしさ部門のマスターランクで優勝する',
+  },
+  {
+    id: 'cuteness-ribbon-bdsp',
+    name: 'かわいさマスターリボン',
+    description: 'コンテスト・かわいさ部門のマスターランクで優勝した証',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: 'コンテスト',
+    requirements: 'ヨスガシティのスーパーコンテストショー・かわいさ部門のマスターランクで優勝する',
+  },
+  {
+    id: 'cleverness-ribbon-bdsp',
+    name: 'かしこさマスターリボン',
+    description: 'コンテスト・かしこさ部門のマスターランクで優勝した証',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: 'コンテスト',
+    requirements: 'ヨスガシティのスーパーコンテストショー・かしこさ部門のマスターランクで優勝する',
+  },
+  {
+    id: 'toughness-ribbon-bdsp',
+    name: 'たくましさマスターリボン',
+    description: 'コンテスト・たくましさ部門のマスターランクで優勝した証',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: 'コンテスト',
+    requirements: 'ヨスガシティのスーパーコンテストショー・たくましさ部門のマスターランクで優勝する',
+  },
+  {
+    id: 'best-friends-ribbon-g8',
+    name: 'なかよしリボン',
+    description: 'トレーナーと最高の友情を育んだ証',
+    generation: 8,
+    games: ['sword', 'shield', 'brilliant_diamond', 'shining_pearl'],
+    category: '思い出',
+    requirements: '友好度がMAXの状態でポケモンに話しかける。BDSPではヨスガシティのポケモンだいすきクラブでなかよし度最大のポケモンを判定してもらう',
+  },
+  {
+    id: 'contest-star-ribbon-bdsp',
+    name: 'コンテストスターリボン',
+    description: 'スーパーコンテストショーの5部門すべてでマスターランク優勝した証',
+    generation: 8,
+    games: ['brilliant_diamond', 'shining_pearl'],
+    category: 'コンテスト',
+    requirements: 'スーパーコンテストショーの5部門すべてでマスターランク優勝する',
+  },
+  {
+    id: 'champion-galar',
+    name: 'ガラルチャンプリボン',
+    description: 'ガラル地方のポケモンリーグを制覇した証',
+    generation: 8,
+    games: ['sword', 'shield'],
+    category: 'チャンピオン',
+    requirements: '殿堂入りメンバーに入っている',
+  },
   {
     id: 'twinkling-star-ribbon',
     name: 'トゥインクルスターリボン',
@@ -35,10 +204,6 @@ export const RIBBONS_GEN8: Ribbon[] = [
     category: 'コンテスト',
     requirements: 'スーパーコンテストショー マスターランクでベストパフォーマーになる（5部門のマスターランク制覇後に挑戦可能）',
   },
-
-  // ============================================================
-  // バトル施設
-  // ============================================================
   {
     id: 'tower-master-ribbon',
     name: 'マスタータワーリボン',
@@ -58,10 +223,6 @@ export const RIBBONS_GEN8: Ribbon[] = [
     category: 'バトル施設',
     requirements: 'バトルスタジアムのランクバトルでマスターランクに到達する（SVのランクバトル マスターボール級到達でも入手可能）',
   },
-
-  // ============================================================
-  // 思い出
-  // ============================================================
   {
     id: 'hisui-ribbon',
     name: 'ヒスイリボン',
@@ -70,18 +231,5 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ['legends_arceus'],
     category: '思い出',
     requirements: 'コトブキムラの写真屋でポケモンと記念写真を撮る',
-  },
-
-  // ============================================================
-  // 友情
-  // ============================================================
-  {
-    id: 'best-friends-ribbon-g8',
-    name: 'なかよしリボン',
-    description: 'トレーナーと最高の友情を育んだ証',
-    generation: 8,
-    games: ['sword', 'shield'],
-    category: '思い出',
-    requirements: '友好度がMAXの状態でポケモンに話しかける',
   },
 ];
