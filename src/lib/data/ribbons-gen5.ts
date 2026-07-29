@@ -14,6 +14,7 @@ export const RIBBONS_GEN5: Ribbon[] = [
     games: ["black", "white", "black2", "white2"],
     category: "イベント",
     requirements: "イベント配布ポケモンを受け取る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/classic.png",
   },
   {
     id: "wishing-ribbon",
@@ -23,6 +24,7 @@ export const RIBBONS_GEN5: Ribbon[] = [
     games: ["black", "white", "black2", "white2"],
     category: "イベント",
     requirements: "イベント配布ポケモンを受け取る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/wishing.png",
   },
   {
     id: "premier-ribbon",
@@ -32,6 +34,7 @@ export const RIBBONS_GEN5: Ribbon[] = [
     games: ["black", "white", "black2", "white2"],
     category: "イベント",
     requirements: "イベント配布ポケモンを受け取る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/premier.png",
   },
   {
     id: "event-ribbon",
@@ -41,6 +44,7 @@ export const RIBBONS_GEN5: Ribbon[] = [
     games: ["black", "white", "black2", "white2"],
     category: "イベント",
     requirements: "イベント参加または配布ポケモンを受け取る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/event.png",
   },
   {
     id: "birthday-ribbon",
@@ -50,6 +54,7 @@ export const RIBBONS_GEN5: Ribbon[] = [
     games: ["black", "white", "black2", "white2"],
     category: "イベント",
     requirements: "イベント配布ポケモンを受け取る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/birthday.png",
   },
   {
     id: "special-ribbon",
@@ -59,6 +64,7 @@ export const RIBBONS_GEN5: Ribbon[] = [
     games: ["black", "white", "black2", "white2"],
     category: "イベント",
     requirements: "イベント配布ポケモンを受け取る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/special.png",
   },
   {
     id: "souvenir-ribbon",
@@ -68,5 +74,6 @@ export const RIBBONS_GEN5: Ribbon[] = [
     games: ["black", "white", "black2", "white2"],
     category: "イベント",
     requirements: "イベント配布ポケモンを受け取る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/souvenir.png",
   },
 ];

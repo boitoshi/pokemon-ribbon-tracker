@@ -14,6 +14,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "思い出",
     requirements: "努力値を最大まで貯めたポケモンをナギサシティの女性に見せる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/effort.png",
   },
   {
     id: "champion-sinnoh-bdsp",
@@ -23,6 +24,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "チャンピオン",
     requirements: "殿堂入りメンバーに入っている",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/sinnoh_champion.png",
   },
   {
     id: "footprint-ribbon-bdsp",
@@ -32,6 +34,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "思い出",
     requirements: "なついたポケモンを213番道路のあしあと博士に見せる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/footprint.png",
   },
   {
     id: "gorgeous-ribbon-bdsp",
@@ -41,6 +44,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "リゾートエリアのリボンシンジケートで購入する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/gorgeous.png",
   },
   {
     id: "royal-ribbon-bdsp",
@@ -50,6 +54,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "リゾートエリアのリボンシンジケートで購入する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/royal.png",
   },
   {
     id: "gorgeous-royal-ribbon-bdsp",
@@ -59,6 +64,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "リゾートエリアのリボンシンジケートで購入する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/gorgeous_royal.png",
   },
   {
     id: "alert-ribbon-bdsp",
@@ -68,6 +74,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/alert.png",
   },
   {
     id: "shock-ribbon-bdsp",
@@ -77,6 +84,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/shock.png",
   },
   {
     id: "downcast-ribbon-bdsp",
@@ -86,6 +94,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/downcast.png",
   },
   {
     id: "careless-ribbon-bdsp",
@@ -95,6 +104,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/careless.png",
   },
   {
     id: "relax-ribbon-bdsp",
@@ -104,6 +114,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/relax.png",
   },
   {
     id: "snooze-ribbon-bdsp",
@@ -113,6 +124,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/snooze.png",
   },
   {
     id: "smile-ribbon-bdsp",
@@ -122,6 +134,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "特殊",
     requirements: "ノモセシティ北東の民家の女性からもらう（1日1種類・2日目以降）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smile.png",
   },
   {
     id: "coolness-ribbon-bdsp",
@@ -131,6 +144,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "コンテスト",
     requirements: "ヨスガシティのスーパーコンテストショー・かっこよさ部門のマスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/coolness_master.png",
   },
   {
     id: "beauty-ribbon-bdsp",
@@ -140,6 +154,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "コンテスト",
     requirements: "ヨスガシティのスーパーコンテストショー・うつくしさ部門のマスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_master.png",
   },
   {
     id: "cuteness-ribbon-bdsp",
@@ -149,6 +164,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "コンテスト",
     requirements: "ヨスガシティのスーパーコンテストショー・かわいさ部門のマスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cuteness_master.png",
   },
   {
     id: "cleverness-ribbon-bdsp",
@@ -158,6 +174,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "コンテスト",
     requirements: "ヨスガシティのスーパーコンテストショー・かしこさ部門のマスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cleverness_master.png",
   },
   {
     id: "toughness-ribbon-bdsp",
@@ -167,6 +184,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "コンテスト",
     requirements: "ヨスガシティのスーパーコンテストショー・たくましさ部門のマスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/toughness_master.png",
   },
   {
     id: "best-friends-ribbon-g8",
@@ -176,6 +194,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["sword", "shield", "brilliant_diamond", "shining_pearl"],
     category: "思い出",
     requirements: "友好度がMAXの状態でポケモンに話しかける。BDSPではヨスガシティのポケモンだいすきクラブでなかよし度最大のポケモンを判定してもらう",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/best_friends.png",
   },
   {
     id: "contest-star-ribbon-bdsp",
@@ -185,6 +204,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "コンテスト",
     requirements: "スーパーコンテストショーの5部門すべてでマスターランク優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/contest_star.png",
   },
   {
     id: "champion-galar",
@@ -194,6 +214,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["sword", "shield"],
     category: "チャンピオン",
     requirements: "殿堂入りメンバーに入っている",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/galar_champion.png",
   },
   {
     id: "twinkling-star-ribbon",
@@ -203,6 +224,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["brilliant_diamond", "shining_pearl"],
     category: "コンテスト",
     requirements: "スーパーコンテストショー マスターランクでベストパフォーマーになる（5部門のマスターランク制覇後に挑戦可能）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/twinkling_star.png",
   },
   {
     id: "tower-master-ribbon",
@@ -212,6 +234,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["sword", "shield", "brilliant_diamond", "shining_pearl"],
     category: "バトル施設",
     requirements: "バトルタワーでマスターランクに到達する（BDSPのバトルタワー制覇でも入手可能）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/tower_master.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -222,6 +245,7 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["sword", "shield", "scarlet", "violet"],
     category: "バトル施設",
     requirements: "バトルスタジアムのランクバトルでマスターランクに到達する（SVのランクバトル マスターボール級到達でも入手可能）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/master_rank.png",
   },
   {
     id: "hisui-ribbon",
@@ -231,5 +255,6 @@ export const RIBBONS_GEN8: Ribbon[] = [
     games: ["legends_arceus"],
     category: "思い出",
     requirements: "コトブキムラの写真屋でポケモンと記念写真を撮る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/hisui.png",
   },
 ];

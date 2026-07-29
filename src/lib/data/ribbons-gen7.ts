@@ -14,6 +14,7 @@ export const RIBBONS_GEN7: Ribbon[] = [
     games: ["lets_go"],
     category: "チャンピオン",
     requirements: "殿堂入りメンバーに入っている",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/champion.png",
   },
   {
     id: "premier-ribbon-g7",
@@ -23,6 +24,7 @@ export const RIBBONS_GEN7: Ribbon[] = [
     games: ["sun", "moon", "usum"],
     category: "イベント",
     requirements: "イベント配布ポケモンを受け取る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/premier.png",
   },
   {
     id: "best-friends-ribbon-g7",
@@ -32,6 +34,7 @@ export const RIBBONS_GEN7: Ribbon[] = [
     games: ["sun", "moon", "usum"],
     category: "思い出",
     requirements: "友好度がMAXの状態でポケモンに話しかける",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/best_friends.png",
   },
   {
     id: "champion-alola",
@@ -41,6 +44,7 @@ export const RIBBONS_GEN7: Ribbon[] = [
     games: ["sun", "moon", "usum"],
     category: "チャンピオン",
     requirements: "殿堂入りメンバーに入っている",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/alola_champion.png",
   },
   {
     id: "battle-tree-great-ribbon",
@@ -50,6 +54,7 @@ export const RIBBONS_GEN7: Ribbon[] = [
     games: ["sun", "moon", "usum"],
     category: "バトル施設",
     requirements: "バトルツリー（通常）を制覇する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/battle_tree_great.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -60,6 +65,7 @@ export const RIBBONS_GEN7: Ribbon[] = [
     games: ["sun", "moon", "usum"],
     category: "バトル施設",
     requirements: "スーパーバトルツリーを制覇する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/battle_tree_master.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -70,6 +76,7 @@ export const RIBBONS_GEN7: Ribbon[] = [
     games: ["sun", "moon", "usum"],
     category: "バトル施設",
     requirements: "バトルロイヤルドームでマスターランクを制覇する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/battle_royal_master.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
 ];

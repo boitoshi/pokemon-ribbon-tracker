@@ -14,6 +14,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald", "firered", "leafgreen", "firered_switch", "leafgreen_switch"],
     category: "チャンピオン",
     requirements: "殿堂入りメンバーに入っている",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/champion.png",
   },
   {
     id: "cool-ribbon",
@@ -23,6 +24,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かっこよさ部門ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cool_g3.png",
   },
   {
     id: "cool-ribbon-super",
@@ -32,6 +34,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かっこよさ部門スーパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cool_super.png",
   },
   {
     id: "cool-ribbon-hyper",
@@ -41,6 +44,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かっこよさ部門ハイパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cool_hyper.png",
   },
   {
     id: "cool-ribbon-master",
@@ -50,6 +54,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かっこよさ部門マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cool_master_g3.png",
   },
   {
     id: "beauty-ribbon",
@@ -59,6 +64,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "うつくしさ部門ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_g3.png",
   },
   {
     id: "beauty-ribbon-super",
@@ -68,6 +74,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "うつくしさ部門スーパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_super.png",
   },
   {
     id: "beauty-ribbon-hyper",
@@ -77,6 +84,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "うつくしさ部門ハイパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_hyper.png",
   },
   {
     id: "beauty-ribbon-master",
@@ -86,6 +94,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "うつくしさ部門マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_master_g3.png",
   },
   {
     id: "cute-ribbon",
@@ -95,6 +104,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かわいさ部門ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cute_g3.png",
   },
   {
     id: "cute-ribbon-super",
@@ -104,6 +114,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かわいさ部門スーパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cute_super.png",
   },
   {
     id: "cute-ribbon-hyper",
@@ -113,6 +124,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かわいさ部門ハイパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cute_hyper.png",
   },
   {
     id: "cute-ribbon-master",
@@ -122,6 +134,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かわいさ部門マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cute_master_g3.png",
   },
   {
     id: "smart-ribbon",
@@ -131,6 +144,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かしこさ部門ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smart_g3.png",
   },
   {
     id: "smart-ribbon-super",
@@ -140,6 +154,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かしこさ部門スーパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smart_super.png",
   },
   {
     id: "smart-ribbon-hyper",
@@ -149,6 +164,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かしこさ部門ハイパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smart_hyper.png",
   },
   {
     id: "smart-ribbon-master",
@@ -158,6 +174,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "かしこさ部門マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smart_master_g3.png",
   },
   {
     id: "tough-ribbon",
@@ -167,6 +184,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "たくましさ部門ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/tough_g3.png",
   },
   {
     id: "tough-ribbon-super",
@@ -176,6 +194,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "たくましさ部門スーパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/tough_super.png",
   },
   {
     id: "tough-ribbon-hyper",
@@ -185,6 +204,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "たくましさ部門ハイパーランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/tough_hyper.png",
   },
   {
     id: "tough-ribbon-master",
@@ -194,6 +214,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "たくましさ部門マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/tough_master_g3.png",
   },
   {
     id: "winning-ribbon",
@@ -203,6 +224,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "バトル施設",
     requirements: "バトルタワーのLv.50チャレンジで勝ち抜く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/winning.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -213,6 +235,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "バトル施設",
     requirements: "バトルタワーのオープンレベルチャレンジで勝ち抜く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/victory.png",
   },
   {
     id: "artist-ribbon",
@@ -222,6 +245,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald"],
     category: "コンテスト",
     requirements: "マスターランクで最高スコアを獲得し、リルシティ美術館に絵が飾られる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/artist.png",
   },
   {
     id: "effort-ribbon",
@@ -231,6 +255,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald", "firered", "leafgreen", "firered_switch", "leafgreen_switch"],
     category: "思い出",
     requirements: "努力値の合計が510に達した状態で特定のNPCに話しかける",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/effort.png",
   },
   {
     id: "country-ribbon",
@@ -240,6 +265,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald", "firered", "leafgreen"],
     category: "イベント",
     requirements: "過去のイベント配布・大会で受け取る（現在は入手不可）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/country.png",
   },
   {
     id: "world-ribbon",
@@ -249,6 +275,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["ruby", "sapphire", "emerald", "firered", "leafgreen"],
     category: "イベント",
     requirements: "過去のイベント配布・大会で受け取る（現在は入手不可）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/world.png",
   },
   {
     id: "national-ribbon",
@@ -258,6 +285,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["colosseum", "xd"],
     category: "特殊",
     requirements: "シャドウポケモンをリライブ（浄化）する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/national.png",
     eligibility: { type: "shadow_only", shadowGames: ["colosseum", "xd"] },
   },
   {
@@ -268,5 +296,6 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ["colosseum", "xd"],
     category: "バトル施設",
     requirements: "Mt.Battleの100人抜きをメンバーチェンジなしで達成する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/earth.png",
   },
 ];

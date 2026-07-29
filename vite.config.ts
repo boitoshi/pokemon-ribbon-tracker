@@ -2,6 +2,10 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vite';
+import { normalizeBasePath } from './scripts/normalize-base-path.js';
+
+/** デプロイ先サブディレクトリ（例: /ribbon-tracker）。未設定ならルート配信 */
+const basePath: string = normalizeBasePath(process.env.BASE_PATH);
 
 export default defineConfig({
 	plugins: [
@@ -9,7 +13,12 @@ export default defineConfig({
 		sveltekit(),
 		VitePWA({
 			registerType: 'autoUpdate',
-			includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icons/icon-192.png', 'icons/icon-512.png'],
+			includeAssets: [
+				'favicon.ico',
+				'apple-touch-icon.png',
+				'icons/icon-192.png',
+				'icons/icon-512.png'
+			],
 			manifest: {
 				name: 'ポケモンリボン制覇トラッカー',
 				short_name: 'リボントラッカー',
@@ -20,8 +29,8 @@ export default defineConfig({
 				display: 'standalone',
 				display_override: ['window-controls-overlay', 'standalone', 'minimal-ui'],
 				orientation: 'portrait-primary',
-				start_url: '/',
-				scope: '/',
+				start_url: `${basePath}/`,
+				scope: `${basePath}/`,
 				categories: ['games', 'utilities'],
 				icons: [
 					{
@@ -46,7 +55,7 @@ export default defineConfig({
 			},
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
-				navigateFallback: '/index.html',
+				navigateFallback: `${basePath}/index.html`,
 				navigateFallbackDenylist: [/^\/api\//],
 				runtimeCaching: [
 					{

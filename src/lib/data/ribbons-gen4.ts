@@ -14,6 +14,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "チャンピオン",
     requirements: "殿堂入りメンバーに入っている",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/sinnoh_champion.png",
   },
   {
     id: "cool-ribbon-g4",
@@ -23,6 +24,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かっこよさ ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cool_g4.png",
   },
   {
     id: "cool-ribbon-great-g4",
@@ -32,6 +34,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かっこよさ グレートランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cool_great.png",
   },
   {
     id: "cool-ribbon-ultra-g4",
@@ -41,6 +44,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かっこよさ ウルトラランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cool_ultra.png",
   },
   {
     id: "cool-ribbon-master-g4",
@@ -50,6 +54,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かっこよさ マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cool_master_g4.png",
   },
   {
     id: "beauty-ribbon-g4",
@@ -59,6 +64,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・うつくしさ ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_g4.png",
   },
   {
     id: "beauty-ribbon-great-g4",
@@ -68,6 +74,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・うつくしさ グレートランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_great.png",
   },
   {
     id: "beauty-ribbon-ultra-g4",
@@ -77,6 +84,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・うつくしさ ウルトラランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_ultra.png",
   },
   {
     id: "beauty-ribbon-master-g4",
@@ -86,6 +94,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・うつくしさ マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_master_g4.png",
   },
   {
     id: "cute-ribbon-g4",
@@ -95,6 +104,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かわいさ ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cute_g4.png",
   },
   {
     id: "cute-ribbon-great-g4",
@@ -104,6 +114,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かわいさ グレートランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cute_great.png",
   },
   {
     id: "cute-ribbon-ultra-g4",
@@ -113,6 +124,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かわいさ ウルトラランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cute_ultra.png",
   },
   {
     id: "cute-ribbon-master-g4",
@@ -122,6 +134,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かわいさ マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cute_master_g4.png",
   },
   {
     id: "clever-ribbon-g4",
@@ -131,6 +144,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かしこさ ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smart_g4.png",
   },
   {
     id: "clever-ribbon-great-g4",
@@ -140,6 +154,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かしこさ グレートランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smart_great.png",
   },
   {
     id: "clever-ribbon-ultra-g4",
@@ -149,6 +164,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かしこさ ウルトラランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smart_ultra.png",
   },
   {
     id: "clever-ribbon-master-g4",
@@ -158,6 +174,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・かしこさ マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smart_master_g4.png",
   },
   {
     id: "tough-ribbon-g4",
@@ -167,6 +184,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・たくましさ ノーマルランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/tough_g4.png",
   },
   {
     id: "tough-ribbon-great-g4",
@@ -176,6 +194,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・たくましさ グレートランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/tough_great.png",
   },
   {
     id: "tough-ribbon-ultra-g4",
@@ -185,6 +204,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・たくましさ ウルトラランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/tough_ultra.png",
   },
   {
     id: "tough-ribbon-master-g4",
@@ -194,6 +214,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "コンテスト",
     requirements: "スーパーコンテスト・たくましさ マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/tough_master_g4.png",
   },
   {
     id: "ability-ribbon",
@@ -203,6 +224,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "バトル施設",
     requirements: "バトルタワーのLv.50チャレンジで21連勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/ability.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -213,6 +235,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "バトル施設",
     requirements: "バトルタワーのLv.50チャレンジで49連勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/great_ability.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -223,6 +246,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "バトル施設",
     requirements: "バトルタワーのダブルバトルで21連勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/double_ability.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -233,6 +257,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "バトル施設",
     requirements: "バトルタワーのマルチバトルで21連勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/multi_ability.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -243,6 +268,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "バトル施設",
     requirements: "バトルタワーのWiFiマルチバトルで21連勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/pair_ability.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -253,6 +279,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["platinum", "heartgold", "soulsilver"],
     category: "バトル施設",
     requirements: "バトルファクトリーで21連勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/world_ability.png",
     eligibility: { type: "level_max", maxLevel: 50 },
   },
   {
@@ -263,6 +290,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum"],
     category: "思い出",
     requirements: "Lv.30以上で十分成長しており、かつ友好度がMAXである",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/footprint.png",
   },
   {
     id: "gorgeous-ribbon",
@@ -272,6 +300,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["heartgold", "soulsilver"],
     category: "特殊",
     requirements: "リゾートエリアのショップで10,000円で購入する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/gorgeous.png",
   },
   {
     id: "royal-ribbon",
@@ -281,6 +310,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["heartgold", "soulsilver"],
     category: "特殊",
     requirements: "リゾートエリアのショップで100,000円で購入する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/royal.png",
   },
   {
     id: "gorgeous-royal-ribbon",
@@ -290,6 +320,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["heartgold", "soulsilver"],
     category: "特殊",
     requirements: "リゾートエリアのショップで999,999円で購入する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/gorgeous_royal.png",
   },
   {
     id: "alert-ribbon",
@@ -299,6 +330,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "特殊",
     requirements: "ゲーム内の特定のイベントで贈られる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/alert.png",
   },
   {
     id: "shock-ribbon",
@@ -308,6 +340,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "特殊",
     requirements: "ゲーム内の特定のイベントで贈られる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/shock.png",
   },
   {
     id: "downcast-ribbon",
@@ -317,6 +350,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "特殊",
     requirements: "ゲーム内の特定のイベントで贈られる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/downcast.png",
   },
   {
     id: "careless-ribbon",
@@ -326,6 +360,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "特殊",
     requirements: "ゲーム内の特定のイベントで贈られる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/careless.png",
   },
   {
     id: "relax-ribbon",
@@ -335,6 +370,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "特殊",
     requirements: "ゲーム内の特定のイベントで贈られる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/relax.png",
   },
   {
     id: "snooze-ribbon",
@@ -344,6 +380,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "特殊",
     requirements: "ゲーム内の特定のイベントで贈られる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/snooze.png",
   },
   {
     id: "smile-ribbon",
@@ -353,6 +390,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "特殊",
     requirements: "ゲーム内の特定のイベントで贈られる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/smile.png",
   },
   {
     id: "record-ribbon",
@@ -362,6 +400,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "特殊",
     requirements: "バトルタワーで最高記録を更新する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/record.png",
   },
   {
     id: "legend-ribbon",
@@ -371,6 +410,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl"],
     category: "特殊",
     requirements: "My Pokémon Ranch（ポケモン牧場）に999匹のポケモンを送る",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/legend.png",
   },
   {
     id: "battle-champion-ribbon",
@@ -380,6 +420,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "イベント",
     requirements: "ポケモン公式大会の入賞記念に配布される（現実のイベント配布。通常プレイでは入手不可）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/battle_champion.png",
   },
   {
     id: "regional-champion-ribbon",
@@ -389,6 +430,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "イベント",
     requirements: "ポケモン地方大会の入賞記念に配布される（現実のイベント配布。通常プレイでは入手不可）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/regional_champion.png",
   },
   {
     id: "national-champion-ribbon",
@@ -398,6 +440,7 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "イベント",
     requirements: "ポケモン全国大会の入賞記念に配布される（現実のイベント配布。通常プレイでは入手不可）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/national_champion.png",
   },
   {
     id: "world-champion-ribbon",
@@ -407,5 +450,6 @@ export const RIBBONS_GEN4: Ribbon[] = [
     games: ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
     category: "イベント",
     requirements: "ポケモン世界大会の入賞記念に配布される（現実のイベント配布。通常プレイでは入手不可）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/world_champion.png",
   },
 ];

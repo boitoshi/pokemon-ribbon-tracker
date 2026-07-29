@@ -1,16 +1,23 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/stores';
+	import { base } from '$app/paths';
 
 	const { children } = $props();
 
 	const navItems = [
-		{ href: '/', label: 'トラッカー', icon: '🎀' },
+		{ href: '/', label: 'さがす', icon: '🔎' },
 		{ href: '/roadmap', label: 'ロードマップ', icon: '🗺️' },
-		{ href: '/quick', label: 'クイック', icon: '⚡' },
+		{ href: '/box', label: 'きろく', icon: '📦' },
 		{ href: '/guide', label: 'ガイド', icon: '📖' },
 		{ href: '/setup', label: '設定', icon: '⚙️' }
 	];
+
+	/** base とトレイリングスラッシュを考慮してナビのアクティブ状態を判定する */
+	function isActive(pathname: string, href: string): boolean {
+		const target = `${base}${href}`;
+		return pathname === target || pathname === `${target}/`;
+	}
 </script>
 
 <svelte:head>
@@ -26,13 +33,14 @@
 			<nav class="flex gap-1">
 				{#each navItems as item (item.href)}
 					<a
-						href={item.href}
+						href="{base}{item.href}"
 						class="rounded-md px-4 py-2 text-sm font-medium transition-colors
-							{$page.url.pathname === item.href
+							{isActive($page.url.pathname, item.href)
 							? 'bg-blue-100 text-blue-700'
 							: 'text-gray-600 hover:bg-gray-100'}"
 					>
-						{item.icon} {item.label}
+						{item.icon}
+						{item.label}
 					</a>
 				{/each}
 			</nav>
@@ -49,11 +57,9 @@
 		<div class="flex pb-safe">
 			{#each navItems as item (item.href)}
 				<a
-					href={item.href}
+					href="{base}{item.href}"
 					class="flex flex-1 flex-col items-center justify-center py-2 text-xs transition-colors
-						{$page.url.pathname === item.href
-						? 'text-blue-600'
-						: 'text-gray-500 hover:text-gray-700'}"
+						{isActive($page.url.pathname, item.href) ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}"
 				>
 					<span class="text-lg leading-none">{item.icon}</span>
 					<span class="mt-0.5">{item.label}</span>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { GAMES } from '$lib/data/games';
 	import { TRANSFER_ROUTES } from '$lib/data/transfer-routes';
@@ -59,7 +60,7 @@
 	function handleComplete(): void {
 		setup.completeSetup();
 		toast.success('セットアップ完了！次はポケモンを登録してみよう 🎉');
-		goto('/');
+		goto(`${base}/box`);
 	}
 </script>
 
@@ -156,7 +157,7 @@
 			</div>
 		</div>
 
-	<!-- Step 2: 所持ハードを選ぶ -->
+		<!-- Step 2: 所持ハードを選ぶ -->
 	{:else if currentStep === 2}
 		<div>
 			<h1 class="mb-2 text-xl font-bold text-gray-800">所持ハードを選んでください</h1>
@@ -165,7 +166,9 @@
 			</p>
 
 			{#if setup.ownedHardware.length === 0}
-				<div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+				<div
+					class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700"
+				>
 					ハードを選ばないと転送ルートが使えません。
 				</div>
 			{/if}
@@ -229,7 +232,7 @@
 			</div>
 		</div>
 
-	<!-- Step 3: 転送ルート確認 -->
+		<!-- Step 3: 転送ルート確認 -->
 	{:else if currentStep === 3}
 		<div>
 			<h1 class="mb-2 text-xl font-bold text-gray-800">転送ルートの確認</h1>

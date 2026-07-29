@@ -14,6 +14,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["x", "y"],
     category: "チャンピオン",
     requirements: "殿堂入りメンバーに入っている",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/kalos_champion.png",
   },
   {
     id: "champion-hoenn-remake",
@@ -23,6 +24,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["oras"],
     category: "チャンピオン",
     requirements: "殿堂入りメンバーに入っている",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/hoenn_champion.png",
   },
   {
     id: "coolness-ribbon",
@@ -32,6 +34,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["oras"],
     category: "コンテスト",
     requirements: "ポケモンコンテスト・かっこよさ部門 マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/coolness_master.png",
   },
   {
     id: "beauty-ribbon-oras",
@@ -41,6 +44,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["oras"],
     category: "コンテスト",
     requirements: "ポケモンコンテスト・うつくしさ部門 マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/beauty_master.png",
   },
   {
     id: "cuteness-ribbon",
@@ -50,6 +54,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["oras"],
     category: "コンテスト",
     requirements: "ポケモンコンテスト・かわいさ部門 マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cuteness_master.png",
   },
   {
     id: "cleverness-ribbon",
@@ -59,6 +64,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["oras"],
     category: "コンテスト",
     requirements: "ポケモンコンテスト・かしこさ部門 マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/cleverness_master.png",
   },
   {
     id: "toughness-ribbon",
@@ -68,6 +74,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["oras"],
     category: "コンテスト",
     requirements: "ポケモンコンテスト・たくましさ部門 マスターランクで優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/toughness_master.png",
   },
   {
     id: "training-ribbon",
@@ -77,6 +84,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["x", "y", "oras"],
     category: "バトル施設",
     requirements: "同一個体でスーパートレーニングの全30トレーニングを「すごい記録」でクリアし、XYは自宅の母、ORASはムロタウンの男性に話しかける",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/training.png",
   },
   {
     id: "skillful-battler-ribbon",
@@ -86,6 +94,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["x", "y"],
     category: "バトル施設",
     requirements: "スカイバトルで所定の条件を達成する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/skillful_battler.png",
   },
   {
     id: "expert-battler-ribbon",
@@ -95,6 +104,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["x", "y"],
     category: "バトル施設",
     requirements: "バトルシャトーで所定のランクに到達する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/expert_battler.png",
   },
   {
     id: "best-friends-ribbon-g6",
@@ -104,6 +114,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["x", "y", "oras"],
     category: "思い出",
     requirements: "友好度がMAXの状態でポケモンに話しかける",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/best_friends.png",
   },
   {
     id: "contest-memory-ribbon",
@@ -113,6 +124,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["x", "y", "oras"],
     category: "思い出",
     requirements: "Gen3/4のコンテスト系リボンを持つポケモンをポケムーバー/ポケモンバンク経由でGen6に転送すると変換付与される",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/contest_memory.png",
   },
   {
     id: "battle-memory-ribbon",
@@ -122,6 +134,7 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["x", "y", "oras"],
     category: "思い出",
     requirements: "Gen3/4のバトル施設系リボンを持つポケモンをポケムーバー/ポケモンバンク経由でGen6に転送すると変換付与される",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/battle_memory.png",
   },
   {
     id: "contest-star-ribbon",
@@ -131,5 +144,6 @@ export const RIBBONS_GEN6: Ribbon[] = [
     games: ["oras"],
     category: "コンテスト",
     requirements: "コンテストライブ！の5部門すべてでマスターランク優勝する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/contest_star.png",
   },
 ];

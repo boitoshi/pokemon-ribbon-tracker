@@ -1,0 +1,45 @@
+name: Deploy to pokebros.net/ribbon-tracker/
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  BASE_PATH: /ribbon-tracker
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run check
+
+      - run: npm run test
+
+      - run: npm run build
+
+      # Apache 用 404 フォールバック（ErrorDocument はスラッシュ始まりの絶対URLパス必須のため、
+      # BASE_PATH からビルド時に生成して配信先変更に追従させる）
+      - name: Generate .htaccess
+        run: echo "ErrorDocument 404 ${BASE_PATH}/404.html" > build/.htaccess
+
+      - name: FTP deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: build/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }} # 例: /pokebros.net/ribbon-tracker/（末尾スラッシュ必須）
+          dangerous-clean-slate: false
