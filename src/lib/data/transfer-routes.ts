@@ -188,6 +188,6 @@ export const TRANSFER_ROUTES: TransferRoute[] = [
 			'Switch版FRLGとHOMEを直接連携して転送する',
 			'転送は一方通行（HOMEからFRLGへは戻せない。他ソフトのポケモンもFRLGへ送れない）',
 			'一部転送できないポケモンあり'
-		],
-	},
+		]
+	}
 ];
