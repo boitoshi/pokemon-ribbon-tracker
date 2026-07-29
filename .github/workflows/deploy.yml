@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  BASE_PATH: /ribbon-tracker
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -24,7 +27,12 @@ jobs:
 
       - run: npm run test
 
-      - run: BASE_PATH=/ribbon-tracker npm run build
+      - run: npm run build
+
+      # Apache 用 404 フォールバック（ErrorDocument はスラッシュ始まりの絶対URLパス必須のため、
+      # BASE_PATH からビルド時に生成して配信先変更に追従させる）
+      - name: Generate .htaccess
+        run: echo "ErrorDocument 404 ${BASE_PATH}/404.html" > build/.htaccess
 
       - name: FTP deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

@@ -2,9 +2,10 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vite';
+import { normalizeBasePath } from './scripts/normalize-base-path.js';
 
-/** デプロイ先サブディレクトリ（例: /ribbon）。未設定ならルート配信 */
-const basePath: string = process.env.BASE_PATH ?? '';
+/** デプロイ先サブディレクトリ（例: /ribbon-tracker）。未設定ならルート配信 */
+const basePath: string = normalizeBasePath(process.env.BASE_PATH);
 
 export default defineConfig({
 	plugins: [

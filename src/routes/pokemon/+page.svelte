@@ -10,13 +10,13 @@
 	/** 選択中の種族ID */
 	let selectedPokemonId = $state<string | null>(null);
 
-	// URL の ?p=<pokemonId> から初期選択を復元（クライアントのみ）
-	if (browser) {
-		const initialId = page.url.searchParams.get('p');
-		if (initialId && pokemonData.some((p) => p.id === initialId)) {
-			selectedPokemonId = initialId;
-		}
-	}
+	// URL の ?p=<pokemonId> に追従（クライアントのみ。ブラウザバック等での変化も反映）
+	$effect(() => {
+		if (!browser) return;
+		const id = page.url.searchParams.get('p');
+		const valid = id !== null && pokemonData.some((p) => p.id === id) ? id : null;
+		if (valid !== selectedPokemonId) selectedPokemonId = valid;
+	});
 </script>
 
 <svelte:head>
