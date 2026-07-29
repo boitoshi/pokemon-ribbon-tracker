@@ -14,6 +14,7 @@ export const RIBBONS_GEN9: Ribbon[] = [
     games: ["scarlet", "violet"],
     category: "チャンピオン",
     requirements: "四天王とチャンピオンを倒して殿堂入りする",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/paldea_champion.png",
   },
   {
     id: "partner-ribbon-sv",
@@ -23,5 +24,6 @@ export const RIBBONS_GEN9: Ribbon[] = [
     games: ["scarlet", "violet"],
     category: "思い出",
     requirements: "藍の円盤DLC — ブルーベリー学園の特別講師とポケモンを交換する。ニャオハ（リコ）など一部の配布ポケモンにも付いている",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/ribbons/partner.png",
   },
 ];

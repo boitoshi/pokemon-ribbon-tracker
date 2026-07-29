@@ -15,6 +15,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "昼にフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/lunchtime.png",
   },
   {
     id: "sleepy-time-mark",
@@ -25,6 +26,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "深夜にフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/sleepy_time.png",
   },
   {
     id: "dusk-mark",
@@ -35,6 +37,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "夕方にフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/dusk.png",
   },
   {
     id: "dawn-mark",
@@ -45,6 +48,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "明け方にフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/dawn.png",
   },
   {
     id: "cloudy-mark",
@@ -55,6 +59,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "くもりの天気のときにフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/cloudy.png",
   },
   {
     id: "rainy-mark",
@@ -65,6 +70,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "雨の天気のときにフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/rainy.png",
   },
   {
     id: "stormy-mark",
@@ -75,6 +81,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "雷雨の天気のときにフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/stormy.png",
   },
   {
     id: "snowy-mark",
@@ -85,6 +92,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "雪の天気のときにフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/snowy.png",
   },
   {
     id: "blizzard-mark",
@@ -95,6 +103,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "吹雪の天気のときにフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/blizzard.png",
   },
   {
     id: "dry-mark",
@@ -105,6 +114,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "日照りの天気のときにフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/dry.png",
   },
   {
     id: "sandstorm-mark",
@@ -115,6 +125,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "砂嵐の天気のときにフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/sandstorm.png",
   },
   {
     id: "misty-mark",
@@ -125,6 +136,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "霧の天気のときにフィールドで出会ったポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/misty.png",
   },
   {
     id: "destiny-mark",
@@ -135,6 +147,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンに非常に低い確率で付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/destiny.png",
   },
   {
     id: "fishing-mark",
@@ -145,6 +158,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "釣りで捕まえたポケモンをランダムで入手する",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/fishing.png",
   },
   {
     id: "curry-mark",
@@ -155,6 +169,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "キャンプでカレーを作った後、一緒に食べたポケモン等に低確率で付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/curry.png",
   },
   {
     id: "rare-mark",
@@ -165,6 +180,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンに低い確率で付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/rare.png",
   },
   {
     id: "uncommon-mark",
@@ -175,6 +191,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/uncommon.png",
   },
   {
     id: "rowdy-mark",
@@ -185,6 +202,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/rowdy.png",
   },
   {
     id: "absent-minded-mark",
@@ -195,6 +213,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/absent_minded.png",
   },
   {
     id: "jittery-mark",
@@ -205,6 +224,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/jittery.png",
   },
   {
     id: "excited-mark",
@@ -215,6 +235,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/excited.png",
   },
   {
     id: "charismatic-mark",
@@ -225,6 +246,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/charismatic.png",
   },
   {
     id: "calmness-mark",
@@ -235,6 +257,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/calmness.png",
   },
   {
     id: "intense-mark",
@@ -245,6 +268,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/intense.png",
   },
   {
     id: "zoned-out-mark",
@@ -255,6 +279,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/zoned_out.png",
   },
   {
     id: "joyful-mark",
@@ -265,6 +290,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/joyful.png",
   },
   {
     id: "angry-mark",
@@ -275,6 +301,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/angry.png",
   },
   {
     id: "smiley-mark",
@@ -285,6 +312,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/smiley.png",
   },
   {
     id: "teary-mark",
@@ -295,6 +323,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/teary.png",
   },
   {
     id: "upbeat-mark",
@@ -305,6 +334,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/upbeat.png",
   },
   {
     id: "peeved-mark",
@@ -315,6 +345,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/peeved.png",
   },
   {
     id: "intellectual-mark",
@@ -325,6 +356,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/intellectual.png",
   },
   {
     id: "ferocious-mark",
@@ -335,6 +367,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/ferocious.png",
   },
   {
     id: "crafty-mark",
@@ -345,6 +378,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/crafty.png",
   },
   {
     id: "scowling-mark",
@@ -355,6 +389,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/scowling.png",
   },
   {
     id: "kindly-mark",
@@ -365,6 +400,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/kindly.png",
   },
   {
     id: "flustered-mark",
@@ -375,6 +411,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/flustered.png",
   },
   {
     id: "pumped-up-mark",
@@ -385,6 +422,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/pumped_up.png",
   },
   {
     id: "zero-energy-mark",
@@ -395,6 +433,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/zero_energy.png",
   },
   {
     id: "prideful-mark",
@@ -405,6 +444,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/prideful.png",
   },
   {
     id: "unsure-mark",
@@ -415,6 +455,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/unsure.png",
   },
   {
     id: "humble-mark",
@@ -425,6 +466,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/humble.png",
   },
   {
     id: "thorny-mark",
@@ -435,6 +477,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/thorny.png",
   },
   {
     id: "vigor-mark",
@@ -445,6 +488,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/vigor.png",
   },
   {
     id: "slump-mark",
@@ -455,6 +499,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "フィールドで出会ったポケモンにランダムで付く",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/slump.png",
   },
   {
     id: "jumbo-mark",
@@ -465,6 +510,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "テーブルシティ西の「やまガール」に、サイズ値255（最大）の個体を見せる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/jumbo.png",
   },
   {
     id: "mini-mark",
@@ -475,6 +521,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "テーブルシティ西の「やまガール」に、サイズ値0（最小）の個体を見せる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/mini.png",
   },
   {
     id: "companion-mark",
@@ -485,6 +532,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "なかよし度200以上の手持ちポケモンに対し、プレイヤーが10000歩歩くたびに判定。ボールの外に出す必要はなし",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/partner.png",
   },
   {
     id: "collector-mark",
@@ -495,6 +543,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "レッツゴーで道具を拾う（Ver.2.0.1以降）",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/itemfinder.png",
   },
   {
     id: "gourmand-mark",
@@ -505,6 +554,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "サンドウィッチを作るか買った後、パーティの各ポケモンごとにランダムで判定を受ける",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/gourmand.png",
   },
   {
     id: "mightiest-mark",
@@ -515,6 +565,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "最強のレイドバトルで捕まえる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/mightiest.png",
   },
   {
     id: "titan-mark",
@@ -525,6 +576,7 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "ヌシポケモンを倒した後に捕まえる",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/titan.png",
   },
   {
     id: "alpha-mark",
@@ -535,5 +587,6 @@ export const MARKS: Ribbon[] = [
     category: "あかし",
     type: "mark",
     requirements: "LEGENDS アルセウスでオヤブンポケモンを捕まえ、HOME経由でSVに送ると表示される",
+    image_url: "https://www.pokebros.net/wp-content/uploads/pokemon-assets/marks/alpha.png",
   },
 ];

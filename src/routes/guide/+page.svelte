@@ -11,6 +11,7 @@
 	import { normalizeForSearch } from '$lib/utils/searchNormalize';
 	import { getCategoryColor } from '$lib/utils/categoryColor';
 	import RibbonSpeciesList from '$lib/components/pokedex/RibbonSpeciesList.svelte';
+	import RibbonIcon from '$lib/components/ui/RibbonIcon.svelte';
 	import type { Ribbon } from '$lib/types';
 
 	const GENERATIONS = [3, 4, 5, 6, 7, 8, 9] as const;
@@ -214,6 +215,11 @@
 						<div class="divide-y divide-gray-100">
 							{#each ribbons as ribbon (ribbon.id)}
 								<div class="flex flex-wrap items-start gap-2 px-4 py-3">
+									<RibbonIcon
+										src={ribbon.image_url}
+										alt={ribbon.name}
+										fallback={ribbon.type === 'mark' ? '✨' : '🎀'}
+									/>
 									<!-- リボン名 + level_max バッジ -->
 									<div class="min-w-0 flex-1">
 										<div class="flex flex-wrap items-center gap-1.5">

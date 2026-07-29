@@ -8,6 +8,7 @@
 	import { normalizeForSearch } from '$lib/utils/searchNormalize';
 	import { getCategoryColor } from '$lib/utils/categoryColor';
 	import RibbonSpeciesList from '$lib/components/pokedex/RibbonSpeciesList.svelte';
+	import RibbonIcon from '$lib/components/ui/RibbonIcon.svelte';
 	import type { Ribbon } from '$lib/types';
 
 	const GENERATIONS = [3, 4, 5, 6, 7, 8, 9] as const;
@@ -109,6 +110,12 @@
 			<!-- ヘッダー -->
 			<div class="border-b border-gray-100 bg-gray-50 px-4 py-3">
 				<div class="flex flex-wrap items-center gap-2">
+					<RibbonIcon
+						src={selectedRibbon.image_url}
+						alt={selectedRibbon.name}
+						sizeClass="h-10 w-10"
+						fallback={selectedRibbon.type === 'mark' ? '✨' : '🎀'}
+					/>
 					<h1 class="text-lg font-bold text-gray-800">{selectedRibbon.name}</h1>
 					{#if selectedRibbon.type === 'mark'}
 						<span class="rounded bg-teal-100 px-2 py-0.5 text-xs font-bold text-teal-700">
@@ -253,6 +260,11 @@
 									href="{base}/ribbon?r={ribbon.id}"
 									class="flex flex-wrap items-start gap-2 px-4 py-3 transition-colors hover:bg-sky-50"
 								>
+									<RibbonIcon
+										src={ribbon.image_url}
+										alt={ribbon.name}
+										fallback={ribbon.type === 'mark' ? '✨' : '🎀'}
+									/>
 									<div class="min-w-0 flex-1">
 										<div class="flex flex-wrap items-center gap-1.5">
 											<span class="text-sm font-medium text-gray-800">{ribbon.name}</span>

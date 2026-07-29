@@ -7,6 +7,7 @@
 	import { normalizeForSearch } from '$lib/utils/searchNormalize';
 	import { getSpeciesRibbonSummary, ELIGIBILITY_DISCLAIMER } from '$lib/utils/ribbonIndex';
 	import { getCategoryColor } from '$lib/utils/categoryColor';
+	import RibbonIcon from '$lib/components/ui/RibbonIcon.svelte';
 
 	/** Props */
 	let {
@@ -196,6 +197,12 @@
 								<div class="divide-y divide-gray-100">
 									{#each entries as entry (entry.ribbon.id)}
 										<div class="flex flex-wrap items-center gap-1.5 px-3 py-2">
+											<RibbonIcon
+												src={entry.ribbon.image_url}
+												alt={entry.ribbon.name}
+												sizeClass="h-5 w-5"
+												fallback={entry.ribbon.type === 'mark' ? '✨' : '🎀'}
+											/>
 											<a
 												href="{base}/ribbon?r={entry.ribbon.id}"
 												class="text-sm text-gray-800 underline decoration-gray-300 underline-offset-2 hover:text-sky-700"

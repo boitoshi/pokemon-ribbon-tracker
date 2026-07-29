@@ -4,6 +4,7 @@
 	import { page } from '$app/state';
 	import { loadAllData } from '$lib/utils/dataFetcher';
 	import { getCategoryColor } from '$lib/utils/categoryColor';
+	import RibbonIcon from '$lib/components/ui/RibbonIcon.svelte';
 
 	const GENERATIONS = [3, 4, 5, 6, 7, 8, 9] as const;
 
@@ -93,6 +94,11 @@
 								href="{base}/ribbon?r={ribbon.id}"
 								class="flex flex-wrap items-center gap-2 px-3 py-2.5 transition-colors hover:bg-sky-50"
 							>
+								<RibbonIcon
+									src={ribbon.image_url}
+									alt={ribbon.name}
+									fallback={ribbon.type === 'mark' ? '✨' : '🎀'}
+								/>
 								<span class="text-sm font-medium text-gray-800">{ribbon.name}</span>
 								{#if ribbon.type === 'mark'}
 									<span class="rounded bg-teal-100 px-1.5 py-0.5 text-xs font-bold text-teal-700">
