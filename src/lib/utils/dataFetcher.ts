@@ -7,7 +7,7 @@ import { RIBBONS_GEN6 } from '$lib/data/ribbons-gen6';
 import { RIBBONS_GEN7 } from '$lib/data/ribbons-gen7';
 import { RIBBONS_GEN8 } from '$lib/data/ribbons-gen8';
 import { RIBBONS_GEN9 } from '$lib/data/ribbons-gen9';
-import { MARKS_GEN9 } from '$lib/data/marks-gen9';
+import { MARKS } from '$lib/data/marks';
 import { POKEMON_ALL } from '$lib/data/pokemon';
 
 export interface AllData {
@@ -28,7 +28,7 @@ export function loadAllData(): AllData {
 			...RIBBONS_GEN7,
 			...RIBBONS_GEN8,
 			...RIBBONS_GEN9,
-			...MARKS_GEN9
+			...MARKS
 		],
 		gameData: GAMES
 	};
