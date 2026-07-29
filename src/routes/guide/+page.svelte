@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
+	import { SvelteSet } from 'svelte/reactivity';
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
@@ -9,32 +9,22 @@
 	import { getTransferUxText } from '$lib/utils/transferUxText';
 	import { normalizeForSearch } from '$lib/utils/searchNormalize';
 	import { getCategoryColor } from '$lib/utils/categoryColor';
-	import {
-		getEligibleSpeciesCount,
-		formatEligibleSpeciesCondition,
-		getEligibleSpeciesForRibbon,
-		type RibbonSpeciesCondition
-	} from '$lib/utils/ribbonIndex';
-	import PokemonRibbonLookup from '$lib/components/guide/PokemonRibbonLookup.svelte';
-	import type { PokemonDetail, Ribbon } from '$lib/types';
+	import RibbonSpeciesList from '$lib/components/pokedex/RibbonSpeciesList.svelte';
+	import type { Ribbon } from '$lib/types';
 
 	const GENERATIONS = [3, 4, 5, 6, 7, 8, 9] as const;
 
 	/** タブ */
-	let activeTab = $state<'ribbons' | 'pokemon' | 'transfer' | 'tips'>('ribbons');
+	let activeTab = $state<'ribbons' | 'transfer' | 'tips'>('ribbons');
 
 	/** 全リボン・ポケモンデータをロード（SSG: onMount 不要） */
 	const { ribbonData, pokemonData } = loadAllData();
 
-	/** ポケモン別タブの選択種族ID */
-	let selectedPokemonId = $state<string | null>(null);
-
-	// URL の ?p=<pokemonId> から初期選択を復元（クライアントのみ）
+	// 旧「ポケモン別」タブ（/guide?p=<id>）へのアクセスは /pokemon?p=<id> へリダイレクト
 	if (browser) {
-		const initialId = page.url.searchParams.get('p');
-		if (initialId && pokemonData.some((p) => p.id === initialId)) {
-			selectedPokemonId = initialId;
-			activeTab = 'pokemon';
+		const legacyPokemonId = page.url.searchParams.get('p');
+		if (legacyPokemonId) {
+			void goto(`/pokemon?p=${legacyPokemonId}`, { replaceState: true });
 		}
 	}
 
@@ -102,53 +92,6 @@
 		})()
 	);
 
-	/** ポケモン別タブへ切り替えて種族を選択する */
-	function jumpToPokemonTab(pokemon: PokemonDetail): void {
-		selectedPokemonId = pokemon.id;
-		activeTab = 'pokemon';
-		void goto(`?p=${pokemon.id}`, { replaceState: true, keepFocus: true, noScroll: true });
-	}
-
-	/** 各リボンの「つけられるポケモン」条件テキスト（種族配列は実体化しない軽量版） */
-	const speciesConditionTextByRibbon = new Map<string, string>(
-		ribbonData.map((r) => [
-			r.id,
-			formatEligibleSpeciesCondition(r, getEligibleSpeciesCount(r, pokemonData))
-		])
-	);
-
-	/** 種族一覧の初期表示件数と追加表示件数 */
-	const INITIAL_SPECIES_SHOWN = 24;
-	const SPECIES_SHOWN_INCREMENT = 48;
-
-	/** 種族一覧を開いているリボンID */
-	const openSpeciesRibbons = new SvelteSet<string>();
-	/** 開いたときに初めて計算する種族一覧キャッシュ */
-	const speciesCache = new SvelteMap<string, RibbonSpeciesCondition>();
-	/** リボンごとの種族表示件数 */
-	const speciesShownCount = new SvelteMap<string, number>();
-
-	/** 種族一覧の開閉をトグルする（開くときに初めて一覧を計算する） */
-	function toggleSpeciesList(ribbon: Ribbon): void {
-		if (openSpeciesRibbons.has(ribbon.id)) {
-			openSpeciesRibbons.delete(ribbon.id);
-			return;
-		}
-		if (!speciesCache.has(ribbon.id)) {
-			speciesCache.set(ribbon.id, getEligibleSpeciesForRibbon(ribbon, pokemonData));
-			speciesShownCount.set(ribbon.id, INITIAL_SPECIES_SHOWN);
-		}
-		openSpeciesRibbons.add(ribbon.id);
-	}
-
-	/** 種族一覧の表示件数を増やす */
-	function showMoreSpecies(ribbonId: string): void {
-		speciesShownCount.set(
-			ribbonId,
-			(speciesShownCount.get(ribbonId) ?? INITIAL_SPECIES_SHOWN) + SPECIES_SHOWN_INCREMENT
-		);
-	}
-
 	/** level_max 制限があるか */
 	function hasLevelMax(ribbon: Ribbon): boolean {
 		return ribbon.eligibility?.type === 'level_max';
@@ -180,7 +123,7 @@
 	<!-- ===== タブナビ ===== -->
 	<div class="mb-6 border-b border-gray-200">
 		<nav class="-mb-px flex gap-1">
-			{#each [{ key: 'ribbons', label: 'リボン一覧' }, { key: 'pokemon', label: '🔍 ポケモン別' }, { key: 'transfer', label: '転送ルート' }, { key: 'tips', label: '攻略Tips' }] as const as tab (tab.key)}
+			{#each [{ key: 'ribbons', label: 'リボン一覧' }, { key: 'transfer', label: '転送ルート' }, { key: 'tips', label: '攻略Tips' }] as const as tab (tab.key)}
 				<button
 					class="rounded-t px-4 py-2 text-sm font-medium transition-colors
 						{activeTab === tab.key
@@ -239,12 +182,12 @@
 					{#if pokemonSearchFallback}
 						{@const fallback = pokemonSearchFallback}
 						<div class="mt-3">
-							<button
-								class="rounded-lg border border-sky-200 bg-sky-50 px-3 py-1.5 text-sm font-medium text-sky-700 hover:bg-sky-100"
-								onclick={() => jumpToPokemonTab(fallback)}
+							<a
+								href="/pokemon?p={fallback.id}"
+								class="inline-block rounded-lg border border-sky-200 bg-sky-50 px-3 py-1.5 text-sm font-medium text-sky-700 hover:bg-sky-100"
 							>
-								『{fallback.name}』をポケモン別で調べる →
-							</button>
+								『{fallback.name}』をポケモンから探す →
+							</a>
 						</div>
 					{/if}
 				</div>
@@ -273,7 +216,12 @@
 									<!-- リボン名 + level_max バッジ -->
 									<div class="min-w-0 flex-1">
 										<div class="flex flex-wrap items-center gap-1.5">
-											<span class="text-sm font-medium text-gray-800">{ribbon.name}</span>
+											<a
+												href="/ribbon?r={ribbon.id}"
+												class="text-sm font-medium text-gray-800 underline decoration-gray-300 underline-offset-2 hover:text-sky-700"
+											>
+												{ribbon.name}
+											</a>
 											{#if hasLevelMax(ribbon)}
 												<span
 													class="rounded bg-orange-100 px-1.5 py-0.5 text-xs font-bold text-orange-700"
@@ -308,48 +256,7 @@
 									</div>
 
 									<!-- つけられるポケモン（逆引き） -->
-									<div class="w-full">
-										<div class="flex flex-wrap items-center gap-2">
-											<p class="text-xs text-gray-600">
-												つけられるポケモン: {speciesConditionTextByRibbon.get(ribbon.id)}
-											</p>
-											<button
-												class="text-xs text-sky-600 underline"
-												onclick={() => toggleSpeciesList(ribbon)}
-											>
-												{openSpeciesRibbons.has(ribbon.id) ? '一覧を閉じる ▲' : '一覧を見る ▼'}
-											</button>
-										</div>
-										{#if openSpeciesRibbons.has(ribbon.id)}
-											{@const condition = speciesCache.get(ribbon.id)}
-											{#if condition}
-												{@const shown = speciesShownCount.get(ribbon.id) ?? INITIAL_SPECIES_SHOWN}
-												<div class="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
-													{#each condition.species.slice(0, shown) as species (species.id)}
-														<div class="flex flex-col items-center">
-															<img
-																src={species.image}
-																alt={species.name}
-																loading="lazy"
-																class="h-12 w-12 object-contain"
-															/>
-															<span class="text-center text-[10px] leading-tight text-gray-600">
-																{species.name}
-															</span>
-														</div>
-													{/each}
-												</div>
-												{#if condition.species.length > shown}
-													<button
-														class="mt-2 text-xs text-sky-600 underline"
-														onclick={() => showMoreSpecies(ribbon.id)}
-													>
-														さらに表示（残り {condition.species.length - shown} 件）
-													</button>
-												{/if}
-											{/if}
-										{/if}
-									</div>
+									<RibbonSpeciesList {ribbon} allPokemon={pokemonData} />
 								</div>
 							{/each}
 						</div>
@@ -357,14 +264,6 @@
 				</div>
 			{/each}
 		</div>
-
-		<!-- ===== ポケモン別タブ ===== -->
-	{:else if activeTab === 'pokemon'}
-		<PokemonRibbonLookup
-			allPokemon={pokemonData}
-			allRibbons={ribbonData}
-			bind:selectedId={selectedPokemonId}
-		/>
 
 		<!-- ===== 転送ルートタブ ===== -->
 	{:else if activeTab === 'transfer'}

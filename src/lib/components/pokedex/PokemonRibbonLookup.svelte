@@ -64,7 +64,7 @@
 	function selectPokemon(pokemon: PokemonDetail): void {
 		selectedId = pokemon.id;
 		searchQuery = '';
-		void goto(`?p=${pokemon.id}`, { replaceState: true, keepFocus: true, noScroll: true });
+		void goto(`/pokemon?p=${pokemon.id}`, { replaceState: true, keepFocus: true, noScroll: true });
 	}
 
 	/** 図鑑番号を3桁ゼロ埋めでフォーマットする */
@@ -191,7 +191,12 @@
 								<div class="divide-y divide-gray-100">
 									{#each entries as entry (entry.ribbon.id)}
 										<div class="flex flex-wrap items-center gap-1.5 px-3 py-2">
-											<span class="text-sm text-gray-800">{entry.ribbon.name}</span>
+											<a
+												href="/ribbon?r={entry.ribbon.id}"
+												class="text-sm text-gray-800 underline decoration-gray-300 underline-offset-2 hover:text-sky-700"
+											>
+												{entry.ribbon.name}
+											</a>
 											<span
 												class="rounded px-1.5 py-0.5 text-xs font-medium {getCategoryColor(
 													entry.ribbon.category

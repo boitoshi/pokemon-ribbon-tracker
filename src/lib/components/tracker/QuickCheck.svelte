@@ -24,7 +24,14 @@
 	});
 
 	// --- 派生値 ---
-	const STATE_SORT_ORDER = { urgent: 0, missed: 1, available: 2, obtained: 3, future: 4, locked: 5 };
+	const STATE_SORT_ORDER = {
+		urgent: 0,
+		missed: 1,
+		available: 2,
+		obtained: 3,
+		future: 4,
+		locked: 5
+	};
 
 	const filteredRibbons = $derived(
 		(genFilter === null
@@ -154,13 +161,20 @@
 			<p class="text-gray-500">この世代のリボンはないよ</p>
 		</div>
 
-	<!-- メイン表示 -->
+		<!-- メイン表示 -->
 	{:else}
 		<!-- 参照モードバナー -->
 		{#if !ribbonProgress.activeMyPokemonId}
-			<div class="flex items-center gap-2 border-b border-sky-100 bg-sky-50 px-3 py-2 text-xs text-sky-700">
+			<div
+				class="flex items-center gap-2 border-b border-sky-100 bg-sky-50 px-3 py-2 text-xs text-sky-700"
+			>
 				<span>ℹ</span>
-				<span><strong>参照モード</strong> — タップしても記録されません。<a href="/" class="underline hover:text-sky-900">ポケモンを選ぶ →</a></span>
+				<span
+					><strong>参照モード</strong> — タップしても記録されません。<a
+						href="/box"
+						class="underline hover:text-sky-900">ポケモンを選ぶ →</a
+					></span
+				>
 			</div>
 		{/if}
 
@@ -173,40 +187,63 @@
 		<button
 			class="flex w-full flex-1 flex-col items-center justify-center gap-4 p-8 transition-colors
 				{isChecked
-					? 'bg-green-50'
-					: currentRibbonState === 'urgent'
-						? 'bg-orange-50'
-						: currentRibbonState === 'missed'
-							? 'bg-red-50'
-							: 'bg-white'}"
+				? 'bg-green-50'
+				: currentRibbonState === 'urgent'
+					? 'bg-orange-50'
+					: currentRibbonState === 'missed'
+						? 'bg-red-50'
+						: 'bg-white'}"
 			ontouchstart={onTouchStart}
 			ontouchend={onTouchEnd}
-			onclick={(e) => { if (swipeHandled) { swipeHandled = false; e.preventDefault(); return; } toggleCurrent(); }}
-			aria-label={isChecked ? 'チェック済み（タップで解除）' : '未チェック（タップで取得済みにする）'}
+			onclick={(e) => {
+				if (swipeHandled) {
+					swipeHandled = false;
+					e.preventDefault();
+					return;
+				}
+				toggleCurrent();
+			}}
+			aria-label={isChecked
+				? 'チェック済み（タップで解除）'
+				: '未チェック（タップで取得済みにする）'}
 		>
 			<!-- 状態バッジ -->
 			{#if currentRibbonState === 'urgent'}
-				<span class="rounded-full bg-orange-500 px-3 py-1 text-sm font-bold text-white">⚡ 今すぐ取得必須！</span>
+				<span class="rounded-full bg-orange-500 px-3 py-1 text-sm font-bold text-white"
+					>⚡ 今すぐ取得必須！</span
+				>
 			{:else if currentRibbonState === 'missed'}
-				<span class="rounded-full bg-red-500 px-3 py-1 text-sm font-bold text-white">❌ 取り逃し</span>
+				<span class="rounded-full bg-red-500 px-3 py-1 text-sm font-bold text-white"
+					>❌ 取り逃し</span
+				>
 			{:else if currentRibbonState === 'locked'}
-				<span class="rounded-full bg-gray-400 px-3 py-1 text-sm font-bold text-white">🚫 取得不可</span>
+				<span class="rounded-full bg-gray-400 px-3 py-1 text-sm font-bold text-white"
+					>🚫 取得不可</span
+				>
 			{:else if currentRibbonState === 'future'}
-				<span class="rounded-full bg-gray-300 px-3 py-1 text-sm font-medium text-gray-600">🔒 未来のリボン</span>
+				<span class="rounded-full bg-gray-300 px-3 py-1 text-sm font-medium text-gray-600"
+					>🔒 未来のリボン</span
+				>
 			{/if}
 
 			<!-- チェック状態アイコン（大きく） -->
 			<div
 				class="flex h-20 w-20 items-center justify-center rounded-full border-4 text-4xl
 					{isChecked
-						? 'border-green-500 bg-green-500 text-white'
-						: currentRibbonState === 'urgent'
-							? 'border-orange-400 bg-white text-orange-400'
-							: currentRibbonState === 'missed'
-								? 'border-red-400 bg-white text-red-400'
-								: 'border-gray-300 bg-white text-transparent'}"
+					? 'border-green-500 bg-green-500 text-white'
+					: currentRibbonState === 'urgent'
+						? 'border-orange-400 bg-white text-orange-400'
+						: currentRibbonState === 'missed'
+							? 'border-red-400 bg-white text-red-400'
+							: 'border-gray-300 bg-white text-transparent'}"
 			>
-				{isChecked ? '✓' : currentRibbonState === 'urgent' ? '⚡' : currentRibbonState === 'missed' ? '×' : '✓'}
+				{isChecked
+					? '✓'
+					: currentRibbonState === 'urgent'
+						? '⚡'
+						: currentRibbonState === 'missed'
+							? '×'
+							: '✓'}
 			</div>
 
 			<!-- リボン名 -->
@@ -214,12 +251,12 @@
 				<h2
 					class="text-center text-2xl font-bold
 						{isChecked
-							? 'text-green-800'
-							: currentRibbonState === 'urgent'
-								? 'text-orange-800'
-								: currentRibbonState === 'missed'
-									? 'text-red-800'
-									: 'text-gray-900'}"
+						? 'text-green-800'
+						: currentRibbonState === 'urgent'
+							? 'text-orange-800'
+							: currentRibbonState === 'missed'
+								? 'text-red-800'
+								: 'text-gray-900'}"
 				>
 					{currentRibbon.name}
 				</h2>
