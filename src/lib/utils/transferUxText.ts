@@ -14,7 +14,8 @@ const DEFAULT_TEXT: TransferUxText = {
 
 export const TRANSFER_UX_TEXT: Record<string, TransferUxText> = {
 	'route.gen3_to_gen4': {
-		guideSummary: 'パルパーク転送は一方通行です。GBAスロット搭載機で事前に取り逃しを確認してください。',
+		guideSummary:
+			'パルパーク転送は一方通行です。GBAスロット搭載機で事前に取り逃しを確認してください。',
 		irreversibleAlert: 'パルパーク転送は不可逆です。Gen3へは戻せません。',
 		confirmStep1Label: 'パルパーク転送が不可逆であることを理解しました',
 		finalAgreementLabel: 'このパルパーク転送が不可逆であることに同意します'
@@ -26,7 +27,8 @@ export const TRANSFER_UX_TEXT: Record<string, TransferUxText> = {
 		finalAgreementLabel: 'このポケシフター転送が不可逆であることに同意します'
 	},
 	'route.gen5_to_bank': {
-		guideSummary: 'バンク移動は一方通行です。実施前にGen5リボンの取り残しがないか確認してください。',
+		guideSummary:
+			'バンク移動は一方通行です。実施前にGen5リボンの取り残しがないか確認してください。',
 		irreversibleAlert: 'ポケムーバー経由の転送は不可逆です。Gen5へは戻せません。',
 		confirmStep1Label: 'ポケムーバー転送が不可逆であることを理解しました',
 		finalAgreementLabel: 'このポケムーバー転送が不可逆であることに同意します'
@@ -41,6 +43,12 @@ export const TRANSFER_UX_TEXT: Record<string, TransferUxText> = {
 		guideSummary: 'HOME連携で双方向移動できるルートです。転送可否は対応図鑑に依存します。',
 		irreversibleAlert: 'このルートは双方向移動に対応しています。対応ソフト間で行き来できます。',
 		confirmStep1Label: 'このルートが双方向移動に対応していることを確認しました',
+		finalAgreementLabel: '対応条件を確認して転送を実行します'
+	},
+	'route.lgpe_to_home': {
+		guideSummary: 'LGPE⇔HOME間は双方向です。ただし他ソフトへ移動させるとLGPEには戻せません。',
+		irreversibleAlert: 'LGPE⇔HOME間は双方向ですが、他ソフトへ移動後はLGPEに戻せません。',
+		confirmStep1Label: '他ソフトへ移動後はLGPEに戻せないことを理解しました',
 		finalAgreementLabel: '対応条件を確認して転送を実行します'
 	},
 	'route.frlg_switch_to_home': {

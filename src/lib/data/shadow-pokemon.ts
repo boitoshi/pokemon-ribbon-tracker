@@ -4,7 +4,11 @@
  * ポケモンIDはPokeAPI の name と同じ形式（英語小文字）。
  */
 
-/** コロシアムのシャドウポケモン種族IDリスト（48匹、ゲーム内出現順） */
+/**
+ * コロシアムのシャドウポケモン種族IDリスト（48匹、ゲーム内出現順）
+ * 注意: プラスル（ドキング関連の通常入手）とホウオウ（全48匹リライブ+バトル山100人抜き報酬）は
+ * シャドウポケモンではないため含めない。
+ */
 export const SHADOW_POKEMON_COLOSSEUM: string[] = [
   'makuhita',
   'bayleef',
@@ -25,7 +29,6 @@ export const SHADOW_POKEMON_COLOSSEUM: string[] = [
   'meditite',
   'swablu',
   'sudowoodo',
-  'plusle',
   'hitmontop',
   'entei',
   'ledian',
@@ -55,7 +58,6 @@ export const SHADOW_POKEMON_COLOSSEUM: string[] = [
   'ursaring',
   'shuckle',
   'togetic',
-  'ho-oh',
 ];
 
 /** XD: 闇の旋風ダークルギアのシャドウポケモン種族IDリスト（83匹、ゲーム内出現順） */

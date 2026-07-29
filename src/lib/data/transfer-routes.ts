@@ -24,9 +24,10 @@ export const TRANSFER_ROUTES: TransferRoute[] = [
 		dailyLimit: 6,
 		restrictions: [
 			'転送は一方通行（Gen3には戻せない）',
-			'1日6匹まで',
+			'1日6匹まで（GBAカートリッジごと）',
 			'DSのスロット2にGBAカートリッジを挿入する',
-			'パルパークに到着後、ミニゲームで捕獲する必要はない（自動で手持ちに来る）'
+			'受け取り側は DPPt / HGSS のパルパーク',
+			'パルパーク到着後、キャッチングショーでパークボールを使って捕獲する（必ず捕まる）'
 		]
 	},
 	{
@@ -113,7 +114,31 @@ export const TRANSFER_ROUTES: TransferRoute[] = [
 			'ポケモンHOMEのスマホ版またはSwitch版が必要',
 			'バンクとHOMEを連携させる',
 			'引越し後はバンクに戻せない',
-			'HOME Premiumプランでより多くのポケモンを預けられる'
+			'バンク→HOMEのひっこし機能にはHOMEプレミアムプランが必要'
+		]
+	},
+	{
+		id: 'lgpe-to-home',
+		fromGeneration: 7,
+		toGeneration: 8,
+		methodName: "ポケモンHOME（Let's Go! 連携）",
+		requirements: {
+			anyOf: [
+				{
+					id: 'switch-home-lgpe',
+					allOf: ['switch'],
+					labelKey: 'route.lgpe_to_home.switch_only',
+					label: 'Switch + HOME連携'
+				}
+			]
+		},
+		hardwareRequired: ['switch'],
+		softwareRequired: ['lets_go'],
+		isIrreversible: false,
+		explanationKey: 'route.lgpe_to_home',
+		restrictions: [
+			'LGPE⇔HOME間は双方向（LGPEに戻すことも可能）',
+			'HOME経由で他ソフトに移動させたポケモンはLGPEへ戻せない'
 		]
 	},
 	{
@@ -132,7 +157,7 @@ export const TRANSFER_ROUTES: TransferRoute[] = [
 			]
 		},
 		hardwareRequired: ['switch'],
-		softwareRequired: ['sword', 'shield', 'legends_arceus'],
+		softwareRequired: ['sword', 'shield', 'brilliant_diamond', 'shining_pearl', 'legends_arceus'],
 		isIrreversible: false,
 		explanationKey: 'route.gen8_to_gen9',
 		restrictions: [
@@ -160,8 +185,9 @@ export const TRANSFER_ROUTES: TransferRoute[] = [
 		isIrreversible: true,
 		explanationKey: 'route.frlg_switch_to_home',
 		restrictions: [
-			'ポケモンHOMEプレミアムプランが必要な場合あり',
-			'Switch版ファイアレッドまたはリーフグリーンが必要',
-		],
-	},
+			'Switch版FRLGとHOMEを直接連携して転送する',
+			'転送は一方通行（HOMEからFRLGへは戻せない。他ソフトのポケモンもFRLGへ送れない）',
+			'一部転送できないポケモンあり'
+		]
+	}
 ];
