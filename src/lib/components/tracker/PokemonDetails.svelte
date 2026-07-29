@@ -1,6 +1,18 @@
 <script lang="ts">
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
 	import { getGameName } from '$lib/utils/gameNames';
+	import { loadAllData } from '$lib/utils/dataFetcher';
+	import { getSpeciesRibbonSummary } from '$lib/utils/ribbonIndex';
+
+	/** 全リボン定義（種族レベルのサマリー用。store のロード状態に依存しない） */
+	const { ribbonData } = loadAllData();
+
+	/** 選択種族が種族レベルで取得しうるリボン/あかしのサマリー */
+	const speciesSummary = $derived(
+		ribbonProgress.selectedPokemon
+			? getSpeciesRibbonSummary(ribbonProgress.selectedPokemon, ribbonData)
+			: null
+	);
 
 	/** タイプ別Tailwindクラスマッピング（18タイプ対応） */
 	const TYPE_CLASSES: Record<string, string> = {
@@ -124,6 +136,14 @@
 				></div>
 			</div>
 		</div>
+
+		<!-- 種族レベルの取得可能サマリー -->
+		{#if speciesSummary}
+			<p class="mt-2 text-xs text-gray-500">
+				この種族が取得できる可能性: リボン{speciesSummary.ribbonCount}・あかし{speciesSummary.markCount}
+				<a href="/guide?p={pokemon.id}" class="ml-1 text-sky-600 underline">世代別内訳 →</a>
+			</p>
+		{/if}
 	</div>
 {:else}
 	<!-- プレースホルダー -->
