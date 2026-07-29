@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { GAMES } from '$lib/data/games';
 	import { TRANSFER_ROUTES } from '$lib/data/transfer-routes';
@@ -59,7 +60,7 @@
 	function handleComplete(): void {
 		setup.completeSetup();
 		toast.success('セットアップ完了！次はポケモンを登録してみよう 🎉');
-		goto('/box');
+		goto(`${base}/box`);
 	}
 </script>
 

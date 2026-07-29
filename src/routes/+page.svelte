@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { loadAllData } from '$lib/utils/dataFetcher';
 	import { searchPokemon, searchRibbons, searchGames } from '$lib/utils/unifiedSearch';
 	import { getCategoryColor } from '$lib/utils/categoryColor';
@@ -98,7 +99,7 @@
 						>
 							{#each pokemonResults as pokemon (pokemon.id)}
 								<a
-									href="/pokemon?p={pokemon.id}"
+									href="{base}/pokemon?p={pokemon.id}"
 									class="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-sky-50"
 								>
 									<div class="h-10 w-10 shrink-0">
@@ -131,7 +132,7 @@
 						>
 							{#each ribbonResults as ribbon (ribbon.id)}
 								<a
-									href="/ribbon?r={ribbon.id}"
+									href="{base}/ribbon?r={ribbon.id}"
 									class="flex flex-wrap items-center gap-2 px-3 py-2.5 transition-colors hover:bg-sky-50"
 								>
 									<span
@@ -161,7 +162,7 @@
 						>
 							{#each gameResults as game (game.id)}
 								<a
-									href="/game?g={game.id}"
+									href="{base}/game?g={game.id}"
 									class="flex items-center gap-2 px-3 py-2.5 transition-colors hover:bg-sky-50"
 								>
 									<span class="text-sm font-medium text-gray-800">{game.shortName}</span>
@@ -180,7 +181,7 @@
 		<div class="grid gap-3 sm:grid-cols-3">
 			{#each entryCards as card (card.href)}
 				<a
-					href={card.href}
+					href="{base}{card.href}"
 					class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-colors hover:border-sky-300 hover:bg-sky-50"
 				>
 					<div class="text-2xl">{card.icon}</div>
@@ -193,7 +194,7 @@
 		<!-- サブ導線 -->
 		<div class="mt-4 grid gap-3 sm:grid-cols-2">
 			<a
-				href="/roadmap"
+				href="{base}/roadmap"
 				class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm transition-colors hover:border-sky-300 hover:bg-sky-50"
 			>
 				<span class="text-xl">🗺️</span>
@@ -203,7 +204,7 @@
 				</div>
 			</a>
 			<a
-				href="/box"
+				href="{base}/box"
 				class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm transition-colors hover:border-sky-300 hover:bg-sky-50"
 			>
 				<span class="text-xl">📦</span>
@@ -215,7 +216,9 @@
 		</div>
 
 		<p class="mt-6 text-center text-xs text-gray-400">
-			マイポケモンのチェックは 📦<a href="/box" class="underline hover:text-gray-600">きろく</a>
+			マイポケモンのチェックは 📦<a href="{base}/box" class="underline hover:text-gray-600"
+				>きろく</a
+			>
 			へ移動しました
 		</p>
 	{/if}

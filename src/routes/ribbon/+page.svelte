@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { browser } from '$app/environment';
 	import { page } from '$app/state';
@@ -90,7 +91,7 @@
 <div class="mx-auto max-w-4xl px-4 py-6">
 	{#if selectedRibbonId && !selectedRibbon}
 		<!-- ===== 不明な ID ===== -->
-		<a href="/ribbon" class="text-sm font-medium text-sky-700 underline hover:text-sky-900">
+		<a href="{base}/ribbon" class="text-sm font-medium text-sky-700 underline hover:text-sky-900">
 			← リボン一覧へ
 		</a>
 		<div
@@ -100,7 +101,7 @@
 		</div>
 	{:else if selectedRibbon}
 		<!-- ===== 詳細パネル ===== -->
-		<a href="/ribbon" class="text-sm font-medium text-sky-700 underline hover:text-sky-900">
+		<a href="{base}/ribbon" class="text-sm font-medium text-sky-700 underline hover:text-sky-900">
 			← リボン一覧へ
 		</a>
 
@@ -172,7 +173,7 @@
 					<div class="flex flex-wrap gap-1">
 						{#each selectedRibbon.games as gameId (gameId)}
 							<a
-								href="/game?g={gameId}"
+								href="{base}/game?g={gameId}"
 								class="rounded border border-gray-200 bg-white px-2 py-0.5 text-xs text-gray-600 transition-colors hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700"
 							>
 								{getGameName(gameId)}
@@ -249,7 +250,7 @@
 						<div class="divide-y divide-gray-100 bg-white">
 							{#each ribbons as ribbon (ribbon.id)}
 								<a
-									href="/ribbon?r={ribbon.id}"
+									href="{base}/ribbon?r={ribbon.id}"
 									class="flex flex-wrap items-start gap-2 px-4 py-3 transition-colors hover:bg-sky-50"
 								>
 									<div class="min-w-0 flex-1">

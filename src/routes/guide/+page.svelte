@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
@@ -24,7 +25,7 @@
 	if (browser) {
 		const legacyPokemonId = page.url.searchParams.get('p');
 		if (legacyPokemonId) {
-			void goto(`/pokemon?p=${legacyPokemonId}`, { replaceState: true });
+			void goto(`${base}/pokemon?p=${legacyPokemonId}`, { replaceState: true });
 		}
 	}
 
@@ -183,7 +184,7 @@
 						{@const fallback = pokemonSearchFallback}
 						<div class="mt-3">
 							<a
-								href="/pokemon?p={fallback.id}"
+								href="{base}/pokemon?p={fallback.id}"
 								class="inline-block rounded-lg border border-sky-200 bg-sky-50 px-3 py-1.5 text-sm font-medium text-sky-700 hover:bg-sky-100"
 							>
 								『{fallback.name}』をポケモンから探す →
@@ -217,7 +218,7 @@
 									<div class="min-w-0 flex-1">
 										<div class="flex flex-wrap items-center gap-1.5">
 											<a
-												href="/ribbon?r={ribbon.id}"
+												href="{base}/ribbon?r={ribbon.id}"
 												class="text-sm font-medium text-gray-800 underline decoration-gray-300 underline-offset-2 hover:text-sky-700"
 											>
 												{ribbon.name}

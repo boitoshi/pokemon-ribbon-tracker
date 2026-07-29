@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import type { FilterState, PokemonDetail } from '$lib/types';
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
@@ -420,7 +421,7 @@
 			<p class="text-xs text-gray-500">マイポケモンのリボン取得チェックリスト</p>
 		</div>
 		<a
-			href="/quick"
+			href="{base}/quick"
 			class="shrink-0 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-amber-600 active:bg-amber-700"
 		>
 			⚡ クイック
@@ -452,7 +453,7 @@
 					</p>
 					<div class="mt-3 flex flex-wrap gap-2">
 						<a
-							href="/setup"
+							href="{base}/setup"
 							class="inline-flex items-center gap-1 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 active:bg-sky-800"
 							>⚙️ セットアップを始める</a
 						>

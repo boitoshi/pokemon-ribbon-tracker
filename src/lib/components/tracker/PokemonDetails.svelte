@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
 	import { getGameName } from '$lib/utils/gameNames';
 	import { loadAllData } from '$lib/utils/dataFetcher';
@@ -141,7 +142,7 @@
 		{#if speciesSummary}
 			<p class="mt-2 text-xs text-gray-500">
 				この種族が取得できる可能性: リボン{speciesSummary.ribbonCount}・あかし{speciesSummary.markCount}
-				<a href="/pokemon?p={pokemon.id}" class="ml-1 text-sky-600 underline">世代別内訳 →</a>
+				<a href="{base}/pokemon?p={pokemon.id}" class="ml-1 text-sky-600 underline">世代別内訳 →</a>
 			</p>
 		{/if}
 	</div>

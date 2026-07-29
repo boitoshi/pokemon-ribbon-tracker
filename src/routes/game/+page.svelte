@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import { loadAllData } from '$lib/utils/dataFetcher';
@@ -42,7 +43,7 @@
 <div class="mx-auto max-w-4xl px-4 py-6">
 	{#if selectedGameId && !selectedGame}
 		<!-- ===== 不明な ID ===== -->
-		<a href="/game" class="text-sm font-medium text-sky-700 underline hover:text-sky-900">
+		<a href="{base}/game" class="text-sm font-medium text-sky-700 underline hover:text-sky-900">
 			← ソフト一覧へ
 		</a>
 		<div
@@ -52,7 +53,7 @@
 		</div>
 	{:else if selectedGame}
 		<!-- ===== 詳細パネル ===== -->
-		<a href="/game" class="text-sm font-medium text-sky-700 underline hover:text-sky-900">
+		<a href="{base}/game" class="text-sm font-medium text-sky-700 underline hover:text-sky-900">
 			← ソフト一覧へ
 		</a>
 
@@ -89,7 +90,7 @@
 					<div class="divide-y divide-gray-100 overflow-hidden rounded-xl border border-gray-200">
 						{#each obtainableRibbons as ribbon (ribbon.id)}
 							<a
-								href="/ribbon?r={ribbon.id}"
+								href="{base}/ribbon?r={ribbon.id}"
 								class="flex flex-wrap items-center gap-2 px-3 py-2.5 transition-colors hover:bg-sky-50"
 							>
 								<span class="text-sm font-medium text-gray-800">{ribbon.name}</span>
@@ -130,7 +131,7 @@
 					<div class="divide-y divide-gray-100 bg-white">
 						{#each games as game (game.id)}
 							<a
-								href="/game?g={game.id}"
+								href="{base}/game?g={game.id}"
 								class="flex items-center gap-2 px-4 py-2.5 transition-colors hover:bg-sky-50"
 							>
 								<span class="text-sm font-medium text-gray-800">{game.shortName}</span>

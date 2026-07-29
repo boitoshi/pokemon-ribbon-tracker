@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import type { PokemonDetail, Ribbon } from '$lib/types';
 	import {
 		getEligibleSpeciesCount,
@@ -54,7 +55,7 @@
 		<div class="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
 			{#each condition.species.slice(0, shownCount) as species (species.id)}
 				<a
-					href="/pokemon?p={species.id}"
+					href="{base}/pokemon?p={species.id}"
 					class="flex flex-col items-center rounded-lg p-1 transition-colors hover:bg-sky-50"
 				>
 					<img

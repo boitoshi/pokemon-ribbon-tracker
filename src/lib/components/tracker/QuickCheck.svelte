@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
 	import { toast } from '$lib/stores/toast.svelte';
 	import { getGameName } from '$lib/utils/gameNames';
@@ -171,7 +172,7 @@
 				<span>ℹ</span>
 				<span
 					><strong>参照モード</strong> — タップしても記録されません。<a
-						href="/box"
+						href="{base}/box"
 						class="underline hover:text-sky-900">ポケモンを選ぶ →</a
 					></span
 				>

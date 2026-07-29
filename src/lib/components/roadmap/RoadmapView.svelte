@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import type { RibbonGroup, TransferRoute } from '$lib/types';
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
 	import { setup } from '$lib/stores/setup.svelte';
@@ -168,7 +169,7 @@
 			class="mb-6 flex items-center justify-between gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800"
 		>
 			<span>ポケモンが選ばれていません</span>
-			<a href="/box" class="shrink-0 font-medium text-sky-700 underline hover:text-sky-900"
+			<a href="{base}/box" class="shrink-0 font-medium text-sky-700 underline hover:text-sky-900"
 				>← きろくで選ぶ</a
 			>
 		</div>

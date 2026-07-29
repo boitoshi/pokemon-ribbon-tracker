@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { untrack } from 'svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { goto } from '$app/navigation';
@@ -64,7 +65,11 @@
 	function selectPokemon(pokemon: PokemonDetail): void {
 		selectedId = pokemon.id;
 		searchQuery = '';
-		void goto(`/pokemon?p=${pokemon.id}`, { replaceState: true, keepFocus: true, noScroll: true });
+		void goto(`${base}/pokemon?p=${pokemon.id}`, {
+			replaceState: true,
+			keepFocus: true,
+			noScroll: true
+		});
 	}
 
 	/** 図鑑番号を3桁ゼロ埋めでフォーマットする */
@@ -192,7 +197,7 @@
 									{#each entries as entry (entry.ribbon.id)}
 										<div class="flex flex-wrap items-center gap-1.5 px-3 py-2">
 											<a
-												href="/ribbon?r={entry.ribbon.id}"
+												href="{base}/ribbon?r={entry.ribbon.id}"
 												class="text-sm text-gray-800 underline decoration-gray-300 underline-offset-2 hover:text-sky-700"
 											>
 												{entry.ribbon.name}
