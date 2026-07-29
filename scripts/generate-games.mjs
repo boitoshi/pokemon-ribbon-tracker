@@ -11,7 +11,7 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const POKEMON_DATA_DIR = resolve(__dirname, '../../pokemon-data/games');
+const POKEMON_DATA_DIR = `${process.env.POKEMON_DATA_DIR ?? resolve(__dirname, '../../pokemon-data')}/games`;
 const OUTPUT = resolve(__dirname, '../src/lib/data/games.ts');
 
 // titles.json / groups.json を読み込む
