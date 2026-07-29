@@ -49,10 +49,10 @@ npm run build
 
 ## デプロイ
 
-公開URL: **https://www.pokebros.net/ribbon/**（Apache 共有ホスティングのサブディレクトリ）
+公開URL: **https://www.pokebros.net/ribbon-tracker/**（Apache 共有ホスティングのサブディレクトリ）
 
 `main` ブランチへの push で GitHub Actions（`.github/workflows/deploy.yml`）が
-lint / check / test → `BASE_PATH=/ribbon` ビルド → FTP アップロードを自動実行します。
+lint / check / test → `BASE_PATH=/ribbon-tracker` ビルド → FTP アップロードを自動実行します。
 
 ### 必要な Secrets（リポジトリ設定に登録）
 
@@ -61,13 +61,13 @@ lint / check / test → `BASE_PATH=/ribbon` ビルド → FTP アップロード
 | `FTP_SERVER`     | FTP サーバーのホスト名                                            |
 | `FTP_USERNAME`   | FTP ユーザー名                                                    |
 | `FTP_PASSWORD`   | FTP パスワード                                                    |
-| `FTP_SERVER_DIR` | アップロード先（例: `/pokebros.net/ribbon/`、末尾スラッシュ必須） |
+| `FTP_SERVER_DIR` | アップロード先（例: `/pokebros.net/ribbon-tracker/`、末尾スラッシュ必須） |
 
 ### ローカルでの本番ビルド検証
 
 ```sh
-npm run build:prod   # BASE_PATH=/ribbon でビルド
-npx vite preview     # http://localhost:4173/ribbon/ で確認
+npm run build:prod   # BASE_PATH=/ribbon-tracker でビルド
+npx vite preview     # http://localhost:4173/ribbon-tracker/ で確認
 ```
 
 ## ドキュメント
