@@ -59,10 +59,6 @@ const gen3Pokemon: PokemonDetail = {
   types: ['でんき'],
   generation: 3,
   image: '',
-  category: 'ねずみポケモン',
-  height: 0.4,
-  weight: 6,
-  abilities: [],
 };
 
 const gen8Pokemon: PokemonDetail = {
@@ -72,10 +68,6 @@ const gen8Pokemon: PokemonDetail = {
   types: ['はがね'],
   generation: 8,
   image: '',
-  category: 'ゆうじのポケモン',
-  height: 2.8,
-  weight: 110,
-  abilities: [],
 };
 
 // MyPokemon に currentGeneration フィールドはない

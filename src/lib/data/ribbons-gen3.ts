@@ -1,5 +1,5 @@
 // Gen 3 リボン定義データ
-// ルビー・サファイア・エメラルド・ファイアレッド・リーフグリーン・コロシアム・XD で取得可能な全27リボン
+// ルビー・サファイア・エメラルド・ファイアレッド・リーフグリーン・コロシアム・XD で取得可能な全29リボン
 
 import type { Ribbon } from '$lib/types';
 
@@ -8,7 +8,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
 
   {
     id: 'champion-hoenn',
-    name: 'チャンピオンリボン',
+    name: 'チャンプリボン',
     description: 'ホウエン/カントー地方のポケモンリーグを制覇した証',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald', 'firered', 'leafgreen', 'firered_switch', 'leafgreen_switch'],
@@ -21,38 +21,38 @@ export const RIBBONS_GEN3: Ribbon[] = [
   {
     id: 'cool-ribbon',
     name: 'クールリボン',
-    description: 'コンテスト・クール部門ノーマルランク優勝',
+    description: 'コンテスト・かっこよさ部門ノーマルランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
     category: 'コンテスト',
-    requirements: 'クール部門ノーマルランクで優勝する',
+    requirements: 'かっこよさ部門ノーマルランクで優勝する',
   },
   {
     id: 'cool-ribbon-super',
-    name: 'クールリボン スーパー',
-    description: 'コンテスト・クール部門スーパーランク優勝',
+    name: 'クールリボンスーパー',
+    description: 'コンテスト・かっこよさ部門スーパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
     category: 'コンテスト',
-    requirements: 'クール部門スーパーランクで優勝する',
+    requirements: 'かっこよさ部門スーパーランクで優勝する',
   },
   {
     id: 'cool-ribbon-hyper',
-    name: 'クールリボン ハイパー',
-    description: 'コンテスト・クール部門ハイパーランク優勝',
+    name: 'クールリボンハイパー',
+    description: 'コンテスト・かっこよさ部門ハイパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
     category: 'コンテスト',
-    requirements: 'クール部門ハイパーランクで優勝する',
+    requirements: 'かっこよさ部門ハイパーランクで優勝する',
   },
   {
     id: 'cool-ribbon-master',
-    name: 'クールリボン マスター',
-    description: 'コンテスト・クール部門マスターランク優勝',
+    name: 'クールリボンマスター',
+    description: 'コンテスト・かっこよさ部門マスターランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
     category: 'コンテスト',
-    requirements: 'クール部門マスターランクで優勝する',
+    requirements: 'かっこよさ部門マスターランクで優勝する',
   },
 
   // ── コンテスト・ビューティ (4) ───────────────────────────────────────────
@@ -68,7 +68,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'beauty-ribbon-super',
-    name: 'ビューティリボン スーパー',
+    name: 'ビューティリボンスーパー',
     description: 'コンテスト・うつくしさ部門スーパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -77,7 +77,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'beauty-ribbon-hyper',
-    name: 'ビューティリボン ハイパー',
+    name: 'ビューティリボンハイパー',
     description: 'コンテスト・うつくしさ部門ハイパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -86,7 +86,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'beauty-ribbon-master',
-    name: 'ビューティリボン マスター',
+    name: 'ビューティリボンマスター',
     description: 'コンテスト・うつくしさ部門マスターランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -107,7 +107,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'cute-ribbon-super',
-    name: 'キュートリボン スーパー',
+    name: 'キュートリボンスーパー',
     description: 'コンテスト・かわいさ部門スーパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -116,7 +116,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'cute-ribbon-hyper',
-    name: 'キュートリボン ハイパー',
+    name: 'キュートリボンハイパー',
     description: 'コンテスト・かわいさ部門ハイパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -125,7 +125,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'cute-ribbon-master',
-    name: 'キュートリボン マスター',
+    name: 'キュートリボンマスター',
     description: 'コンテスト・かわいさ部門マスターランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -133,11 +133,11 @@ export const RIBBONS_GEN3: Ribbon[] = [
     requirements: 'かわいさ部門マスターランクで優勝する',
   },
 
-  // ── コンテスト・スマート (4) ──────────────────────────────────────────────
+  // ── コンテスト・ジーニアス (4) ────────────────────────────────────────────
 
   {
     id: 'smart-ribbon',
-    name: 'スマートリボン',
+    name: 'ジーニアスリボン',
     description: 'コンテスト・かしこさ部門ノーマルランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -146,7 +146,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'smart-ribbon-super',
-    name: 'スマートリボン スーパー',
+    name: 'ジーニアスリボンスーパー',
     description: 'コンテスト・かしこさ部門スーパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -155,7 +155,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'smart-ribbon-hyper',
-    name: 'スマートリボン ハイパー',
+    name: 'ジーニアスリボンハイパー',
     description: 'コンテスト・かしこさ部門ハイパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -164,7 +164,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'smart-ribbon-master',
-    name: 'スマートリボン マスター',
+    name: 'ジーニアスリボンマスター',
     description: 'コンテスト・かしこさ部門マスターランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -172,11 +172,11 @@ export const RIBBONS_GEN3: Ribbon[] = [
     requirements: 'かしこさ部門マスターランクで優勝する',
   },
 
-  // ── コンテスト・タフ (4) ──────────────────────────────────────────────────
+  // ── コンテスト・パワフル (4) ──────────────────────────────────────────────
 
   {
     id: 'tough-ribbon',
-    name: 'タフリボン',
+    name: 'パワフルリボン',
     description: 'コンテスト・たくましさ部門ノーマルランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -185,7 +185,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'tough-ribbon-super',
-    name: 'タフリボン スーパー',
+    name: 'パワフルリボンスーパー',
     description: 'コンテスト・たくましさ部門スーパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -194,7 +194,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'tough-ribbon-hyper',
-    name: 'タフリボン ハイパー',
+    name: 'パワフルリボンハイパー',
     description: 'コンテスト・たくましさ部門ハイパーランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -203,7 +203,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
   },
   {
     id: 'tough-ribbon-master',
-    name: 'タフリボン マスター',
+    name: 'パワフルリボンマスター',
     description: 'コンテスト・たくましさ部門マスターランク優勝',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -215,7 +215,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
 
   {
     id: 'winning-ribbon',
-    name: 'ウィニングリボン',
+    name: 'ウイニングリボン',
     description: 'バトルタワー Lv.50チャレンジを制覇した証',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -237,7 +237,7 @@ export const RIBBONS_GEN3: Ribbon[] = [
 
   {
     id: 'artist-ribbon',
-    name: 'アーティストリボン',
+    name: 'ブロマイドリボン',
     description: 'コンテストのマスターランクで優勝し、美術館に絵が飾られた証',
     generation: 3,
     games: ['ruby', 'sapphire', 'emerald'],
@@ -255,6 +255,27 @@ export const RIBBONS_GEN3: Ribbon[] = [
     games: ['ruby', 'sapphire', 'emerald', 'firered', 'leafgreen', 'firered_switch', 'leafgreen_switch'],
     category: '思い出',
     requirements: '努力値の合計が510に達した状態で特定のNPCに話しかける',
+  },
+
+  // ── イベント (2) ──────────────────────────────────────────────────────────
+
+  {
+    id: 'country-ribbon',
+    name: 'カントリーリボン',
+    description: '過去のイベント配布・大会で贈られたリボン（現在は入手不可）',
+    generation: 3,
+    games: ['ruby', 'sapphire', 'emerald', 'firered', 'leafgreen'],
+    category: 'イベント',
+    requirements: '過去のイベント配布・大会で受け取る（現在は入手不可）',
+  },
+  {
+    id: 'world-ribbon',
+    name: 'ワールドリボン',
+    description: '過去のイベント配布・大会で贈られたリボン（現在は入手不可）',
+    generation: 3,
+    games: ['ruby', 'sapphire', 'emerald', 'firered', 'leafgreen'],
+    category: 'イベント',
+    requirements: '過去のイベント配布・大会で受け取る（現在は入手不可）',
   },
 
   // ── 特殊（コロシアム / XD専用）(2) ──────────────────────────────────────

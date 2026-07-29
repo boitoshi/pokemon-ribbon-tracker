@@ -16,7 +16,9 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"gen-icons": "node scripts/gen-icons.mjs",
-		"gen-games": "node scripts/generate-games.mjs"
+		"gen-games": "node scripts/generate-games.mjs",
+		"gen-pokemon": "node scripts/generate-pokemon.mjs",
+		"gen-ribbon-names": "node scripts/generate-ribbon-names.mjs"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.0",

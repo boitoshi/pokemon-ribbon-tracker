@@ -15,7 +15,7 @@ export const RIBBONS_GEN5: Ribbon[] = [
   },
   {
     id: 'wishing-ribbon',
-    name: 'ウィッシングリボン',
+    name: 'ウィッシュリボン',
     description: '願いをかなえてくれる不思議なリボン',
     generation: 5,
     games: ['black', 'white', 'black2', 'white2'],
@@ -60,7 +60,7 @@ export const RIBBONS_GEN5: Ribbon[] = [
   },
   {
     id: 'souvenir-ribbon',
-    name: 'スーベニアリボン',
+    name: 'メモリアルリボン',
     description: '旅の記念として贈られるリボン',
     generation: 5,
     games: ['black', 'white', 'black2', 'white2'],

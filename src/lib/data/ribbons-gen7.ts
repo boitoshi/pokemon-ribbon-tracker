@@ -6,7 +6,7 @@ export const RIBBONS_GEN7: Ribbon[] = [
   // ============================================================
   {
     id: 'champion-alola',
-    name: 'アローラチャンピオンリボン',
+    name: 'アローラチャンプリボン',
     description: 'アローラ地方のポケモンリーグを制覇した証',
     generation: 7,
     games: ['sun', 'moon', 'usum'],
@@ -15,8 +15,8 @@ export const RIBBONS_GEN7: Ribbon[] = [
   },
   {
     id: 'champion-lets-go',
-    name: 'チャンピオンリボン',
-    description: 'カントー地方のポケモンリーグを制覇した証',
+    name: 'チャンプリボン',
+    description: 'カントー地方のポケモンリーグを制覇した証（Gen3のチャンプリボンと同一）',
     generation: 7,
     games: ['lets_go'],
     category: 'チャンピオン',
@@ -27,23 +27,33 @@ export const RIBBONS_GEN7: Ribbon[] = [
   // バトル施設
   // ============================================================
   {
-    id: 'battle-tree-ribbon',
-    name: 'バトルツリーリボン',
-    description: 'バトルツリーで20連勝した証',
+    id: 'battle-tree-great-ribbon',
+    name: 'グレートツリーリボン',
+    description: 'バトルツリー（通常）を制覇した証',
     generation: 7,
     games: ['sun', 'moon', 'usum'],
     category: 'バトル施設',
-    requirements: 'バトルツリーのシングルバトルで20連勝する',
+    requirements: 'バトルツリー（通常）を制覇する',
+    eligibility: { type: 'level_max', maxLevel: 50 },
+  },
+  {
+    id: 'battle-tree-master-ribbon',
+    name: 'マスターツリーリボン',
+    description: 'スーパーバトルツリーを制覇した証',
+    generation: 7,
+    games: ['sun', 'moon', 'usum'],
+    category: 'バトル施設',
+    requirements: 'スーパーバトルツリーを制覇する',
     eligibility: { type: 'level_max', maxLevel: 50 },
   },
   {
     id: 'battle-royal-ribbon',
-    name: 'バトルロイヤルリボン',
-    description: 'バトルロイヤルのマスターランクに到達した証',
+    name: 'ロイヤルマスターリボン',
+    description: 'バトルロイヤルのマスターランクを制覇した証',
     generation: 7,
     games: ['sun', 'moon', 'usum'],
     category: 'バトル施設',
-    requirements: 'バトルロイヤルドームでマスターランクに到達する',
+    requirements: 'バトルロイヤルドームでマスターランクを制覇する',
     eligibility: { type: 'level_max', maxLevel: 50 },
   },
 
@@ -52,7 +62,7 @@ export const RIBBONS_GEN7: Ribbon[] = [
   // ============================================================
   {
     id: 'best-friends-ribbon-g7',
-    name: 'ベストフレンドリボン',
+    name: 'なかよしリボン',
     description: 'トレーナーと最高の友情を育んだ証',
     generation: 7,
     games: ['sun', 'moon', 'usum'],

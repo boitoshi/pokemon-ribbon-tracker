@@ -53,10 +53,6 @@ export interface PokemonDetail {
 	types: string[];
 	generation: number;
 	image: string;
-	category: string;
-	height: number;
-	weight: number;
-	abilities: string[];
 }
 
 /** リボンの取得条件 */
