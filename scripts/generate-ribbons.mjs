@@ -134,8 +134,9 @@ if (errors.length > 0) {
 // TypeScript ファイル出力
 // ================================================================
 
+// JSON.stringify で改行・制御文字も安全に文字列リテラル化する（generate-games/pokemon と同方式）
 function q(value) {
-  return `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+  return JSON.stringify(String(value));
 }
 
 function gamesToTs(games) {
