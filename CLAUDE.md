@@ -115,14 +115,13 @@ npm run test      # テスト
 
 ---
 
-# モデル設定
+# デプロイ
 
-| 用途 | モデル |
-|------|--------|
-| プラン作成・レビュー・設計判断 | Sonnet 4.6（あなた） |
-| 1M コンテキストが必要なとき | Opus 4.6 |
-| 実装タスク（後輩ちゃん） | `model: sonnet` |
-| 単純作業（後輩ちゃん） | `model: haiku` |
+`.github/workflows/deploy.yml` が `main` ブランチへの push をトリガーに
+lint / check / test → build → FTP デプロイを自動実行する。
+公開先は **https://www.pokebros.net/ribbon-tracker/**（`BASE_PATH=/ribbon-tracker`）。
+
+⚠️ **`main` への push は即本番反映される。** レビュー前の変更を `main` に直接 push しないこと。
 
 ---
 
@@ -149,6 +148,9 @@ npm run test      # テスト
 src/
 ├── lib/
 │   ├── data/          リボン・ゲーム・転送ルートデータ
+│   │                  （pokemon.ts/games.ts/ribbons-gen*.ts/marks.ts/canonical-ribbon-names.ts は
+│   │                   pokemon-data からの自動生成・編集禁止。gen-* で再生成。
+│   │                   手書きは transfer-routes.ts と shadow-pokemon.ts のみ）
 │   ├── types.ts       共通型定義
 │   ├── utils/         純粋関数ユーティリティ
 │   ├── stores/        Svelte 5 Runes ストア（*.svelte.ts）
@@ -159,7 +161,11 @@ src/
 └── routes/
     ├── +layout.svelte  アプリシェル（上部/底部ナビ）
     ├── +layout.ts      prerender = true
-    ├── +page.svelte    / メイントラッカー
+    ├── +page.svelte    / 統合検索ホーム（R1で刷新）
+    ├── pokemon/        /pokemon?p=<id> ポケモン詳細
+    ├── ribbon/         /ribbon?r=<id> リボン詳細
+    ├── game/           /game?g=<id> ソフト詳細
+    ├── box/            /box 記録（マイポケモン。R1後は記録の主導線）
     ├── quick/          /quick クイックチェック
     ├── roadmap/        /roadmap 世代別ロードマップ
     ├── setup/          /setup セットアップウィザード
@@ -170,14 +176,11 @@ src/
 
 # 実装フェーズ
 
-詳細は `docs/rewrite-plan.md` 参照。
+Phase 1〜6 完了（旧 `docs/rewrite-plan.md`）。現行の設計正本は `docs/ui-redesign-plan.md` の R1（✅ 完了）〜R4。
 
-- **Phase 0**: ✅ 完了 — SvelteKit セットアップ・データ移植
-- **Phase 1**: ✅ 完了 — コアトラッカー（Runes ストア + 基本UI）
-- **Phase 2**: ✅ 完了 — セットアップウィザード（所持ゲーム・ハード登録）
-- **Phase 3**: ✅ 完了 — ロードマップビュー（🏆 キラー機能）
-- **Phase 4**: ✅ 完了 — クイックチェックモード（スマホ片手操作）
-- **Phase 5**: ✅ 完了 — ガイドページ（ハイブリッド参照）
-- **Phase 6**: 🔜 継続中 — PWA完成 + Gen9データ整備
+- **R1**: 調べる系のコア — 統合検索ホーム + ポケモン詳細 + リボン詳細（ribbonIndex 活用） — ✅ 完了
+- **R2**: 中古屋モード — ソフト詳細 + 所持設定のグローバル文脈化（3色表示） — 未着手
+- **R3**: 計画と記録 — /plan 統合、/box への記録機能移設、旧画面の撤去・リダイレクト — 未着手
+- **R4**: 仕上げ — バックアップ（エクスポート/インポート）、PWA磨き、旧 docs 更新 — 未着手
 
 > リボン制覇と同じ。順番を守って、一個ずつ確実に。
