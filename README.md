@@ -2,7 +2,7 @@
 
 ポケモンのリボン制覇を、**取得計画 + 進捗記録 + 世代間転送確認**まで一気通貫で支援する SvelteKit アプリです。
 
-## 現在の状態（2026-03-03）
+## 現在の状態（2026-07-29）
 
 - 不可逆転送のUI刷新（警告・2段階確認・確認記録）を実装済み
 - UX改善F〜G 完了（モバイル視認性・折りたたみ・長押し情報表示・バナー永続化）
@@ -10,11 +10,12 @@
   - P0: スワイプ/タップ誤操作防止、ボトムシートフォーカストラップ、Toast位置最適化、非存在リボン削除
   - P1: dvh対応、checkedSet O(1)化、MyPokemon aria-pressed、urgent/missed理由常設表示
   - P2: importProgressバリデーション強化（isValidMyPokemon）、検索ひらがな/カタカナ正規化、init()再初期化ガード、safe-areaトークン共通化
-- トラッカー / ロードマップ / ガイド / クイック / セットアップが利用可能
+- 統合検索（/）/ ポケモン・リボン・ソフト詳細（/pokemon /ribbon /game、?p= ?r= ?g= クエリ方式）/ 記録（/box）/ ロードマップ / クイック / ガイド / 設定 が利用可能
 - 不要スクリーンショット画像（ルート直下PNG 8件）を削除済み
-- `lint` / `check 0 errors` / `test 69/69` 通過
+- `lint` / `check 0 errors` / 全テスト通過（vitest）
+- リボン・あかし画像159枚は未アップロード（アップ先 `wp-content/uploads/pokemon-assets/ribbons|marks/`。404時は絵文字フォールバックで表示は壊れない）
 
-**次のアクション**: G-1（ガイドリボン検索）→ Phase 6（PWA + Gen9データ整備）
+**次のアクション**: R2: 中古屋モード（docs/ui-redesign-plan.md 参照。R1 は完了済み）
 
 ## 使い方（最初にここだけ）
 
@@ -23,7 +24,11 @@
 
 ## 主要ページ
 
-- `/` トラッカー（検索、フィルタ、取得記録）
+- `/` 統合検索ホーム（ポケモン名／リボン名／ソフト名の検索、世代・カテゴリタイル）
+- `/pokemon?p=<id>` ポケモン詳細（取得可能リボン/あかし合計、世代別内訳）
+- `/ribbon?r=<id>` リボン詳細（条件・対象ソフト・つけられるポケモン逆引き）
+- `/game?g=<id>` ソフト詳細（このソフトで取れるリボン一覧）
+- `/box` 記録（マイポケモン単位のリボン取得チェックリスト）
 - `/roadmap` 世代別ロードマップ（不可逆転送チェック）
 - `/guide` リボン/転送/Tips の参照ガイド
 - `/quick` プレイ中の簡易確認導線
@@ -46,6 +51,25 @@ npm run check
 npm run test
 npm run build
 ```
+
+### データ再生成
+
+正本は `../pokemon-data`（環境変数 `POKEMON_DATA_DIR` で変更可）。
+
+```sh
+npm run gen-games         # games.ts
+npm run gen-pokemon       # pokemon.ts
+npm run gen-ribbons       # ribbons-gen3〜9.ts / marks.ts
+npm run gen-ribbon-names  # canonical-ribbon-names.ts
+npm run gen-icons
+```
+
+## データ層
+
+`src/lib/data/` の `pokemon.ts` / `games.ts` / `ribbons-gen3〜9.ts` / `marks.ts` /
+`canonical-ribbon-names.ts` は `../pokemon-data`（リボンは `ribbons/catalog.json` 等）からの
+自動生成ファイル。**直接編集禁止**、再生成は上記の `gen-*` コマンドで行う。
+手書きは `transfer-routes.ts` と `shadow-pokemon.ts` のみ。
 
 ## デプロイ
 
@@ -72,6 +96,7 @@ npx vite preview     # http://localhost:4173/ribbon-tracker/ で確認
 
 ## ドキュメント
 
-- 設計・移行計画: [docs/rewrite-plan.md](docs/rewrite-plan.md)
-- 実装再開ハンドオフ: [docs/irreversible-transfer-ux-handoff.md](docs/irreversible-transfer-ux-handoff.md)
+- 現行設計正本（R1〜R4）: [docs/ui-redesign-plan.md](docs/ui-redesign-plan.md)
+- 設計・移行計画（アーカイブ: Nuxt→SvelteKit 移行時の計画）: [docs/rewrite-plan.md](docs/rewrite-plan.md)
+- 実装再開ハンドオフ（アーカイブ）: [docs/irreversible-transfer-ux-handoff.md](docs/irreversible-transfer-ux-handoff.md)
 - エージェント運用規約: [CLAUDE.md](CLAUDE.md)
