@@ -1,7 +1,6 @@
 <script lang="ts">
-	import type { RibbonState } from '$lib/types';
-	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
-	import { getRibbonEvaluation } from '$lib/utils/ribbonEligibility';
+	import type { MyPokemon, PokemonDetail } from '$lib/types';
+	import { ribbonProgress, type RibbonCount } from '$lib/stores/ribbonProgress.svelte';
 	import BottomSheet from '$lib/components/ui/BottomSheet.svelte';
 	import MyPokemonPanel from '$lib/components/tracker/MyPokemonPanel.svelte';
 
@@ -11,62 +10,30 @@
 	let triggerEl = $state<HTMLElement | null>(null);
 
 	/** 現在の主役ポケモン（未選択なら null） */
-	const active = $derived(ribbonProgress.activeMyPokemon);
+	const active: MyPokemon | null = $derived(ribbonProgress.activeMyPokemon);
+
+	/** 主役ポケモンの種族データ（未選択なら null） */
+	const species: PokemonDetail | null = $derived(ribbonProgress.activeSpecies);
 
 	/** 主役ポケモンの画像URL */
-	const image = $derived(
-		active ? ribbonProgress.allPokemon.find((p) => p.id === active.pokemonId)?.image : undefined
-	);
+	const image: string | undefined = $derived(species?.image);
 
 	/** 表示名（ニックネーム優先、なければ種族名） */
-	const displayName = $derived(
+	const displayName: string = $derived(
 		(() => {
 			if (!active) return '';
 			if (active.nickname) return active.nickname;
-			const detail = ribbonProgress.allPokemon.find((p) => p.id === active.pokemonId);
-			return detail?.name ?? active.pokemonId;
+			return species?.name ?? active.pokemonId;
 		})()
 	);
-
-	/** 分母に数える状態（取得済み + まだ取れる） */
-	const COUNTABLE_STATES: readonly RibbonState[] = ['obtained', 'available', 'urgent'];
 
 	/**
 	 * 主役ポケモンのリボン取得数（取得済み / この個体で狙える数）。
 	 *
-	 * ストアの generationProgress は ribbonStateMap 経由で「今画面で見ている種族
-	 * （selectedPokemon）」に依存するため、他の種族を閲覧中は分母がブレる。
-	 * 主役バーは常に「主役の個体そのもの」を出したいので、種族を主役の pokemonId に
-	 * 固定して generationProgress と同じ集計ロジックをここで走らせる。
-	 * 集計条件（obtained/available/urgent を分母に、手動 missed を除外）は
-	 * ribbonProgress.generationProgress と揃えてある。
+	 * generationProgress は「今画面で見ている種族（selectedPokemon）」依存で分母がブレるため、
+	 * 主役の種族に固定して集計するストア側の derived を使う。
 	 */
-	const ribbonCount = $derived(
-		(() => {
-			if (!active) return { obtained: 0, total: 0 };
-			const species = ribbonProgress.allPokemon.find((p) => p.id === active.pokemonId) ?? null;
-			const checked = ribbonProgress.currentCheckedSet;
-			let obtained = 0;
-			let total = 0;
-			for (const ribbon of ribbonProgress.allRibbons) {
-				const isChecked = checked.has(ribbon.id);
-				const evaluation = getRibbonEvaluation(
-					ribbon,
-					species,
-					active,
-					isChecked,
-					ribbonProgress.genMap
-				);
-				const manualMissed = active.manualRibbonOverrides?.[ribbon.id]?.isMissed === true;
-				const state: RibbonState =
-					manualMissed && evaluation.state !== 'obtained' ? 'missed' : evaluation.state;
-				if (!COUNTABLE_STATES.includes(state)) continue;
-				total++;
-				if (state === 'obtained') obtained++;
-			}
-			return { obtained, total };
-		})()
-	);
+	const ribbonCount: RibbonCount = $derived(ribbonProgress.activeRibbonCount);
 
 	function openSheet(e: MouseEvent): void {
 		triggerEl = e.currentTarget as HTMLElement;

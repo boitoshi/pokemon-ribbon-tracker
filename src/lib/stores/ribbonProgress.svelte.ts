@@ -23,6 +23,34 @@ export interface GenerationProgress {
 	total: number;
 }
 
+/** リボン取得数（取得済み / 分母） */
+export interface RibbonCount {
+	obtained: number;
+	total: number;
+}
+
+/**
+ * 世代別進捗の分母に数えるリボン状態（その世代で「今」狙えるもの）。
+ * future を含めないのは、generationProgress が世代ごとの到達度を示すものだから。
+ */
+const COUNTABLE_RIBBON_STATES: readonly RibbonState[] = ['obtained', 'available', 'urgent'];
+
+/**
+ * 主役個体が「最終的に到達できる」リボン状態。future を分母に含める。
+ *
+ * COUNTABLE_RIBBON_STATES を使うと、たとえば Gen4 のソフトにいる個体は
+ * Gen5 以降が全部 future として分母から外れ、まだ 153 件残っているのに
+ * 「28/28 = 100% 完了」と表示されてしまう（実機で確認済み）。
+ * 個体の総進捗としては誤解を招くため、転送すれば取れる future は分母に入れ、
+ * 本当に取得不能な locked（種族的に不可能）と missed（世代を遡れない）だけを外す。
+ */
+const ACHIEVABLE_RIBBON_STATES: readonly RibbonState[] = [
+	'obtained',
+	'available',
+	'urgent',
+	'future'
+];
+
 /**
  * 旧形式のマイポケモンデータに、後から追加したオプショナルフィールドのデフォルト値を補う。
  * isValidMyPokemon による検証よりも「先に」適用すること。
@@ -138,12 +166,57 @@ export class RibbonProgressStore {
 				const gen = ribbon.generation;
 				if (!result[gen]) result[gen] = { obtained: 0, total: 0 };
 				const state = this.ribbonStateMap.get(ribbon.id) ?? 'available';
-				if (state === 'obtained' || state === 'available' || state === 'urgent') {
+				if (COUNTABLE_RIBBON_STATES.includes(state)) {
 					result[gen].total++;
 					if (state === 'obtained') result[gen].obtained++;
 				}
 			}
 			return result;
+		})()
+	);
+
+	/** 主役個体（activeMyPokemon）の種族データ。未選択・マスタ未登録なら null */
+	activeSpecies: PokemonDetail | null = $derived(
+		(() => {
+			const active = this.activeMyPokemon;
+			if (!active) return null;
+			return this.allPokemon.find((p) => p.id === active.pokemonId) ?? null;
+		})()
+	);
+
+	/**
+	 * 主役個体に固定したリボン取得数（取得済み / この個体で狙える数）。
+	 *
+	 * ribbonStateMap / generationProgress は「今画面で見ている種族」(selectedPokemon) 依存なので、
+	 * 他の種族を閲覧すると数が動いてしまう。主役バーのように「主役の個体そのもの」を
+	 * 出したい箇所ではこちらを使うこと。
+	 * 分母は ACHIEVABLE_RIBBON_STATES（future 込み = その個体が最終的に到達できる総数）。
+	 * 取得済みでない手動 missed は missed 扱いにして分母から外す。
+	 */
+	activeRibbonCount: RibbonCount = $derived(
+		(() => {
+			const active = this.activeMyPokemon;
+			if (!active) return { obtained: 0, total: 0 };
+			const species = this.activeSpecies;
+			const checked = this.currentCheckedSet;
+			let obtained = 0;
+			let total = 0;
+			for (const ribbon of this.allRibbons) {
+				const evaluation = getRibbonEvaluation(
+					ribbon,
+					species,
+					active,
+					checked.has(ribbon.id),
+					this.gameGenMap
+				);
+				const manualMissed = active.manualRibbonOverrides?.[ribbon.id]?.isMissed === true;
+				const state: RibbonState =
+					manualMissed && evaluation.state !== 'obtained' ? 'missed' : evaluation.state;
+				if (!ACHIEVABLE_RIBBON_STATES.includes(state)) continue;
+				total++;
+				if (state === 'obtained') obtained++;
+			}
+			return { obtained, total };
 		})()
 	);
 

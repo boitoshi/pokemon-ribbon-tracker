@@ -3,6 +3,7 @@
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
 	import { setup } from '$lib/stores/setup.svelte';
 	import { getGameName } from '$lib/utils/gameNames';
+	import { getMyPokemonDisplayName, getMyPokemonImage } from '$lib/utils/myPokemonDisplay';
 	import { GAMES } from '$lib/data/games';
 	import type { Game, MyPokemon } from '$lib/types';
 
@@ -89,18 +90,6 @@
 	/** ゲームIDから短い表示名を取得する（GAMES優先、未知IDは名称表にフォールバック） */
 	function getGameShortName(gameId: string): string {
 		return GAMES.find((g) => g.id === gameId)?.shortName ?? getGameName(gameId);
-	}
-
-	/** ポケモンの画像URLを取得する */
-	function getPokemonImage(pokemonId: string): string | undefined {
-		return ribbonProgress.allPokemon.find((p) => p.id === pokemonId)?.image;
-	}
-
-	/** 表示名（ニックネーム優先、なければポケモン名）を取得する */
-	function getDisplayName(mp: MyPokemon): string {
-		if (mp.nickname) return mp.nickname;
-		const detail = ribbonProgress.allPokemon.find((p) => p.id === mp.pokemonId);
-		return detail?.name ?? mp.pokemonId;
 	}
 
 	/** 進捗率を取得する */
@@ -260,6 +249,8 @@
 			{#if ribbonProgress.myPokemonList.length > 0}
 				<div class="flex gap-2 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-3 lg:grid-cols-4">
 					{#each ribbonProgress.myPokemonList as mp (mp.id)}
+						{@const displayName = getMyPokemonDisplayName(mp, ribbonProgress.allPokemon)}
+						{@const imageUrl = getMyPokemonImage(mp.pokemonId, ribbonProgress.allPokemon)}
 						<div
 							class="w-36 shrink-0 cursor-pointer rounded-lg border p-2 transition-colors hover:bg-gray-50 md:w-auto
 								{ribbonProgress.activeMyPokemonId === mp.id ? 'bg-blue-50 ring-2 ring-blue-500' : ''}"
@@ -273,17 +264,13 @@
 						>
 							<div class="flex items-center gap-2">
 								<!-- ポケモン画像 -->
-								{#if getPokemonImage(mp.pokemonId)}
-									<img
-										src={getPokemonImage(mp.pokemonId)}
-										alt={getDisplayName(mp)}
-										class="h-10 w-10 object-contain"
-									/>
+								{#if imageUrl}
+									<img src={imageUrl} alt={displayName} class="h-10 w-10 object-contain" />
 								{:else}
 									<div class="h-10 w-10 rounded-full bg-gray-200"></div>
 								{/if}
 								<div class="min-w-0 flex-1">
-									<div class="truncate text-sm font-medium">{getDisplayName(mp)}</div>
+									<div class="truncate text-sm font-medium">{displayName}</div>
 									<div class="truncate text-xs text-gray-500">
 										{mp.originGame ? getGameName(mp.originGame) : '未設定'}
 									</div>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { base } from '$app/paths';
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
 	import { toast } from '$lib/stores/toast.svelte';
 	import { getGameName } from '$lib/utils/gameNames';
@@ -8,6 +7,17 @@
 
 	/** スワイプ判定の閾値（px） */
 	const SWIPE_THRESHOLD = 50;
+
+	interface Props {
+		/**
+		 * 主役ポケモンを選び直したいときに呼ばれる。
+		 * 親（/box）が主役ピッカーを開くために渡す。
+		 * 未指定ならバナーは案内テキストだけを出す（行き先を勝手に決めない）。
+		 */
+		onRequestActivePokemon?: () => void;
+	}
+
+	const { onRequestActivePokemon }: Props = $props();
 
 	// --- 状態 ---
 	let currentIndex = $state(0);
@@ -64,6 +74,12 @@
 		filteredRibbons.filter((r) => !ribbonProgress.currentCheckedSet.has(r.id)).length
 	);
 
+	/** 記録モードかどうか（主役ポケモンが決まっていれば記録できる） */
+	const isRecording = $derived<boolean>(ribbonProgress.activeMyPokemonId !== null);
+
+	/** マイポケモンが1匹でも登録されているか（未登録なら「登録して」と案内する） */
+	const hasMyPokemon = $derived<boolean>(ribbonProgress.myPokemonList.length > 0);
+
 	// --- 操作メソッド ---
 	function next(): void {
 		if (filteredRibbons.length === 0) return;
@@ -99,8 +115,8 @@
 
 	function toggleCurrent(): void {
 		if (currentRibbon === null) return;
-		if (!ribbonProgress.activeMyPokemonId) {
-			toast.show('ポケモンを選ぶと記録できるよ！', 'info');
+		if (!isRecording) {
+			toast.show('主役を決めると記録できるよ！', 'info');
 			return;
 		}
 		ribbonProgress.toggleRibbon(currentRibbon.id);
@@ -135,10 +151,15 @@
 	}
 </script>
 
-<div class="flex h-[calc(100dvh-5rem)] flex-col md:h-screen">
+<!--
+	高さは親（/box）が決める。ここではビューポート単位を使わず h-full / flex-1 で追従させる。
+	上に何が積まれても（主役バー・ナビ）壊れないようにするため。
+-->
+<div class="flex h-full min-h-0 flex-col">
 	<!-- 世代フィルター -->
-	<div class="flex gap-2 overflow-x-auto border-b p-3">
+	<div class="flex shrink-0 gap-2 overflow-x-auto border-b border-gray-200 p-3">
 		<button
+			type="button"
 			onclick={() => setGenFilter(null)}
 			class="shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors
 				{genFilter === null ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'}"
@@ -147,6 +168,7 @@
 		</button>
 		{#each availableGenerations as gen (gen)}
 			<button
+				type="button"
 				onclick={() => setGenFilter(gen)}
 				class="shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors
 					{genFilter === gen ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'}"
@@ -156,7 +178,31 @@
 		{/each}
 	</div>
 
-	<!-- マイポケモン未選択時 -->
+	<!-- 主役未選択（＝参照モード）: 次に何をすればいいかをその場に出す -->
+	{#if !isRecording}
+		<div class="shrink-0 border-b border-amber-200 bg-amber-50 px-3 py-2.5">
+			<p class="text-sm font-bold text-amber-900">記録するには主役を決めてね</p>
+			<p class="mt-1 text-xs leading-relaxed text-amber-800">
+				いまは<strong>参照モード</strong>。タップしても取得状況は保存されないよ。
+				{#if hasMyPokemon}
+					画面上部の<strong>主役バー</strong>をタップすると、記録する子に切り替えられるよ。
+				{:else}
+					まだ1匹も登録がないから、ポケモンを検索して「このコで始める」から登録してね。
+				{/if}
+			</p>
+			{#if onRequestActivePokemon}
+				<button
+					type="button"
+					onclick={onRequestActivePokemon}
+					class="mt-2 w-full rounded-lg bg-amber-500 py-2 text-sm font-bold text-white
+						transition-colors active:bg-amber-600"
+				>
+					{hasMyPokemon ? '主役を選ぶ' : 'ポケモンを登録する'}
+				</button>
+			{/if}
+		</div>
+	{/if}
+
 	{#if filteredRibbons.length === 0}
 		<div class="flex flex-1 items-center justify-center">
 			<p class="text-gray-500">この世代のリボンはないよ</p>
@@ -164,29 +210,16 @@
 
 		<!-- メイン表示 -->
 	{:else}
-		<!-- 参照モードバナー -->
-		{#if !ribbonProgress.activeMyPokemonId}
-			<div
-				class="flex items-center gap-2 border-b border-sky-100 bg-sky-50 px-3 py-2 text-xs text-sky-700"
-			>
-				<span>ℹ</span>
-				<span
-					><strong>参照モード</strong> — タップしても記録されません。<a
-						href="{base}/box"
-						class="underline hover:text-sky-900">ポケモンを選ぶ →</a
-					></span
-				>
-			</div>
-		{/if}
-
 		<!-- カウンター表示 -->
-		<div class="py-2 text-center text-sm text-gray-500">
+		<div class="shrink-0 py-2 text-center text-sm text-gray-500">
 			{currentIndex + 1} / {filteredRibbons.length}&nbsp;·&nbsp;未取得 {uncheckedCount}件
 		</div>
 
 		<!-- リボン表示エリア（タップ全体でトグル） -->
 		<button
-			class="flex w-full flex-1 flex-col items-center justify-center gap-4 p-8 transition-colors
+			type="button"
+			class="flex w-full min-h-0 flex-1 flex-col items-center justify-center gap-4
+				overflow-y-auto overscroll-contain p-8 transition-colors
 				{isChecked
 				? 'bg-green-50'
 				: currentRibbonState === 'urgent'
@@ -204,9 +237,11 @@
 				}
 				toggleCurrent();
 			}}
-			aria-label={isChecked
-				? 'チェック済み（タップで解除）'
-				: '未チェック（タップで取得済みにする）'}
+			aria-label={!isRecording
+				? '参照モード（主役を決めると記録できるよ）'
+				: isChecked
+					? 'チェック済み（タップで解除）'
+					: '未チェック（タップで取得済みにする）'}
 		>
 			<!-- 状態バッジ -->
 			{#if currentRibbonState === 'urgent'}
@@ -229,7 +264,7 @@
 
 			<!-- チェック状態アイコン（大きく） -->
 			<div
-				class="flex h-20 w-20 items-center justify-center rounded-full border-4 text-4xl
+				class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-4 text-4xl
 					{isChecked
 					? 'border-green-500 bg-green-500 text-white'
 					: currentRibbonState === 'urgent'
@@ -298,25 +333,42 @@
 			{/if}
 		</button>
 
-		<!-- ナビゲーションボタン -->
-		<div class="flex items-center gap-2 border-t p-4">
+		<!-- ナビゲーション（親指が届くカード下部。取りこぼし潰しの「次の未取得へ」を主役に置く） -->
+		<div class="shrink-0 border-t border-gray-200 bg-white p-3">
+			<div class="flex gap-2">
+				<button
+					type="button"
+					onclick={prev}
+					class="flex-1 rounded-lg bg-gray-100 py-2.5 text-sm font-medium text-gray-700 active:bg-gray-200"
+				>
+					← 前
+				</button>
+				<button
+					type="button"
+					onclick={next}
+					class="flex-1 rounded-lg bg-gray-100 py-2.5 text-sm font-medium text-gray-700 active:bg-gray-200"
+				>
+					次 →
+				</button>
+			</div>
 			<button
-				onclick={prev}
-				class="flex-1 rounded-lg bg-gray-100 py-3 font-medium text-gray-700 active:bg-gray-200"
-			>
-				← 前
-			</button>
-			<button
+				type="button"
 				onclick={jumpToNextUnchecked}
-				class="flex-1 rounded-lg bg-blue-600 py-3 text-sm font-medium text-white active:bg-blue-700"
+				disabled={uncheckedCount === 0}
+				class="mt-2 flex w-full items-center justify-center gap-2 rounded-xl py-4 text-base
+					font-bold transition-colors
+					{uncheckedCount === 0
+					? 'bg-gray-200 text-gray-500'
+					: 'bg-blue-600 text-white shadow-md active:bg-blue-700'}"
 			>
-				次の未取得へ
-			</button>
-			<button
-				onclick={next}
-				class="flex-1 rounded-lg bg-gray-100 py-3 font-medium text-gray-700 active:bg-gray-200"
-			>
-				次 →
+				{#if uncheckedCount === 0}
+					🎉 全部取得済み！
+				{:else}
+					⏭ 次の未取得へ
+					<span class="rounded-full bg-white/20 px-2 py-0.5 text-xs font-bold tabular-nums">
+						残り{uncheckedCount}
+					</span>
+				{/if}
 			</button>
 		</div>
 	{/if}

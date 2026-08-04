@@ -36,7 +36,14 @@
 	<meta name="description" content="ポケモンのリボンコンプリートを効率よく管理・計画するツール" />
 </svelte:head>
 
-<div class="min-h-screen bg-gray-50">
+<!--
+	アプリシェル。h-dvh + flex 縦積みで「ヘッダー / 主役バー / 本文 / 底部ナビ」の
+	高さを確定させ、本文だけがスクロールする形にしている。
+	こうすることで各ページが h-full で高さを取れる（QuickCheck のスワイプUIが依存）。
+	以前は各ページが calc(100dvh - 5rem) のようにビューポート高さを決め打ちしており、
+	上部に要素を足すたびに壊れていた。
+-->
+<div class="flex h-dvh flex-col bg-gray-50">
 	<!-- デスクトップ上部ナビ -->
 	<header class="sticky top-0 z-40 hidden border-b border-gray-200 bg-white shadow-sm md:block">
 		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
@@ -61,13 +68,13 @@
 	<!-- 主役ポケモンバー（PC・モバイル共通。主役未選択なら何も描画されない） -->
 	<ActivePokemonBar />
 
-	<!-- メインコンテンツ -->
-	<main class="pb-nav-safe md:pb-0">
+	<!-- メインコンテンツ。ここだけがスクロールする -->
+	<main class="min-h-0 flex-1 overflow-y-auto">
 		{@render children()}
 	</main>
 
-	<!-- モバイル底部ナビ -->
-	<nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white md:hidden">
+	<!-- モバイル底部ナビ。シェルが flex なので fixed をやめ、通常フローで最下段に置く -->
+	<nav class="shrink-0 border-t border-gray-200 bg-white md:hidden">
 		<div class="flex pb-safe">
 			{#each navItems as item (item.href)}
 				<a

@@ -61,6 +61,11 @@ function getPokemon(store: RibbonProgressStore, pokemonId: string): PokemonDetai
 	return pokemon;
 }
 
+/** 世代別進捗の分母合計（＝「見てる種族」依存の集計。比較対象として使う） */
+function generationTotal(store: RibbonProgressStore): number {
+	return Object.values(store.generationProgress).reduce((sum, gen) => sum + gen.total, 0);
+}
+
 beforeEach(() => {
 	localStorage.clear();
 });
@@ -201,6 +206,148 @@ describe('activeMyPokemonId の永続化', () => {
 
 		expect(store.activeMyPokemonId).toBe('mp-a');
 		expect(localStorage.getItem(ACTIVE_MY_POKEMON_STORAGE_KEY)).toBe('mp-a');
+	});
+});
+
+describe('主役固定のリボン集計（activeRibbonCount）', () => {
+	it('主役が居ないときは 0/0', () => {
+		seedMyPokemonList([myPokemonEntry()]);
+		const store = createInitializedStore();
+
+		expect(store.activeMyPokemon).toBeNull();
+		expect(store.activeRibbonCount).toEqual({ obtained: 0, total: 0 });
+	});
+
+	it('主役の種族データが引ける（集計が種族に固定されている前提）', () => {
+		seedMyPokemonList([myPokemonEntry()]);
+		const store = createInitializedStore();
+		store.switchMyPokemon('mp-001');
+
+		store.selectPokemon(getPokemon(store, 'sprigatito'));
+
+		// 見てる種族が変わっても activeSpecies は主役の種族のまま
+		expect(store.activeSpecies?.id).toBe('bulbasaur');
+		expect(store.selectedPokemon?.id).toBe('sprigatito');
+	});
+
+	it('別の種族を閲覧しても主役の集計は分子・分母とも変わらない', () => {
+		// bulbasaur（Gen1）/ ルビー / Lv30
+		seedMyPokemonList([myPokemonEntry()]);
+		const store = createInitializedStore();
+		store.switchMyPokemon('mp-001');
+
+		const before = { ...store.activeRibbonCount };
+		// 分母が 0 だと「変わらない」ことが自明になり、テストの意味がなくなる
+		expect(before.total).toBeGreaterThan(0);
+
+		// Gen9 の種族をただ閲覧しただけ（selectedPokemon だけが変わる）
+		store.selectPokemon(getPokemon(store, 'sprigatito'));
+
+		expect(store.activeRibbonCount).toEqual(before);
+	});
+
+	it('見てる種族に依存する generationProgress とは独立している', () => {
+		seedMyPokemonList([myPokemonEntry()]);
+		const store = createInitializedStore();
+		store.switchMyPokemon('mp-001');
+
+		const genTotalBefore = generationTotal(store);
+		const activeBefore = { ...store.activeRibbonCount };
+
+		// Gen9 の種族を見ると Gen3〜8 のリボンが軒並み locked になり、
+		// selectedPokemon 依存の集計は分母が縮む
+		store.selectPokemon(getPokemon(store, 'sprigatito'));
+
+		expect(generationTotal(store)).toBeLessThan(genTotalBefore);
+		// それでも主役バーの数字（＝この derived）は動かない
+		expect(store.activeRibbonCount).toEqual(activeBefore);
+	});
+
+	it('リボンをトグルすると分子だけが増減する', () => {
+		seedMyPokemonList([myPokemonEntry()]);
+		const store = createInitializedStore();
+		store.switchMyPokemon('mp-001');
+
+		const before = { ...store.activeRibbonCount };
+
+		// champion-hoenn はルビー（Gen3）で取得可能なので、もともと分母に入っている
+		store.toggleRibbon('champion-hoenn');
+		expect(store.activeRibbonCount.obtained).toBe(before.obtained + 1);
+		expect(store.activeRibbonCount.total).toBe(before.total);
+
+		store.toggleRibbon('champion-hoenn');
+		expect(store.activeRibbonCount).toEqual(before);
+	});
+
+	it('まだ到達していない世代のリボン（future）も分母に含む', () => {
+		// ルビー（Gen3）にいる個体。Gen4 以降のリボンは future 状態になる。
+		seedMyPokemonList([myPokemonEntry()]);
+		const store = createInitializedStore();
+		store.switchMyPokemon('mp-001');
+
+		// generationProgress は Record<世代, {obtained,total}>。
+		// 「その世代で今狙えるもの」だけを分母にするので future を含まない
+		const nowReachableTotal = Object.values(store.generationProgress).reduce(
+			(sum: number, g) => sum + g.total,
+			0
+		);
+
+		// activeRibbonCount は「最終的に到達できる総数」なので future のぶんだけ大きくなる。
+		// ここが同値になると、転送すれば取れるリボンが残っているのに
+		// 「100% 完了」と表示される回帰（実機で確認された不具合）に戻る。
+		expect(nowReachableTotal).toBeGreaterThan(0);
+		expect(store.activeRibbonCount.total).toBeGreaterThan(nowReachableTotal);
+	});
+
+	it('手動で「取り逃し」にしたリボンは分母から外れる', () => {
+		seedMyPokemonList([myPokemonEntry()]);
+		const store = createInitializedStore();
+		store.switchMyPokemon('mp-001');
+
+		const before = { ...store.activeRibbonCount };
+
+		store.toggleManualMissed('mp-001', 'champion-hoenn');
+
+		expect(store.activeRibbonCount.total).toBe(before.total - 1);
+		expect(store.activeRibbonCount.obtained).toBe(before.obtained);
+	});
+
+	it('取得済みのリボンは手動で「取り逃し」にしても取得済みとして数える', () => {
+		seedMyPokemonList([myPokemonEntry()]);
+		const store = createInitializedStore();
+		store.switchMyPokemon('mp-001');
+
+		const before = { ...store.activeRibbonCount };
+
+		store.toggleRibbon('champion-hoenn');
+		store.toggleManualMissed('mp-001', 'champion-hoenn');
+
+		expect(store.activeRibbonCount.obtained).toBe(before.obtained + 1);
+		expect(store.activeRibbonCount.total).toBe(before.total);
+	});
+
+	it('主役を切り替えるとその個体の集計になる', () => {
+		seedMyPokemonList([
+			myPokemonEntry({ id: 'mp-a' }),
+			myPokemonEntry({ id: 'mp-b', currentGame: 'scarlet' })
+		]);
+		const store = createInitializedStore();
+
+		store.switchMyPokemon('mp-a');
+		store.toggleRibbon('champion-hoenn');
+		const countA = { ...store.activeRibbonCount };
+
+		store.switchMyPokemon('mp-b');
+
+		// mp-b はまだ何も取得していない = 集計が mp-a のものではなく mp-b のものになっている
+		expect(store.activeRibbonCount.obtained).toBe(0);
+		// 分母が個体ごとに何件違うかは現在ゲーム依存で、リボンデータの再生成で動きうる。
+		// ここでは差を断定せず、後段の往復チェックが「0同士で自明に一致」する退化だけを防ぐ。
+		expect(countA.total).toBeGreaterThan(0);
+		expect(store.activeRibbonCount.total).toBeGreaterThan(0);
+
+		store.switchMyPokemon('mp-a');
+		expect(store.activeRibbonCount).toEqual(countA);
 	});
 });
 
