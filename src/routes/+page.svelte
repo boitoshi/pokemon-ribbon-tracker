@@ -52,11 +52,18 @@
 	<title>さがす | ポケモンリボン制覇トラッカー</title>
 </svelte:head>
 
-<div class="mx-auto max-w-3xl px-4 py-8 md:py-12">
-	<!-- ヒーロー部 -->
-	<div class="mb-6 text-center">
-		<h1 class="text-2xl font-bold text-gray-800 md:text-3xl">🎀 ポケモンリボン制覇トラッカー</h1>
-		<p class="mt-2 text-sm text-gray-500">
+<div class="mx-auto max-w-3xl px-4 py-4 md:py-12">
+	<!--
+		ヒーロー部。モバイルでは畳んで検索ボックスを最初に見せる。
+		アプリ名は底部ナビとPWAのアイコンで分かるうえ、狭い画面では
+		可視領域の大半を装飾で潰してしまうため（設計原則「検索が主役」）。
+		見出し自体は文書構造のため sr-only で DOM に残す。
+	-->
+	<div class="text-center md:mb-6">
+		<h1 class="sr-only text-2xl font-bold text-gray-800 md:not-sr-only md:text-3xl">
+			🎀 ポケモンリボン制覇トラッカー
+		</h1>
+		<p class="mt-2 hidden text-sm text-gray-500 md:block">
 			ポケモン・リボン・ソフトを1箱で横断検索して、リボン制覇を計画しよう
 		</p>
 	</div>
