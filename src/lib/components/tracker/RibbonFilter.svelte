@@ -1,8 +1,23 @@
 <script lang="ts">
 	import type { FilterState } from '$lib/types';
 
-	/** Props */
-	let { onFilterChange }: { onFilterChange: (_f: Omit<FilterState, 'generation'>) => void } = $props();
+	/**
+	 * リボン絞り込みパネル。
+	 *
+	 * フィルタ状態は親（/box）が1箇所で持ち、ここは表示と通知だけを担当する。
+	 * 以前は generation だけ親、type/status/search はこのコンポーネント内 state という
+	 * 二重管理になっていて、リセット処理も2箇所に散っていた。
+	 */
+	interface Props {
+		/** 現在のフィルタ状態（唯一の正） */
+		filter: FilterState;
+		/** フィルタの部分更新を親に通知する */
+		onChange: (_patch: Partial<FilterState>) => void;
+		/** すべてのフィルタを解除する（世代ピルも含む） */
+		onReset: () => void;
+	}
+
+	const { filter, onChange, onReset }: Props = $props();
 
 	/** リボンカテゴリ定義 */
 	const RIBBON_TYPES: { id: string; name: string }[] = [
@@ -15,48 +30,25 @@
 		{ id: 'mark', name: 'あかし' }
 	];
 
-	/** フィルターパネルの開閉状態 */
+	/** フィルターパネルの開閉状態（表示上の状態なのでここで持つ） */
 	let isExpanded = $state(false);
 
-	/** 検索クエリ */
-	let searchQuery = $state('');
-
-	/** アクティブなフィルター */
-	let type = $state<string | null>(null);
-	let status = $state<FilterState['status']>(null);
-
-	/** アクティブなフィルター数（generation 除外） */
-	const activeFilterCount = $derived((type !== null ? 1 : 0) + (status !== null ? 1 : 0));
+	/** アクティブなフィルター数（generation は画面上に世代ピルとして常時見えているので除外） */
+	const activeFilterCount: number = $derived(
+		(filter.type !== null ? 1 : 0) + (filter.status !== null ? 1 : 0)
+	);
 
 	/** タイプIDから日本語名を取得する */
 	function getRibbonTypeName(typeId: string): string {
 		return RIBBON_TYPES.find((t) => t.id === typeId)?.name ?? typeId;
 	}
 
-	/** フィルター変更をコールバックで通知する */
-	function emitFilterChange(): void {
-		onFilterChange({ type, status, search: searchQuery });
-	}
-
 	function toggleType(t: string | null): void {
-		type = type === t ? null : t;
-		emitFilterChange();
+		onChange({ type: filter.type === t ? null : t });
 	}
 
 	function toggleStatus(s: FilterState['status']): void {
-		status = status === s ? null : s;
-		emitFilterChange();
-	}
-
-	function handleSearchInput(): void {
-		emitFilterChange();
-	}
-
-	function resetFilters(): void {
-		type = null;
-		status = null;
-		searchQuery = '';
-		emitFilterChange();
+		onChange({ status: filter.status === s ? null : s });
 	}
 </script>
 
@@ -65,16 +57,18 @@
 	<div class="flex items-center gap-2">
 		<input
 			type="text"
-			bind:value={searchQuery}
+			value={filter.search}
 			placeholder="リボンを検索..."
-			oninput={handleSearchInput}
+			oninput={(e) => onChange({ search: e.currentTarget.value })}
 			class="flex-1 rounded-md border px-3 py-2 text-sm"
 		/>
 		<button
+			type="button"
 			class="flex items-center gap-1 rounded border px-3 py-2 text-sm
 				{isExpanded
 				? 'border-blue-500 bg-blue-500 text-white'
 				: 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'}"
+			aria-expanded={isExpanded}
 			onclick={() => (isExpanded = !isExpanded)}
 		>
 			フィルター
@@ -93,16 +87,23 @@
 	<!-- アクティブフィルターチップ（折りたたみ時に表示） -->
 	{#if !isExpanded && activeFilterCount > 0}
 		<div class="mt-1.5 flex flex-wrap gap-1">
-			{#if type !== null}
-				<span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-800">
-					{getRibbonTypeName(type)}
-					<button class="hover:text-blue-500" onclick={() => toggleType(null)}>×</button>
+			{#if filter.type !== null}
+				<span
+					class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-800"
+				>
+					{getRibbonTypeName(filter.type)}
+					<button type="button" class="hover:text-blue-500" onclick={() => toggleType(null)}>×</button
+					>
 				</span>
 			{/if}
-			{#if status !== null}
-				<span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-800">
-					{status === 'obtained' ? '取得済み' : '未取得'}
-					<button class="hover:text-blue-500" onclick={() => toggleStatus(null)}>×</button>
+			{#if filter.status !== null}
+				<span
+					class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-800"
+				>
+					{filter.status === 'obtained' ? '取得済み' : '未取得'}
+					<button type="button" class="hover:text-blue-500" onclick={() => toggleStatus(null)}
+						>×</button
+					>
 				</span>
 			{/if}
 		</div>
@@ -117,14 +118,20 @@
 					<p class="mb-1 block text-xs font-medium text-gray-700">カテゴリ</p>
 					<div class="flex flex-wrap gap-1">
 						<button
-							class="rounded px-2 py-1 text-xs {type === null ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+							type="button"
+							class="rounded px-2 py-1 text-xs {filter.type === null
+								? 'bg-blue-500 text-white'
+								: 'bg-gray-200'}"
 							onclick={() => toggleType(null)}
 						>
 							すべて
 						</button>
 						{#each RIBBON_TYPES as rt (rt.id)}
 							<button
-								class="rounded px-2 py-1 text-xs {type === rt.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+								type="button"
+								class="rounded px-2 py-1 text-xs {filter.type === rt.id
+									? 'bg-blue-500 text-white'
+									: 'bg-gray-200'}"
 								onclick={() => toggleType(rt.id)}
 							>
 								{rt.name}
@@ -138,19 +145,28 @@
 					<p class="mb-1 block text-xs font-medium text-gray-700">取得状況</p>
 					<div class="flex flex-wrap gap-1">
 						<button
-							class="rounded px-2 py-1 text-xs {status === null ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+							type="button"
+							class="rounded px-2 py-1 text-xs {filter.status === null
+								? 'bg-blue-500 text-white'
+								: 'bg-gray-200'}"
 							onclick={() => toggleStatus(null)}
 						>
 							すべて
 						</button>
 						<button
-							class="rounded px-2 py-1 text-xs {status === 'obtained' ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+							type="button"
+							class="rounded px-2 py-1 text-xs {filter.status === 'obtained'
+								? 'bg-blue-500 text-white'
+								: 'bg-gray-200'}"
 							onclick={() => toggleStatus('obtained')}
 						>
 							取得済み
 						</button>
 						<button
-							class="rounded px-2 py-1 text-xs {status === 'not-obtained' ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+							type="button"
+							class="rounded px-2 py-1 text-xs {filter.status === 'not-obtained'
+								? 'bg-blue-500 text-white'
+								: 'bg-gray-200'}"
 							onclick={() => toggleStatus('not-obtained')}
 						>
 							未取得
@@ -159,13 +175,14 @@
 				</div>
 			</div>
 
-			<!-- リセットボタン -->
+			<!-- リセットボタン（世代・検索も含めて全部解除する） -->
 			<div class="mt-2 text-right">
 				<button
+					type="button"
 					class="rounded bg-gray-200 px-3 py-1 text-xs hover:bg-gray-300"
-					onclick={resetFilters}
+					onclick={onReset}
 				>
-					リセット
+					すべて解除
 				</button>
 			</div>
 		</div>

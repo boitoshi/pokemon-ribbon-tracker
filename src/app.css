@@ -62,7 +62,8 @@
 .mb-safe {
 	margin-bottom: var(--safe-area-inset-bottom);
 }
-/** モバイルボトムナビ分 + Safe Area 込みの main パディング */
-.pb-nav-safe {
-	padding-bottom: calc(5rem + var(--safe-area-inset-bottom));
-}
+/*
+	.pb-nav-safe は廃止した。底部ナビが fixed だった頃に main へ逃がしていた
+	5rem 決め打ちのパディングで、実際のナビ高さ（約53px）とも合っていなかった。
+	現在はアプリシェル（+layout.svelte）が flex 縦積みでナビを通常フローに置くため不要。
+*/
