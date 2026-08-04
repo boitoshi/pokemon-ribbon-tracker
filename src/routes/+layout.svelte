@@ -1,9 +1,20 @@
 <script lang="ts">
 	import '../app.css';
+	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
+	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
+	import { setup } from '$lib/stores/setup.svelte';
+	import ActivePokemonBar from '$lib/components/ui/ActivePokemonBar.svelte';
 
 	const { children } = $props();
+
+	// 主役バーと所持ソフト文脈をどの画面でも使えるよう、レイアウト側で初期化する
+	// （どちらも冪等。各ルートの onMount と二重に呼んでも安全）
+	onMount(() => {
+		ribbonProgress.init();
+		setup.init();
+	});
 
 	const navItems = [
 		{ href: '/', label: 'さがす', icon: '🔎' },
@@ -46,6 +57,9 @@
 			</nav>
 		</div>
 	</header>
+
+	<!-- 主役ポケモンバー（PC・モバイル共通。主役未選択なら何も描画されない） -->
+	<ActivePokemonBar />
 
 	<!-- メインコンテンツ -->
 	<main class="pb-nav-safe md:pb-0">
