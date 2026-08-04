@@ -16,7 +16,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # ローカル（fnm）と CI でバージョンがズレないよう .node-version を唯一の正とする
+          node-version-file: .node-version
           cache: npm
 
       - run: npm ci
