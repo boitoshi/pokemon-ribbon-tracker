@@ -3,16 +3,13 @@
 	import { getGameName } from '$lib/utils/gameNames';
 	import { toast } from '$lib/stores/toast.svelte';
 	import RibbonIcon from '$lib/components/ui/RibbonIcon.svelte';
-
-	/** カテゴリカラーマップ */
-	const CATEGORY_STYLE: Record<string, { bg: string; label: string }> = {
-		チャンピオン: { bg: 'bg-amber-500', label: '🏆' },
-		コンテスト: { bg: 'bg-pink-500', label: '🎭' },
-		バトル施設: { bg: 'bg-red-500', label: '⚔️' },
-		思い出: { bg: 'bg-cyan-500', label: '💫' },
-		イベント: { bg: 'bg-violet-500', label: '✨' },
-		特殊: { bg: 'bg-green-500', label: '🌟' }
-	};
+	import { getCategoryStyle } from '$lib/utils/ribbonCategory';
+	import {
+		getListWrapperClass,
+		getRibbonStateStyle,
+		getStateBadge,
+		getStateLabel
+	} from '$lib/utils/ribbonStateStyle';
 
 	/** Props */
 	let {
@@ -23,7 +20,8 @@
 		onToggleManualMissed,
 		isManualMissed = false,
 		manualMissedUpdatedAt,
-		view = 'grid'
+		view = 'grid',
+		showGeneration = false
 	}: {
 		ribbon: Ribbon;
 		ribbonState: RibbonState;
@@ -33,18 +31,23 @@
 		isManualMissed?: boolean;
 		manualMissedUpdatedAt?: string;
 		view?: 'list' | 'grid';
+		/**
+		 * 世代バッジを行に出すか。
+		 * ロードマップでは見出しが世代を持っているので出さない（既定）。
+		 * /box のように行だけを見る画面では true を渡す。
+		 */
+		showGeneration?: boolean;
 	} = $props();
 
 	const isObtained = $derived(ribbonState === 'obtained');
 	const isDisabled = $derived(ribbonState === 'future' || ribbonState === 'locked');
 	const canManualEditMissed = $derived(ribbonState !== 'future' && ribbonState !== 'locked');
 
-	/** カテゴリスタイル解決 */
-	const style = $derived(
-		ribbon.type === 'mark'
-			? { label: '🔖', bg: 'bg-purple-400' }
-			: (CATEGORY_STYLE[ribbon.category] ?? { label: '🎀', bg: 'bg-blue-400' })
-	);
+	/** カテゴリ表示定義（絵文字フォールバック＋外周リング色） */
+	const category = $derived(getCategoryStyle(ribbon));
+
+	/** 状態 → 表現の対応表 */
+	const stateStyle = $derived(getRibbonStateStyle(ribbonState));
 
 	/** アコーディオン展開状態（リストモード用） */
 	let isExpanded = $state(false);
@@ -61,61 +64,22 @@
 	/** 対応ゲーム名一覧 */
 	const gameNames = $derived(ribbon.games.map(getGameName));
 
-	/** グリッドビュー用状態別クラス */
-	const gridButtonClass = $derived((): string => {
-		switch (ribbonState) {
-			case 'obtained':
-				return `${style.bg} text-white ring-2 ring-offset-1 shadow-md`;
-			case 'urgent':
-				return 'bg-orange-400 text-white animate-pulse';
-			case 'available':
-				return 'bg-gray-200 text-gray-400 hover:bg-gray-300';
-			case 'future':
-				return 'bg-gray-100 text-gray-300 opacity-50';
-			case 'missed':
-				return 'bg-red-100 text-red-400 opacity-80';
-			case 'locked':
-				return 'bg-gray-100 text-gray-200 opacity-25';
-			default:
-				return 'bg-gray-200 text-gray-400';
-		}
-	});
+	/** リスト行の状態バッジ（3階層のうち「状態＝ベタ塗り」） */
+	const stateBadge = $derived(getStateBadge(ribbonState));
 
-	/** グリッドビュー用状態ラベル */
-	const gridStateLabel = $derived((): string => {
-		switch (ribbonState) {
-			case 'urgent':
-				return '⚡ 今すぐ！';
-			case 'missed':
-				return '❌ 取り逃し';
-			case 'locked':
-				return '🚫 取得不可';
-			case 'future':
-				return '🔒 未来';
-			default:
-				return '';
-		}
-	});
+	/**
+	 * 理由文を行に出すか。
+	 * 条件バッジ（⚠ Lv.n以下）がある場合は同じことを二重に言うことになるので出さない。
+	 * 条件バッジがない missed などは、理由が一番重い情報なので行に残す。
+	 */
+	const showInlineReason = $derived(
+		!isLevelRestricted &&
+			(ribbonState === 'urgent' || ribbonState === 'missed') &&
+			reasonLabels.length > 0
+	);
 
-	/** リストビュー用外側divクラス */
-	const listWrapperClass = $derived((): string => {
-		switch (ribbonState) {
-			case 'obtained':
-				return 'border-green-200 bg-green-50';
-			case 'urgent':
-				return 'border-orange-300 bg-orange-50 border-l-4 border-l-orange-400';
-			case 'available':
-				return 'border-gray-200 bg-white';
-			case 'future':
-				return 'border-gray-100 bg-gray-50 opacity-60';
-			case 'missed':
-				return 'border-red-200 bg-red-50 border-l-4 border-l-red-400';
-			case 'locked':
-				return 'border-gray-100 bg-white opacity-40';
-			default:
-				return 'border-gray-200 bg-white';
-		}
-	});
+	/** 取得アニメーションの長さ（app.css の .ribbon-collect と揃える） */
+	const COLLECT_ANIMATION_DURATION = 400;
 
 	/** トグルハンドラ（グリッドモード用・アニメーション付き） */
 	function handleToggle(): void {
@@ -123,29 +87,9 @@
 			justCollected = true;
 			setTimeout(() => {
 				justCollected = false;
-			}, 400);
+			}, COLLECT_ANIMATION_DURATION);
 		}
 		onToggle();
-	}
-
-	/** 状態ラベル（長押しToast用） */
-	function getStateLabel(state: RibbonState): string {
-		switch (state) {
-			case 'urgent':
-				return '⚡ 今すぐ取得必須！';
-			case 'missed':
-				return '❌ 取り逃し';
-			case 'locked':
-				return '🔒 取得不可';
-			case 'obtained':
-				return '✅ 取得済み';
-			case 'available':
-				return '🎯 取得可能';
-			case 'future':
-				return '🔜 将来のリボン';
-			default:
-				return '';
-		}
 	}
 
 	/** 長押しタイマー（グリッドモード用） */
@@ -170,67 +114,75 @@
 </script>
 
 {#if view === 'grid'}
-	<!-- グリッドビュー: 丸いバッジボタン + リボン名ラベル -->
-	<div class="flex flex-col items-center gap-1">
-		<button
-			class="group relative h-14 w-14 rounded-full transition-all duration-200
-        {gridButtonClass()}
-        {justCollected ? 'ribbon-collect' : ''}"
-			onclick={handleToggle}
-			onpointerdown={onGridPointerDown}
-			onpointerup={onGridPointerUp}
-			onpointercancel={onGridPointerUp}
-			onpointerleave={onGridPointerUp}
-			disabled={isDisabled}
-			aria-label="{ribbon.name} {isObtained ? '取得済み' : '未取得'}"
-		>
-			<RibbonIcon
-				src={ribbon.image_url}
-				alt={ribbon.name}
-				sizeClass="mx-auto h-8 w-8 text-xl"
-				fallback={style.label}
-			/>
-			<!-- デスクトップ用ホバーツールチップ（状態ラベル＋理由） -->
-			<div
-				class="absolute bottom-full left-1/2 z-10 mb-1 hidden w-max max-w-48 -translate-x-1/2
-                  rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+	<!--
+		グリッドビュー: 丸いバッジボタン + リボン名ラベル
+		塗り＝状態、外周リング＝カテゴリ。カテゴリ色はクラス名に載せられないので
+		CSS 変数で渡す（Tailwind のパージ事故にも巻き込まれない）。
+	-->
+	<div class="group flex flex-col items-center gap-1.5" style="--ribbon-ring: {category.ring}">
+		<div class="relative h-14 w-14">
+			<button
+				class="ribbon-cell {stateStyle.cellClass} {justCollected ? 'ribbon-collect' : ''}"
+				onclick={handleToggle}
+				onpointerdown={onGridPointerDown}
+				onpointerup={onGridPointerUp}
+				onpointercancel={onGridPointerUp}
+				onpointerleave={onGridPointerUp}
+				disabled={isDisabled}
+				title={ribbon.name}
+				aria-label="{ribbon.name} {isObtained ? '取得済み' : '未取得'}"
 			>
-				{#if reasonLabels.length > 0}
-					<span class="block text-left text-[10px] text-gray-200">{reasonLabels[0]}</span>
+				<RibbonIcon
+					src={ribbon.image_url}
+					alt={ribbon.name}
+					sizeClass="h-8 w-8 text-xl"
+					fallback={category.emoji}
+				/>
+				{#if stateStyle.strike}
+					<span class="ribbon-cell__strike"></span>
 				{/if}
-				{#if gridStateLabel()}
-					<span class="block text-yellow-300 text-xs">{gridStateLabel()}</span>
-				{/if}
-			</div>
-		</button>
-		<!-- モバイル含む常時表示リボン名 -->
+			</button>
+
+			<!-- 状態の記号（obtained の ✓ / urgent の ！）。点滅の代わりの静的な手がかり -->
+			{#if stateStyle.chip}
+				<span
+					class="ribbon-cell__chip {stateStyle.chip.class}"
+					role="img"
+					aria-label={stateStyle.chip.label}>{stateStyle.chip.text}</span
+				>
+			{/if}
+
+			<!-- デスクトップ用ホバーツールチップ（理由） -->
+			{#if reasonLabels.length > 0}
+				<div
+					class="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 hidden w-max max-w-48
+						-translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-left text-[10px] text-gray-100
+						group-hover:block"
+				>
+					{reasonLabels[0]}
+				</div>
+			{/if}
+		</div>
+
+		<!--
+			リボン名。9px・1行 truncate では識別語が出る前に切れていたので、
+			11px・2行まで（line-clamp）に広げた。正式名は title / aria-label に残している。
+		-->
 		<span
-			class="block w-14 truncate text-center text-[9px] leading-tight
-        {isObtained
-				? 'text-green-700 font-medium'
-				: ribbonState === 'urgent'
-					? 'text-orange-600 font-medium'
-					: ribbonState === 'missed'
-						? 'text-red-500'
-						: 'text-gray-500'}"
+			class="line-clamp-2 w-full max-w-[76px] text-center text-[11px] leading-[1.35]
+				{stateStyle.labelClass}"
 			title={ribbon.name}>{ribbon.name}</span
 		>
-		<!-- urgent/missed 時の理由常設表示（タッチでも見える） -->
-		{#if (ribbonState === 'urgent' || ribbonState === 'missed') && reasonLabels.length > 0}
-			<span
-				class="block w-14 truncate text-center text-[8px] leading-tight text-gray-500"
-				title={reasonLabels[0]}>{reasonLabels[0]}</span
-			>
-		{/if}
 	</div>
 {:else}
-	<!-- リストビュー: 既存のアコーディオンUI -->
-	<div class="rounded-lg border transition-colors {listWrapperClass()}">
+	<!-- リストビュー: アコーディオンUI -->
+	<div class="rounded-lg border transition-colors {getListWrapperClass(ribbonState)}">
 		<!-- カードヘッダー（常時表示） -->
-		<div class="flex items-center gap-2 p-3">
-			<!-- チェックボックス -->
+		<div class="flex items-center gap-3 px-3 py-2.5">
+			<!-- チェックボックス（タップ領域 44px、見た目 26px） -->
 			<button
-				class="shrink-0"
+				class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg
+					hover:bg-black/5 disabled:hover:bg-transparent"
 				onclick={onToggle}
 				disabled={isDisabled}
 				aria-label={isObtained
@@ -238,92 +190,88 @@
 					: 'リボン未取得（クリックで取得済みにする）'}
 			>
 				<span
-					class="flex h-6 w-6 items-center justify-center rounded border-2 text-sm
-            {isObtained
-						? 'border-green-500 bg-green-500 text-white'
-						: 'border-gray-300 bg-white text-transparent'}"
+					class="flex h-6.5 w-6.5 items-center justify-center rounded-md border-2 text-sm
+						{isObtained
+						? 'border-state-obtained bg-state-obtained text-white'
+						: 'border-gray-400 bg-white text-transparent'}"
 				>
 					✓
 				</span>
 			</button>
 
-			<!-- リボン情報 -->
-			<div class="min-w-0 flex-1">
-				<div class="flex flex-wrap items-center gap-1.5">
-					<!-- リボン画像アイコン -->
+			<!--
+				リボン情報。
+				バッジは 状態＝ベタ塗り / 条件＝枠線のみ / 分類＝薄地 の3階層に分け、
+				上段に名前と状態、下段に条件と分類を置く。
+			-->
+			<div class="flex min-w-0 flex-1 flex-col gap-1">
+				<div class="flex flex-wrap items-center gap-2">
 					<RibbonIcon
 						src={ribbon.image_url}
 						alt={ribbon.name}
 						sizeClass="h-5 w-5"
-						fallback={style.label}
+						fallback={category.emoji}
 					/>
-					<!-- リボン名 -->
-					<span class="text-sm font-medium {isObtained ? 'text-green-800' : 'text-gray-900'}">
+					<span
+						class="text-[15px] font-semibold {isObtained
+							? 'text-state-obtained-text'
+							: 'text-gray-900'}"
+					>
 						{ribbon.name}
 					</span>
 
-					<!-- 状態バッジ -->
-					{#if ribbonState === 'urgent'}
-						<span class="rounded-full bg-orange-500 px-1.5 py-0.5 text-xs font-bold text-white"
-							>⚡ 今すぐ！</span
-						>
-					{:else if ribbonState === 'missed'}
-						<span class="rounded-full bg-red-500 px-1.5 py-0.5 text-xs font-bold text-white"
-							>❌ 取り逃し</span
-						>
-					{:else if ribbonState === 'locked'}
-						<span class="rounded-full bg-gray-400 px-1.5 py-0.5 text-xs text-white"
-							>🚫 取得不可</span
-						>
-					{:else if ribbonState === 'future'}
-						<span class="rounded-full bg-gray-300 px-1.5 py-0.5 text-xs text-gray-600">🔒 未来</span
-						>
+					<!-- 状態＝ベタ塗り。1行に必ず1個だけ -->
+					{#if stateBadge}
+						<span class="rounded-full px-2.5 py-0.5 text-xs font-bold {stateBadge.class}">
+							{stateBadge.text}
+						</span>
 					{/if}
-					<!-- urgent/missed 時の理由常設表示（リストビュー、展開不要で見える） -->
-					{#if (ribbonState === 'urgent' || ribbonState === 'missed') && reasonLabels.length > 0}
-						<span class="text-xs text-gray-500">— {reasonLabels[0]}</span>
-					{/if}
-					<!-- カテゴリタグ -->
-					<span class="rounded-full bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700">
-						{ribbon.category}
-					</span>
+				</div>
 
-					<!-- 世代タグ -->
-					<span class="rounded-full bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">
-						{generationText}
-					</span>
-
-					<!-- レベル制限警告タグ -->
+				<div class="flex flex-wrap items-center gap-1.5">
+					<!-- 条件＝枠線のみ。状態を説明する従属情報なので地を持たない -->
 					{#if isLevelRestricted}
 						<span
-							class="rounded-full bg-orange-100 px-1.5 py-0.5 text-xs font-medium text-orange-700"
+							class="rounded-full border border-orange-300 bg-white px-2 py-0.5 text-xs
+								font-semibold text-state-urgent-text"
 						>
 							⚠ Lv.{ribbon.eligibility?.maxLevel}以下
 						</span>
 					{/if}
 
-					<!-- あかしタグ -->
-					{#if ribbon.type === 'mark'}
-						<span class="rounded-full bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700">
-							あかし
+					<!-- 分類＝薄地。一番弱い。フィルタの手がかり用 -->
+					<span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+						{ribbon.category}
+					</span>
+
+					{#if showGeneration}
+						<span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+							{generationText}
 						</span>
+					{/if}
+
+					<!-- 条件バッジと重ならない場合だけ、理由を行に残す -->
+					{#if showInlineReason}
+						<span class="text-xs text-gray-600">{reasonLabels[0]}</span>
 					{/if}
 				</div>
 			</div>
 
-			<!-- 展開トグルボタン -->
+			<!-- 展開トグルボタン（タップ領域 44px） -->
 			<button
-				class="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+				class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-xs
+					text-gray-500 hover:bg-black/5 hover:text-gray-900"
 				onclick={() => (isExpanded = !isExpanded)}
+				aria-expanded={isExpanded}
 				aria-label={isExpanded ? '詳細を閉じる' : '詳細を開く'}
 			>
-				<span class="text-xs">{isExpanded ? '▲' : '▼'}</span>
+				<span>{isExpanded ? '▲' : '▼'}</span>
 			</button>
 		</div>
 
 		<!-- アコーディオン展開エリア -->
 		{#if isExpanded}
-			<div class="border-t border-gray-100 px-3 pb-3 pt-2">
+			<div class="border-t border-gray-100 px-3 pt-2 pb-3">
 				{#if reasonLabels.length > 0}
 					<div class="mb-2 rounded bg-gray-50 p-2">
 						<p class="mb-1 text-xs font-medium text-gray-700">判定理由</p>
@@ -364,6 +312,14 @@
 					<div class="mb-2">
 						<p class="mb-0.5 text-xs font-medium text-gray-700">取得条件</p>
 						<p class="text-xs text-gray-600">{ribbon.requirements}</p>
+					</div>
+				{/if}
+
+				<!-- 世代（行から落としたぶんをここで持つ） -->
+				{#if !showGeneration}
+					<div class="mb-2">
+						<p class="mb-0.5 text-xs font-medium text-gray-700">世代</p>
+						<p class="text-xs text-gray-600">{generationText}</p>
 					</div>
 				{/if}
 
