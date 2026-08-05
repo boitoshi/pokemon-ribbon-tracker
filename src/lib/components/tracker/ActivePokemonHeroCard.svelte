@@ -132,7 +132,11 @@
 				<!-- ポケモン画像（大） -->
 				<div class="h-24 w-24 shrink-0">
 					{#if image}
-						<img src={image} alt={displayName} class="h-full w-full object-contain drop-shadow-md" />
+						<img
+							src={image}
+							alt={displayName}
+							class="h-full w-full object-contain drop-shadow-md"
+						/>
 					{:else}
 						<div
 							class="flex h-full w-full items-center justify-center rounded-full bg-white/50 text-4xl"
@@ -149,8 +153,9 @@
 					{/if}
 					<!-- プログレスバー -->
 					<div class="mb-1 h-3 w-full overflow-hidden rounded-full bg-white/70">
+						<!-- 進捗＝完了の集約。取得済み・確認済みと同じ緑にそろえる -->
 						<div
-							class="h-full rounded-full bg-linear-to-r from-green-400 to-emerald-500 transition-all duration-500"
+							class="bg-state-obtained h-full rounded-full transition-all duration-500"
 							style="width: {completionPercent}%"
 						></div>
 					</div>

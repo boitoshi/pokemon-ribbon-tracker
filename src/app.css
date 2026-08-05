@@ -101,6 +101,12 @@
 		0 0 0 4px var(--ribbon-ring);
 }
 
+/* リスト行に置くときの小さいセル（タップ最小の 44px） */
+.ribbon-cell--sm {
+	height: 2.75rem;
+	width: 2.75rem;
+}
+
 /* urgent — 橙ベタ + 二重リング。animate-pulse の代わりに静的な手がかりで重さを出す */
 .ribbon-cell--urgent {
 	background-color: var(--color-state-urgent);

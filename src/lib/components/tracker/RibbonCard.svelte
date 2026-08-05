@@ -4,6 +4,7 @@
 	import { toast } from '$lib/stores/toast.svelte';
 	import RibbonIcon from '$lib/components/ui/RibbonIcon.svelte';
 	import { getCategoryStyle } from '$lib/utils/ribbonCategory';
+	import { getRibbonShortLabel } from '$lib/utils/ribbonShortLabel';
 	import {
 		getListWrapperClass,
 		getRibbonStateStyle,
@@ -48,6 +49,9 @@
 
 	/** 状態 → 表現の対応表 */
 	const stateStyle = $derived(getRibbonStateStyle(ribbonState));
+
+	/** グリッド用の短縮ラベル（最大2行） */
+	const shortLabelLines = $derived(getRibbonShortLabel(ribbon));
 
 	/** アコーディオン展開状態（リストモード用） */
 	let isExpanded = $state(false);
@@ -166,13 +170,18 @@
 
 		<!--
 			リボン名。9px・1行 truncate では識別語が出る前に切れていたので、
-			11px・2行まで（line-clamp）に広げた。正式名は title / aria-label に残している。
+			11px・最大2行に広げ、「リボン」「のあかし」を落として識別語を先頭に出す。
+			ランク付き（クールリボンスーパー）は行で割り、CJK の自動折り返しが
+			識別語の途中で切るのを防ぐ。正式名は title / aria-label に残している。
 		-->
 		<span
-			class="line-clamp-2 w-full max-w-[76px] text-center text-[11px] leading-[1.35]
-				{stateStyle.labelClass}"
-			title={ribbon.name}>{ribbon.name}</span
+			class="w-full max-w-[76px] text-center text-[11px] leading-[1.35] {stateStyle.labelClass}"
+			title={ribbon.name}
 		>
+			{#each shortLabelLines as line, i (i)}
+				<span class="block">{line}</span>
+			{/each}
+		</span>
 	</div>
 {:else}
 	<!-- リストビュー: アコーディオンUI -->

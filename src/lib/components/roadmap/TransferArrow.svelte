@@ -74,8 +74,12 @@
 					: 'border-gray-200 bg-gray-50'}"
 	>
 		<div class="mb-2 flex flex-wrap items-center justify-center gap-1.5">
-			<span class="rounded-full px-2 py-0.5 text-[11px] font-semibold {isAvailable ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-600'}">
-				{isAvailable ? '利用可能' : '利用不可'}
+			<!--
+				機材の可否は「完了度」ではないので緑を使わない。緑は取得・進捗・確認済みという
+				完了の集約だけに残す。失敗でもないので赤も使わず、無彩色の枠線と薄地で示す。
+			-->
+			<span class="rounded-full border border-gray-300 px-2 py-0.5 text-[11px] font-semibold {isAvailable ? 'bg-white text-gray-700' : 'bg-gray-100 text-gray-600'}">
+				{isAvailable ? '使える' : '✕ 機材不足'}
 			</span>
 			{#if route.isIrreversible}
 				<span class="rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700">不可逆</span>
@@ -99,9 +103,6 @@
 			>
 				🔄 {route.methodName}
 			</span>
-			{#if !isAvailable}
-				<span class="text-xs text-red-500">❌ 機材不足</span>
-			{/if}
 		</div>
 
 		<!-- 廃止警告 -->
@@ -114,14 +115,14 @@
 			<div class="mt-2 flex flex-wrap justify-center gap-1">
 				{#if isAvailable}
 					{#if satisfiedOptionLabel}
-						<span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700">
-							✅ {satisfiedOptionLabel}
+						<span class="rounded-full border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-700">
+							✓ {satisfiedOptionLabel}
 						</span>
 					{/if}
 				{:else}
 					{#each route.requirements.anyOf as option (option.id)}
-						<span class="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-700">
-							{option.label}
+						<span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+							✕ {option.label}
 						</span>
 					{/each}
 				{/if}
@@ -129,7 +130,7 @@
 		{/if}
 
 		{#if !isAvailable && missingHardware.length > 0}
-			<p class="mt-1 text-xs text-red-600">
+			<p class="mt-1 text-xs text-gray-600">
 				不足: {missingHardware.map((hw) => hardwareLabels[hw] ?? hw).join(' / ')}
 			</p>
 		{/if}
@@ -169,9 +170,9 @@
 				{#if confirmStep === 0}
 					{#if isConfirmed}
 						<!-- 確認済み状態 -->
-						<div class="mt-2 flex flex-wrap items-center gap-2 rounded-lg border border-green-300 bg-green-100 px-3 py-2">
-							<span class="font-bold text-green-700">✅ 確認済み</span>
-							<span class="text-xs text-green-600">最終確認日: {lastConfirmedDate}</span>
+						<div class="mt-2 flex flex-wrap items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2">
+							<span class="bg-state-obtained rounded-full px-2.5 py-0.5 text-xs font-bold text-white">✓ 確認済み</span>
+							<span class="text-state-obtained-text text-xs">最終確認日: {lastConfirmedDate}</span>
 						</div>
 						<button
 							class="mt-1.5 text-xs text-red-500 underline hover:text-red-700 disabled:cursor-not-allowed disabled:text-gray-400"

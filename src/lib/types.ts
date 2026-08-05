@@ -66,6 +66,12 @@ export interface RibbonEligibility {
 export interface Ribbon {
 	id: string;
 	name: string;
+	/**
+	 * グリッドセル用の短縮名。
+	 * 未指定なら getRibbonShortLabel() が name から派生させる。
+	 * データは自動生成のため、現状は派生＋上書き表で運用している。
+	 */
+	shortLabel?: string;
 	description: string;
 	generation: number;
 	games: string[];
