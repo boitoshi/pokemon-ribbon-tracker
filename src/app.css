@@ -72,12 +72,13 @@
 	リングは ring-* ユーティリティではなく box-shadow で書く。
 	理由は2つあって、(1) カテゴリ色は動的なので Tailwind のクラス名に載せられない、
 	(2) 「白い内側 + カテゴリ色の外側」の二重リングが1本の指定で書ける。
+
+	リングの色（--ribbon-ring＝カテゴリ）と隙間の色（--ribbon-ring-gap＝周囲の地の色）は
+	RibbonCard / RoadmapStep が親要素の style で渡し、継承でここへ届ける。
+	.ribbon-cell 自身には宣言しないこと。自前の宣言は継承値に勝つので、
+	親から渡した値が一切届かなくなる。既定値は使用箇所の var() 第2引数で持つ。
 */
 .ribbon-cell {
-	/* リングの色（カテゴリ）と、リングと塗りの間の隙間の色（＝周囲の地の色）*/
-	--ribbon-ring: #d1d5db;
-	--ribbon-ring-gap: #fff;
-
 	position: relative;
 	display: flex;
 	height: 3.5rem;
@@ -97,8 +98,8 @@
 	background-color: var(--color-state-obtained);
 	color: #fff;
 	box-shadow:
-		0 0 0 2px var(--ribbon-ring-gap),
-		0 0 0 4px var(--ribbon-ring);
+		0 0 0 2px var(--ribbon-ring-gap, #fff),
+		0 0 0 4px var(--ribbon-ring, #d1d5db);
 }
 
 /* リスト行に置くときの小さいセル（タップ最小の 44px） */
@@ -112,7 +113,7 @@
 	background-color: var(--color-state-urgent);
 	color: #fff;
 	box-shadow:
-		0 0 0 3px var(--ribbon-ring-gap),
+		0 0 0 3px var(--ribbon-ring-gap, #fff),
 		0 0 0 5px var(--color-state-urgent-ring);
 }
 
@@ -178,7 +179,7 @@
 	font-weight: 700;
 	color: #fff;
 	pointer-events: none;
-	box-shadow: 0 0 0 2px var(--ribbon-ring-gap);
+	box-shadow: 0 0 0 2px var(--ribbon-ring-gap, #fff);
 }
 
 .ribbon-cell__chip--check {
