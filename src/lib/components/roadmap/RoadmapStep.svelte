@@ -3,6 +3,7 @@
 	import type { GenerationProgress } from '$lib/stores/ribbonProgress.svelte';
 	import { ribbonProgress } from '$lib/stores/ribbonProgress.svelte';
 	import RibbonCard from '$lib/components/tracker/RibbonCard.svelte';
+	import RibbonReasonList from '$lib/components/roadmap/RibbonReasonList.svelte';
 
 	let {
 		group,
@@ -42,6 +43,10 @@
 	);
 </script>
 
+<!--
+	--ribbon-ring-gap は取得済みセルの「塗りと外周リングの隙間」の色。
+	周囲の地と同じ色でないとリングが浮くので、世代パネルの背景に合わせて渡す。
+-->
 <div
 	class="rounded-lg border shadow-sm
   {group.phase === 'current'
@@ -49,6 +54,11 @@
 		: group.phase === 'past'
 			? 'border-gray-200 bg-gray-50'
 			: 'border-dashed border-gray-300 bg-white'}"
+	style="--ribbon-ring-gap: {group.phase === 'current'
+		? '#eff6ff'
+		: group.phase === 'past'
+			? '#f9fafb'
+			: '#fff'}"
 >
 	<!-- 世代ヘッダー -->
 	<button
@@ -91,14 +101,17 @@
 			{:else}
 				<span class="text-sm text-gray-400">{totalInGroup}個</span>
 			{/if}
-				<span class="text-xs text-gray-400">{isOpen ? '▲' : '▼'}</span>
+			<span class="text-xs text-gray-400">{isOpen ? '▲' : '▼'}</span>
 		</div>
 	</button>
 
 	<!-- プログレスバー -->
 	{#if genProgress}
 		<div class="h-1.5 w-full bg-gray-100">
-			<div class="h-full bg-green-500 transition-all" style="width: {completionPercent}%"></div>
+			<div
+				class="bg-state-obtained h-full transition-all"
+				style="width: {completionPercent}%"
+			></div>
 		</div>
 	{/if}
 
@@ -130,7 +143,7 @@
 
 			<!-- 2. 通常リボン（available / obtained）: グリッド表示 -->
 			{#if group.ribbons.length > 0}
-				<div class="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6">
+				<div class="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
 					{#each group.ribbons as ribbon (ribbon.id)}
 						<RibbonCard
 							{ribbon}
@@ -143,25 +156,26 @@
 				</div>
 			{/if}
 
-			<!-- 3. 取り逃しセクション（past フェーズのみ、デフォルト折りたたみ） -->
+			<!--
+				3. 取り逃しセクション（past フェーズのみ、デフォルト折りたたみ）
+				1件あたり理由の文が付くので、グリッドではなくリストが器。
+			-->
 			{#if group.phase === 'past' && group.missedRibbons.length > 0}
-				<details class="mt-2 rounded border border-red-200 bg-red-50">
-					<summary class="cursor-pointer px-3 py-2 text-sm font-medium text-red-700">
+				<details class="mt-2">
+					<summary
+						class="cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-red-700
+							hover:bg-red-50"
+					>
 						❌ 取り逃し（{group.missedRibbons.length}個）
 					</summary>
-					<p class="px-3 pb-1 text-xs text-red-500">
-						不可逆転送済みの場合、この世代には戻れません。確認日を目安に計画してください。
-					</p>
-				<div class="grid grid-cols-4 gap-3 px-3 pb-3 sm:grid-cols-5 md:grid-cols-6">
-					{#each group.missedRibbons as ribbon (ribbon.id)}
-						<RibbonCard
-							{ribbon}
-							view="grid"
-							ribbonState="missed"
-							reasonLabels={ribbonProgress.getRibbonReasonLabels(ribbon)}
-							onToggle={() => onToggle(ribbon.id)}
-							/>
-						{/each}
+					<div class="mt-2">
+						<RibbonReasonList
+							ribbons={group.missedRibbons}
+							state="missed"
+							reasonFor={(ribbon) => ribbonProgress.getRibbonReasonLabels(ribbon)}
+							countLabel="❌ 取り逃し {group.missedRibbons.length}個"
+							description="不可逆転送済みのため、この世代には戻れません"
+						/>
 					</div>
 				</details>
 			{/if}
@@ -179,16 +193,15 @@
 						<span class="ml-auto text-xs text-gray-400">{isLockedOpen ? '▲' : '▼'}</span>
 					</button>
 					{#if isLockedOpen}
-					<div class="mt-2 grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6">
-							{#each group.lockedRibbons as ribbon (ribbon.id)}
-								<RibbonCard
-									{ribbon}
-									view="grid"
-									ribbonState="locked"
-									reasonLabels={ribbonProgress.getRibbonReasonLabels(ribbon)}
-									onToggle={() => {}}
-								/>
-							{/each}
+						<!-- 取得不可も理由を持つので、取り逃しと同じくリストが向く -->
+						<div class="mt-2">
+							<RibbonReasonList
+								ribbons={group.lockedRibbons}
+								state="locked"
+								reasonFor={(ribbon) => ribbonProgress.getRibbonReasonLabels(ribbon)}
+								countLabel="🚫 取得不可 {group.lockedRibbons.length}個"
+								description="この個体では原理的に取得できません"
+							/>
 						</div>
 					{/if}
 				</div>

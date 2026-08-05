@@ -26,6 +26,31 @@
 	--color-type-bug: #a8b820;
 	--color-type-ghost: #705898;
 	--color-type-steel: #b8b8d0;
+
+	/*
+		状態カラー — 「塗りは状態に一任する」ための語彙。
+		画面から生の green-500 / orange-400 を消し、状態名で参照する。
+		値は Tailwind 標準パレットのままなので見た目の変更はない。
+		カテゴリ色は状態とチャンネルを奪い合わないよう、外周リング（--ribbon-ring）へ退避させている。
+	*/
+	--color-state-obtained: #22c55e; /* green-500 */
+	--color-state-obtained-mark: #15803d; /* green-700 */
+	--color-state-obtained-text: #166534; /* green-800 */
+	--color-state-urgent: #f97316; /* orange-500 */
+	--color-state-urgent-ring: #fb923c; /* orange-400 */
+	--color-state-urgent-mark: #9a3412; /* orange-800 */
+	--color-state-urgent-text: #c2410c; /* orange-700 */
+	--color-state-available: #9ca3af; /* gray-400 */
+	--color-state-available-text: #374151; /* gray-700 */
+	--color-state-missed: #fef2f2; /* red-50 */
+	--color-state-missed-border: #fca5a5; /* red-300 */
+	--color-state-missed-mark: #dc2626; /* red-600 */
+	--color-state-missed-text: #b91c1c; /* red-700 */
+	--color-state-future: #d1d5db; /* gray-300 */
+	--color-state-future-text: #6b7280; /* gray-500 */
+	--color-state-locked: #f3f4f6; /* gray-100 */
+	--color-state-locked-hatch: #e5e7eb; /* gray-200 */
+	--color-state-locked-border: #d1d5db; /* gray-300 */
 }
 
 /* リボン取得アニメーション */
@@ -37,6 +62,159 @@
 
 .ribbon-collect {
   animation: ribbon-collect 0.4s ease-out;
+}
+
+/*
+	リボンセル（グリッドビューの丸バッジ）
+	── 6状態を「塗り・枠線・地の処理・記号」の4チャンネルに分けて表す。
+	色は冗長な手がかりでしかないので、グレースケールでも6状態が判別できる。
+
+	リングは ring-* ユーティリティではなく box-shadow で書く。
+	理由は2つあって、(1) カテゴリ色は動的なので Tailwind のクラス名に載せられない、
+	(2) 「白い内側 + カテゴリ色の外側」の二重リングが1本の指定で書ける。
+
+	リングの色（--ribbon-ring＝カテゴリ）と隙間の色（--ribbon-ring-gap＝周囲の地の色）は
+	RibbonCard / RoadmapStep が親要素の style で渡し、継承でここへ届ける。
+	.ribbon-cell 自身には宣言しないこと。自前の宣言は継承値に勝つので、
+	親から渡した値が一切届かなくなる。既定値は使用箇所の var() 第2引数で持つ。
+*/
+.ribbon-cell {
+	position: relative;
+	display: flex;
+	height: 3.5rem;
+	width: 3.5rem;
+	align-items: center;
+	justify-content: center;
+	border-radius: 9999px;
+	box-sizing: border-box;
+	transition:
+		background-color 0.2s,
+		border-color 0.2s,
+		box-shadow 0.2s;
+}
+
+/* obtained — 緑ベタ + カテゴリ色のリング。カテゴリは「取得済みの中の分類」なので状態より一段弱い */
+.ribbon-cell--obtained {
+	background-color: var(--color-state-obtained);
+	color: #fff;
+	box-shadow:
+		0 0 0 2px var(--ribbon-ring-gap, #fff),
+		0 0 0 4px var(--ribbon-ring, #d1d5db);
+}
+
+/* リスト行に置くときの小さいセル（タップ最小の 44px） */
+.ribbon-cell--sm {
+	height: 2.75rem;
+	width: 2.75rem;
+}
+
+/* urgent — 橙ベタ + 二重リング。animate-pulse の代わりに静的な手がかりで重さを出す */
+.ribbon-cell--urgent {
+	background-color: var(--color-state-urgent);
+	color: #fff;
+	box-shadow:
+		0 0 0 3px var(--ribbon-ring-gap, #fff),
+		0 0 0 5px var(--color-state-urgent-ring);
+}
+
+/* available — 白地 + 実線枠。実線＝押せる */
+.ribbon-cell--available {
+	background-color: #fff;
+	border: 2px solid var(--color-state-available);
+	color: #4b5563;
+}
+.ribbon-cell--available:hover:not(:disabled) {
+	background-color: #f9fafb;
+	border-color: #4b5563;
+}
+
+/* missed — 赤淡地 + 斜め一本線。取り消し線の比喩。opacity では落とさない */
+.ribbon-cell--missed {
+	background-color: var(--color-state-missed);
+	border: 2px solid var(--color-state-missed-border);
+	color: #f87171;
+	overflow: hidden;
+}
+
+/* future — 破線枠＝まだ来ていない。減光しない */
+.ribbon-cell--future {
+	background-color: #fff;
+	border: 2px dashed var(--color-state-future);
+	color: #9ca3af;
+}
+
+/* locked — 45°ハッチ＝この個体では原理的に不可 */
+.ribbon-cell--locked {
+	background-image: repeating-linear-gradient(
+		45deg,
+		var(--color-state-locked-hatch) 0 4px,
+		var(--color-state-locked) 4px 8px
+	);
+	border: 1px solid var(--color-state-locked-border);
+	color: #9ca3af;
+}
+
+/* missed の斜め一本線。円の内側だけに出したいので親に overflow:hidden が要る */
+.ribbon-cell__strike {
+	position: absolute;
+	left: -6px;
+	right: -6px;
+	top: 50%;
+	height: 2.5px;
+	border-radius: 2px;
+	background-color: var(--color-state-missed-mark);
+	transform: rotate(-45deg);
+	pointer-events: none;
+}
+
+/*
+	角のチップ（obtained の ✓ / urgent の ！）。
+	セルの兄弟要素として置き、pointer-events:none でクリックを下のボタンへ通す。
+*/
+.ribbon-cell__chip {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 700;
+	color: #fff;
+	pointer-events: none;
+	box-shadow: 0 0 0 2px var(--ribbon-ring-gap, #fff);
+}
+
+.ribbon-cell__chip--check {
+	top: -3px;
+	right: -3px;
+	height: 19px;
+	width: 19px;
+	border-radius: 9999px;
+	background-color: var(--color-state-obtained-mark);
+	font-size: 11px;
+}
+
+.ribbon-cell__chip--bang {
+	top: -4px;
+	right: -4px;
+	height: 19px;
+	min-width: 19px;
+	padding-inline: 4px;
+	border-radius: 6px;
+	background-color: var(--color-state-urgent-mark);
+	font-size: 11px;
+	font-weight: 800;
+}
+
+/*
+	動きを使うのは取得トグルの瞬間だけ。そこだけ無効化すれば reduced-motion 対応は済む。
+	（常時点滅していた animate-pulse は撤去済み）
+*/
+@media (prefers-reduced-motion: reduce) {
+	.ribbon-collect {
+		animation: none;
+	}
+	.ribbon-cell {
+		transition: none;
+	}
 }
 
 .irreversible-warning {

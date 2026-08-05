@@ -322,6 +322,7 @@
 										isManualMissed={ribbonProgress.isManualMissed(ribbon.id)}
 										manualMissedUpdatedAt={ribbonProgress.getManualMissedUpdatedAt(ribbon.id)}
 										view="list"
+										showGeneration
 									/>
 								{/each}
 							</div>
@@ -400,7 +401,7 @@
 								<p class="mt-1 text-xs text-gray-400">フィルターを変更してみてください</p>
 							</div>
 						{:else if cardLayout === 'grid'}
-							<div class="grid grid-cols-5 gap-2 md:grid-cols-8">
+							<div class="grid grid-cols-3 gap-2 sm:grid-cols-5 md:grid-cols-8">
 								{#each filteredRibbons as ribbon (ribbon.id)}
 									<RibbonCard
 										{ribbon}
@@ -426,6 +427,7 @@
 										isManualMissed={ribbonProgress.isManualMissed(ribbon.id)}
 										manualMissedUpdatedAt={ribbonProgress.getManualMissedUpdatedAt(ribbon.id)}
 										view="list"
+										showGeneration
 									/>
 								{/each}
 							</div>

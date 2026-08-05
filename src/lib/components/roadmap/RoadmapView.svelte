@@ -153,9 +153,10 @@
 				<p class="text-[11px] text-gray-500">利用可能ルート</p>
 				<p class="text-lg font-bold text-blue-700">{availableIrreversibleCount}</p>
 			</div>
-			<div class="rounded-lg border border-emerald-200 bg-white px-3 py-2">
+			<!-- 確認記録済み＝完了。ここだけが緑 -->
+			<div class="rounded-lg border border-green-200 bg-white px-3 py-2">
 				<p class="text-[11px] text-gray-500">確認記録済み</p>
-				<p class="text-lg font-bold text-emerald-700">{confirmedIrreversibleCount}</p>
+				<p class="text-state-obtained-text text-lg font-bold">{confirmedIrreversibleCount}</p>
 			</div>
 		</div>
 		<p class="mt-2 text-[11px] text-gray-600">
