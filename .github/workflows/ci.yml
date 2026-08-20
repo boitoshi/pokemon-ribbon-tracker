@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  # main への push は deploy.yml が同じ lint / check / test / build を回すため、
+  # ここでは PR だけを対象にして二重実行を避ける
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # ローカル（fnm）・CI・デプロイでバージョンがズレないよう .node-version を唯一の正とする
+          node-version-file: .node-version
+          cache: npm
+
+      # postinstall の無効化は .npmrc（ignore-scripts=true）に集約している
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run check
+
+      - run: npm run test
+
+      - run: npm run build
