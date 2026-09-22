@@ -189,8 +189,8 @@ Phase 1〜6 完了（旧 `docs/rewrite-plan.md`）。現行の設計正本は `d
 
 ## Codex
 
-This file is the shared source of truth for Claude Code and Codex. `CLAUDE.md` only imports it
-(`@AGENTS.md`) for Claude Code; do not write rules there.
+This file is the shared source of truth for Claude Code and Codex. Claude Code reads it directly;
+do not add a `CLAUDE.md` (it would make Claude Code read that instead of this file).
 
 ### Before working
 

@@ -99,4 +99,4 @@ npx vite preview     # http://localhost:4173/ribbon-tracker/ で確認
 - 現行設計正本（R1〜R4）: [docs/ui-redesign-plan.md](docs/ui-redesign-plan.md)
 - 設計・移行計画（アーカイブ: Nuxt→SvelteKit 移行時の計画）: [docs/rewrite-plan.md](docs/rewrite-plan.md)
 - 実装再開ハンドオフ（アーカイブ）: [docs/irreversible-transfer-ux-handoff.md](docs/irreversible-transfer-ux-handoff.md)
-- エージェント運用規約: [AGENTS.md](AGENTS.md)（Claude Code は CLAUDE.md 経由で読む）
+- エージェント運用規約: [AGENTS.md](AGENTS.md)
